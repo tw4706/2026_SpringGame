@@ -1,4 +1,6 @@
 #pragma once
+#include<Dxlib.h>
+
 class Vector3
 {
 public:
@@ -34,5 +36,11 @@ public:
 
 	//ベクトルの外積を返す
 	Vector3 Cross(const Vector3& other) const;
+
+	//DxlibのVECTORに変換
+	VECTOR ToDxlibVector(const Vector3& vec)
+	{
+		return VGet(vec.x_, vec.y_, vec.z_);
+	}
 };
 

@@ -1,9 +1,16 @@
 #include "SceneMain.h"
 #include "DxLib.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "GameObject.h"
 
 SceneMain::SceneMain() :
-	m_frameCount(0)
+	frameCount_(0),
+	pPlayer_(nullptr),
+	pEnemy_(nullptr)
 {
+	pPlayer_ = std::make_shared<Player>();
+	pEnemy_ = std::make_shared<Enemy>();
 }
 
 SceneMain::~SceneMain()
@@ -23,19 +30,27 @@ void SceneMain::Init()
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
 	SetCameraNearFar(200.0f, 1500.0f);
+
+	pPlayer_->Init();
+	pEnemy_->Init();
 }
 
 void SceneMain::Update()
 {
-	m_frameCount++;
+	frameCount_++;
+	pPlayer_->Update();
+	pEnemy_->Update();
 }
 
 void SceneMain::Draw()
 {
 	DrawGrid();
 
+	pPlayer_->Draw();
+	pEnemy_->Draw();
+
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
-	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", m_frameCount);
+	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 }
 
 void SceneMain::DrawGrid()
