@@ -12,15 +12,15 @@ public:
 
 	//ベクトルの足し算
 	Vector3 operator+(const Vector3& other) const;
-
 	//ベクトルの引き算
 	Vector3 operator-(const Vector3& other) const;
-
 	//ベクトルの掛け算
 	Vector3 operator*(float scalar) const;
-
 	//ベクトルの割り算
 	Vector3 operator/(float scalar) const;
+
+	void operator+=(const Vector3& other);//加算
+	void operator-=(const Vector3& other);//減算
 
 	//ベクトルの正規化
 	Vector3 Normalize() const;

@@ -35,6 +35,20 @@ Vector3 Vector3::operator/(float scalar) const
 	return Vector3(x_ / scalar, y_ / scalar, z_ / scalar);
 }
 
+void Vector3::operator+=(const Vector3& other)
+{
+	x_ += other.x_;
+	y_ += other.y_;
+	z_ += other.z_;
+}
+
+void Vector3::operator-=(const Vector3& other)
+{
+	x_ -= other.x_;
+	y_ -= other.y_;
+	z_ -= other.z_;
+}
+
 //ÉxÉNÉgÉãÇÃê≥ãKâª
 Vector3 Vector3::Normalize() const
 {

@@ -3,6 +3,7 @@
 
 class Enemy;
 class Player;
+class Input;
 class SceneMain
 {
 public:
@@ -10,7 +11,7 @@ public:
 	~SceneMain();
 
 	void Init();
-	void Update();
+	void Update(Input& input);
 	void Draw();
 
 private:

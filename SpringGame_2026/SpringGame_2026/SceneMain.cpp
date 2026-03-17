@@ -35,10 +35,10 @@ void SceneMain::Init()
 	pEnemy_->Init();
 }
 
-void SceneMain::Update()
+void SceneMain::Update(Input&input)
 {
 	frameCount_++;
-	pPlayer_->Update();
+	pPlayer_->Update(input);
 	pEnemy_->Update();
 }
 
