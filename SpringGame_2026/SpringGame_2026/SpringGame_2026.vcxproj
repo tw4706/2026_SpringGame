@@ -135,12 +135,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="Physics\Camera.cpp" />
+    <ClCompile Include="Actor\Charactor.cpp" />
+    <ClCompile Include="Actor\Enemy.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="SceneMain.cpp" />
+    <ClCompile Include="Physics\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="Physics\Camera.h" />
+    <ClInclude Include="Actor\Charactor.h" />
+    <ClInclude Include="Actor\Enemy.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="SceneMain.h" />
+    <ClInclude Include="Physics\Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
