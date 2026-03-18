@@ -72,4 +72,8 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\Player.mv1" />
+    <None Include="data\Enemy.mv1" />
+  </ItemGroup>
 </Project>

@@ -158,6 +158,10 @@
     <ClInclude Include="Physics\Vector3.h" />
     <ClInclude Include="SceneMain.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\Enemy.mv1" />
+    <None Include="data\Player.mv1" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
