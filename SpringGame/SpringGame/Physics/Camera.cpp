@@ -49,8 +49,8 @@ void Camera::UpdateCamera()
 	float playerAngle = pPlayer_->GetAngle();
 
 	//‰ñ“]
-	Matrix4x4 rotMat = Matrix4x4::RotateY(playerAngle);
-	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(-playerAngle);
+	Vector3 offset = rotMat.Transform(kTargetToCamera);
 
 	//ƒJƒƒ‰‚ÌˆÊ’u
 	Vector3 cameraPos = cameraTarget_ + offset;

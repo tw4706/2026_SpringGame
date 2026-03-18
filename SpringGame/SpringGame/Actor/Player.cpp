@@ -8,12 +8,12 @@
 namespace
 {
 	//プレイヤーの移動速度
-	constexpr float kSpeed = 0.1f;
+	constexpr float kSpeed = 8.0f;
 
 	constexpr float kCameraSpeed = 0.05f;
 
 	// プレイヤー基準位置から注視点までのベクトル
-	const Vector3 kPlayerToTarget = { 0.0f, 290.0f, 0.0f };
+	//const Vector3 kPlayerToTarget = { 0.0f, 290.0f, 0.0f };
 }
 
 Player::Player():
@@ -81,7 +81,7 @@ void Player::Update(Input&input)
 	Matrix4x4 scaleMat = Matrix4x4::Scale({ 100.0f,100.0f,100.0f });
 
 	//行列の合成
-	Matrix4x4 mat = rotMat * transMat * scaleMat;
+	Matrix4x4 mat = scaleMat*rotMat * transMat;
 	MV1SetMatrix(modelHandle_, mat.ToDxlibMatrix());
 }
 
@@ -102,5 +102,5 @@ void Player::Attack(Input& input)
 
 Vector3 Player::GetCameraTarget() const
 {
-	return pos_+kPlayerToTarget;
+	return pos_;
 }
