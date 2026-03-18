@@ -19,7 +19,7 @@ void Enemy::Init()
 {
 	modelHandle_ = MV1LoadModel("data/Enemy.mv1");
 	assert(modelHandle_ >= 0);
-	MV1SetPosition(modelHandle_, pos_.ToDxlibVector(pos_));
+	MV1SetPosition(modelHandle_, pos_.ToDxlibVector());
 	MV1SetScale(modelHandle_, VGet(100.0f, 100.0f, 100.0f));
 }
 

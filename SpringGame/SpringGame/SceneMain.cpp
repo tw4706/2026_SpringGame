@@ -2,6 +2,7 @@
 #include"../Actor/Player.h"
 #include"../Actor/Enemy.h"
 #include"../Input.h"
+#include"../Physics/Camera.h"
 #include <Dxlib.h>
 
 SceneMain::SceneMain() :
@@ -9,6 +10,7 @@ SceneMain::SceneMain() :
 {
 	pEnemy_ = std::make_shared<Enemy>();
 	pPlayer_ = std::make_shared<Player>();
+	pCamera_ = std::make_shared<Camera>();
 }
 
 SceneMain::~SceneMain()
@@ -29,20 +31,28 @@ void SceneMain::Init()
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
 	SetCameraNearFar(200.0f, 1500.0f);
 
+	//各クラスの初期化処理
 	pEnemy_->Init();
 	pPlayer_->Init();
+	pCamera_->SetPlayer(pPlayer_);
+	pCamera_->Init();
 }
 
 void SceneMain::Update(Input&input)
 {
 	frameCount_++;
+
+	//各クラスの更新処理
 	pEnemy_->Update();
 	pPlayer_->Update(input);
+	pCamera_->Update();
 }
 
 void SceneMain::Draw()
 {
 	DrawGrid();
+
+	//各クラスの描画処理
 	pEnemy_->Draw();
 	pPlayer_->Draw();
 

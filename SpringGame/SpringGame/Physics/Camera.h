@@ -11,8 +11,11 @@ public:
 
 	void Init()override;
 	void Update()override;
+	void Draw()override {};
 
 	void UpdateCamera();
+
+	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 private:
 	//ƒJƒƒ‰‚Ì’‹“_
 	Vector3 cameraTarget_;

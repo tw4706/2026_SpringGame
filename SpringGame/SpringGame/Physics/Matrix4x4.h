@@ -45,6 +45,8 @@ public:
 	//ベクトルと行列の掛け算
 	Vector3 Transform(const Vector3& vec)const;
 
+	Vector3 TransformForVector(const Vector3& vec)const;
+
 	//Dxlibの行列に変換
 	MATRIX ToDxlibMatrix()const;
 

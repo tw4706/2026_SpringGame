@@ -24,7 +24,7 @@ Matrix4x4::Matrix4x4(float x0, float x1, float x2, float x3,
 Matrix4x4 Matrix4x4::Identity()
 {
 	return Matrix4x4(
-		1, 0, 1, 0,
+		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		0, 0, 0, 1);
@@ -180,6 +180,18 @@ Vector3 Matrix4x4::Transform(const Vector3& vec) const
 	result.x_ = vec.x_ * x0_ + vec.y_ * y0_ + vec.z_ * z0_ + w0_;
 	result.y_ = vec.x_ * x1_ + vec.y_ * y1_ + vec.z_ * z1_ + w1_;
 	result.z_ = vec.x_ * x2_ + vec.y_ * y2_ + vec.z_ * z2_ + w2_;
+
+	return result;
+}
+
+
+Vector3 Matrix4x4::TransformForVector(const Vector3& vec) const
+{
+	Vector3 result;
+
+	result.x_ = vec.x_ * x0_ + vec.y_ * y0_ + vec.z_ * z0_;
+	result.y_ = vec.x_ * x1_ + vec.y_ * y1_ + vec.z_ * z1_;
+	result.z_ = vec.x_ * x2_ + vec.y_ * y2_ + vec.z_ * z2_;
 
 	return result;
 }
