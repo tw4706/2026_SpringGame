@@ -11,15 +11,13 @@ namespace
 	constexpr float kSpeed = 8.0f;
 
 	constexpr float kCameraSpeed = 0.05f;
-
-	// プレイヤー基準位置から注視点までのベクトル
-	//const Vector3 kPlayerToTarget = { 0.0f, 290.0f, 0.0f };
 }
 
 Player::Player():
 	GameObject(pos_,vel_),
 	modelHandle_(-1),
-	angle_(0.0f)
+	cameraAngle_(0.0f),
+	moveAngle_(0.0f)
 {
 	pos_ = { -0.0f,0.0f,0.0f };
 }
@@ -39,7 +37,16 @@ void Player::Update(Input&input)
 {
 	//移動
 	Move(input);
+}
 
+void Player::Draw()
+{
+	MV1DrawModel(modelHandle_);
+}
+
+//移動
+void Player::Move(Input&input)
+{
 	vel_ = { 0.0f,0.0f,0.0f };
 
 	//入力に応じて速度を入れる
@@ -61,16 +68,27 @@ void Player::Update(Input&input)
 	}
 	if (input.IsPressed("cameraLeft"))
 	{
-		angle_ -= kCameraSpeed;
+		cameraAngle_ -= kCameraSpeed;
 	}
 	if (input.IsPressed("cameraRight"))
 	{
-		angle_ += kCameraSpeed;
+		cameraAngle_ += kCameraSpeed;
+	}
+
+	//左アナログスティックの取得
+	Vector3 stick = input.GetStickLeft();
+
+	if (fabs(stick.x_) > 0.2f || fabs(stick.z_) > 0.2f)
+	{
+		vel_.x_ = stick.x_ * kSpeed;
+		vel_.z_ = stick.z_ * kSpeed;
+
+		moveAngle_ = atan2f(-vel_.x_, vel_.z_);
 	}
 
 	//回転
-	Matrix4x4 rotMat = Matrix4x4::RotateY(angle_);
-	vel_ = rotMat.TransformForVector(vel_);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_+3.141592f);
+	//vel_ = rotMat.TransformForVector(vel_);
 
 	pos_ += vel_;
 
@@ -81,18 +99,8 @@ void Player::Update(Input&input)
 	Matrix4x4 scaleMat = Matrix4x4::Scale({ 100.0f,100.0f,100.0f });
 
 	//行列の合成
-	Matrix4x4 mat = scaleMat*rotMat * transMat;
+	Matrix4x4 mat = scaleMat * rotMat * transMat;
 	MV1SetMatrix(modelHandle_, mat.ToDxlibMatrix());
-}
-
-void Player::Draw()
-{
-	MV1DrawModel(modelHandle_);
-}
-
-//移動
-void Player::Move(Input&input)
-{
 }
 
 //攻撃

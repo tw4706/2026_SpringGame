@@ -17,6 +17,8 @@ public:
 
 	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 private:
+	float angle_;
+
 	//ƒJƒƒ‰‚Ì’‹“_
 	Vector3 cameraTarget_;
 	std::shared_ptr<Player>pPlayer_;

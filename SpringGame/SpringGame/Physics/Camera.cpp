@@ -10,6 +10,7 @@ namespace
 
 Camera::Camera():
 	GameObject(pos_, vel_),
+	angle_(0.0f),
 	cameraTarget_(0.0f,0.0f,0.0f)
 {
 }
@@ -23,7 +24,7 @@ void Camera::Init()
 {
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
-	float playerAngle = pPlayer_->GetAngle();
+	float playerAngle = pPlayer_->GetCameraAngle();
 	Matrix4x4 rotMat = Matrix4x4::RotateY(playerAngle);
 	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
 
@@ -46,10 +47,10 @@ void Camera::UpdateCamera()
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	//カメラはプレイヤーと同じ方向を見る
-	float playerAngle = pPlayer_->GetAngle();
+	float playerAngle = pPlayer_->GetCameraAngle();
 
 	//回転
-	Matrix4x4 rotMat = Matrix4x4::RotateY(-playerAngle);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(playerAngle);
 	Vector3 offset = rotMat.Transform(kTargetToCamera);
 
 	//カメラの位置

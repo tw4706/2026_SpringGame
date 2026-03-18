@@ -1,4 +1,5 @@
 #pragma once
+#include"../Physics/Vector3.h"
 #include<array>
 #include<map>
 #include<string>
@@ -21,10 +22,6 @@ struct InputState
 
 class Input
 {
-private:
-	std::map<std::string, std::vector<InputState>>inputTable_;	//イベント名と実際の入力の対応表
-	std::map<std::string, bool>inputData_;						//実際に入力されたかどうかのデータ
-	std::map<std::string, bool>lastInputData_;					//最後に入力されたかどうかのデータ
 public:
 	//初期化処理
 	Input();
@@ -34,5 +31,16 @@ public:
 	bool IsPressed(const char* name)const;
 	//ボタンが今押されたかどうか
 	bool IsTriggered(const char* name)const;
+
+	//スティック情報の取得
+	Vector3 GetStickLeft()const { return stickLeft_; }
+	Vector3 GetStickRight()const { return stickRight_; }
+private:
+	std::map<std::string, std::vector<InputState>>inputTable_;	//イベント名と実際の入力の対応表
+	std::map<std::string, bool>inputData_;						//実際に入力されたかどうかのデータ
+	std::map<std::string, bool>lastInputData_;					//最後に入力されたかどうかのデータ
+
+	Vector3 stickLeft_ = { 0.0f,0.0f,0.0f };
+	Vector3 stickRight_ = { 0.0f,0.0f,0.0f };
 };
 
