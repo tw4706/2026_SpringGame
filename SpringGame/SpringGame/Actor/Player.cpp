@@ -1,6 +1,6 @@
 #include "Player.h"
-#include "Vector3.h"
-#include"Input.h"
+#include"../Input.h"
+#include"../Physics/Vector3.h"
 #include<Dxlib.h>
 
 namespace
