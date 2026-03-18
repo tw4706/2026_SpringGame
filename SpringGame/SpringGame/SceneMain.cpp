@@ -21,15 +21,22 @@ SceneMain::~SceneMain()
 void SceneMain::Init()
 {
 	// カリングの設定（裏面のポリゴンは見えないようにする）
-	SetUseBackCulling(true);
+	SetUseBackCulling(false);
 
 	// Zバッファの設定
 	SetUseZBuffer3D(true);		// Zバッファを使います
 	SetWriteZBuffer3D(true);	// 描画する物体はZバッファにも距離を書き込む
 
+	//SetUseLighting(TRUE);
+	//SetLightDirection(VGet(0.0f, -1.0f, 0.0f));
+	//// ディフューズライト
+	//SetLightDifColor(GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+	//// 環境光
+	//SetLightAmbColor(GetColorF(0.3f, 0.3f, 0.3f, 1.0f));
+
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
-	SetCameraNearFar(200.0f, 1500.0f);
+	SetCameraNearFar(1.0f, 1500.0f);
 
 	//各クラスの初期化処理
 	pEnemy_->Init();
@@ -62,20 +69,42 @@ void SceneMain::Draw()
 
 void SceneMain::DrawGrid()
 {
-	// 直線の始点と終点
-	VECTOR startPos;
-	VECTOR endPos;
+	//// 直線の始点と終点
+	//VECTOR startPos;
+	//VECTOR endPos;
 
-	for (int z = -300; z <= 300; z += 100)
+	//for (int z = -300; z <= 300; z += 100)
+	//{
+	//	startPos = VGet(-300.0f, 0.0f, static_cast<float>(z));
+	//	endPos = VGet(300.0f, 0.0f, static_cast<float>(z));
+	//	DrawLine3D(startPos, endPos, 0xff0000);
+	//}
+	//for (int x = -300; x <= 300; x += 100)
+	//{
+	//	startPos = VGet(static_cast<float>(x), 0.0f, -300.0f);
+	//	endPos = VGet(static_cast<float>(x), 0.0f, 300.0f);
+	//	DrawLine3D(startPos, endPos, 0x0000ff);
+	//}
+
+	const int GRID_NUM = 6;      // 片側のマス数
+	const float TILE_SIZE = 100.0f;
+
+	for (int z = -GRID_NUM; z < GRID_NUM; z++)
 	{
-		startPos = VGet(-300.0f, 0.0f, static_cast<float>(z));
-		endPos = VGet(300.0f, 0.0f, static_cast<float>(z));
-		DrawLine3D(startPos, endPos, 0xff0000);
-	}
-	for (int x = -300; x <= 300; x += 100)
-	{
-		startPos = VGet(static_cast<float>(x), 0.0f, -300.0f);
-		endPos = VGet(static_cast<float>(x), 0.0f, 300.0f);
-		DrawLine3D(startPos, endPos, 0x0000ff);
+		for (int x = -GRID_NUM; x < GRID_NUM; x++)
+		{
+			VECTOR v1 = VGet(x * TILE_SIZE, 0.0f, z * TILE_SIZE);
+			VECTOR v2 = VGet((x + 1) * TILE_SIZE, 0.0f, z * TILE_SIZE);
+			VECTOR v3 = VGet((x + 1) * TILE_SIZE, 0.0f, (z + 1) * TILE_SIZE);
+			VECTOR v4 = VGet(x * TILE_SIZE, 0.0f, (z + 1) * TILE_SIZE);
+
+			int color = ((x + z) & 1)
+				? GetColor(60, 120, 60)
+				: GetColor(80, 160, 80);
+
+			// 三角形2枚で四角形
+			DrawTriangle3D(v1, v2, v3, color, TRUE);
+			DrawTriangle3D(v1, v3, v4, color, TRUE);
+		}
 	}
 }
