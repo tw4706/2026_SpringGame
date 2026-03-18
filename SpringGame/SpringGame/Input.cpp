@@ -35,13 +35,8 @@ void Input::Update()
 	int padState = GetJoypadInputState(DX_INPUT_PAD1);
 	lastInputData_ = inputData_;
 
-	//アナログスティック情報の取得
-	int bufX, bufY;
-	GetJoypadAnalogInput(&bufX, &bufY, DX_INPUT_PAD1);
-
-	//スティックの上限・下限を設定する
-	stickLeft_.x_ = bufX / 1000.0f;
-	stickLeft_.z_ = -bufY / 1000.0f;
+	//アナログスティックの更新
+	UpdateAnalogStick();
 
 	//すべての入力イベントをチェック
 	for (const auto& inputInfo : inputTable_)
@@ -75,4 +70,23 @@ bool Input::IsPressed(const char* name) const
 bool Input::IsTriggered(const char* name) const
 {
 	return inputData_.at(name) && !lastInputData_.at(name);
+}
+
+void Input::UpdateAnalogStick()
+{
+	//左アナログスティック情報の取得
+	int bufX, bufY;
+	GetJoypadAnalogInput(&bufX, &bufY, DX_INPUT_PAD1);
+
+	//スティックの上限・下限を設定する
+	stickLeft_.x_ = bufX / 1000.0f;
+	stickLeft_.z_ = -bufY / 1000.0f;
+
+	//右アナログスティック情報の取得
+	int rx, ry;
+	GetJoypadAnalogInputRight(&rx, &ry, DX_INPUT_PAD1);
+
+	//左の時と同様に上限・下限を設定する
+	stickRight_.x_ = -rx / 1000.0f;
+	stickRight_.z_ = ry / 1000.0f;
 }

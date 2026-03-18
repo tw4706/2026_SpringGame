@@ -13,8 +13,8 @@ namespace
 	constexpr float kCameraSpeed = 0.05f;
 }
 
-Player::Player():
-	GameObject(pos_,vel_),
+Player::Player() :
+	GameObject(pos_, vel_),
 	modelHandle_(-1),
 	cameraAngle_(0.0f),
 	moveAngle_(0.0f)
@@ -33,7 +33,7 @@ void Player::Init()
 	assert(modelHandle_ >= 0);
 }
 
-void Player::Update(Input&input)
+void Player::Update(Input& input)
 {
 	//移動
 	Move(input);
@@ -45,52 +45,63 @@ void Player::Draw()
 }
 
 //移動
-void Player::Move(Input&input)
+void Player::Move(Input& input)
 {
 	vel_ = { 0.0f,0.0f,0.0f };
 
 	//入力に応じて速度を入れる
-	if (input.IsPressed("up"))
-	{
-		vel_.z_ += kSpeed;
-	}
-	if (input.IsPressed("down"))
-	{
-		vel_.z_ -= kSpeed;
-	}
-	if (input.IsPressed("left"))
-	{
-		vel_.x_ -= kSpeed;
-	}
-	if (input.IsPressed("right"))
-	{
-		vel_.x_ += kSpeed;
-	}
-	if (input.IsPressed("cameraLeft"))
-	{
-		cameraAngle_ -= kCameraSpeed;
-	}
-	if (input.IsPressed("cameraRight"))
-	{
-		cameraAngle_ += kCameraSpeed;
-	}
+	if (input.IsPressed("up"))				vel_.z_ += kSpeed;
+	if (input.IsPressed("down"))			vel_.z_ -= kSpeed;
+	if (input.IsPressed("left"))			vel_.x_ -= kSpeed;
+	if (input.IsPressed("right"))			vel_.x_ += kSpeed;
 
-	//左アナログスティックの取得
-	Vector3 stick = input.GetStickLeft();
+	//アナログスティックの更新
+	UpdateAnalogStick(input);
 
-	if (fabs(stick.x_) > 0.2f || fabs(stick.z_) > 0.2f)
-	{
-		vel_.x_ = stick.x_ * kSpeed;
-		vel_.z_ = stick.z_ * kSpeed;
-
-		moveAngle_ = atan2f(-vel_.x_, vel_.z_);
-	}
-
-	//回転
-	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_+3.141592f);
-	//vel_ = rotMat.TransformForVector(vel_);
-
+	//位置の反映
 	pos_ += vel_;
+
+	//行列の更新
+	UpdateMatrix();
+}
+
+//攻撃
+void Player::Attack(Input& input)
+{
+}
+
+void Player::UpdateAnalogStick(Input& input)
+{
+	//左アナログスティックの取得
+	Vector3 stickL = input.GetStickLeft();
+	Vector3 stickR = input.GetStickRight();
+
+	//左スティックでプレイヤー操作
+	if (fabs(stickL.x_) > 0.2f || fabs(stickL.z_) > 0.2f)
+	{
+		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraAngle_);
+
+		Vector3 playerDir = rotMat.TransformForVector(stickL);
+
+		//移動
+		vel_.x_ = playerDir.x_ * kSpeed;
+		vel_.z_ = playerDir.z_ * kSpeed;
+
+		//プレイヤーの向き
+		moveAngle_ = atan2f(-playerDir.x_, playerDir.z_);
+	}
+
+	//右スティックでカメラ操作
+	if (fabs(stickR.x_) > 0.1f)
+	{
+		cameraAngle_ += stickR.x_ * kCameraSpeed;
+	}
+}
+
+void Player::UpdateMatrix()
+{
+	//回転
+	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_ + 3.141592f);
 
 	//移動
 	Matrix4x4 transMat = Matrix4x4::Translate(pos_);
@@ -101,11 +112,6 @@ void Player::Move(Input&input)
 	//行列の合成
 	Matrix4x4 mat = scaleMat * rotMat * transMat;
 	MV1SetMatrix(modelHandle_, mat.ToDxlibMatrix());
-}
-
-//攻撃
-void Player::Attack(Input& input)
-{
 }
 
 Vector3 Player::GetCameraTarget() const

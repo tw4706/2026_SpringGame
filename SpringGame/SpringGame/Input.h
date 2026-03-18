@@ -32,6 +32,9 @@ public:
 	//ボタンが今押されたかどうか
 	bool IsTriggered(const char* name)const;
 
+	//アナログスティックの更新
+	void UpdateAnalogStick();
+
 	//スティック情報の取得
 	Vector3 GetStickLeft()const { return stickLeft_; }
 	Vector3 GetStickRight()const { return stickRight_; }

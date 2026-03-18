@@ -13,8 +13,16 @@ public:
 	void Update(Input&input);
 	void Draw()override;
 
+	//移動処理
 	void Move(Input& input);
+	//攻撃処理
 	void Attack(Input& input);
+
+	//アナログスティックの更新処理
+	void UpdateAnalogStick(Input& input);
+
+	//行列の更新処理
+	void UpdateMatrix();
 
 	//プレイヤーの位置を取得
 	Vector3 GetPos()const{ return pos_; }
