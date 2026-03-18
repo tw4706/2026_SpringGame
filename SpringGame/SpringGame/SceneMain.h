@@ -1,4 +1,9 @@
 #pragma once
+#include<memory>
+
+class Enemy;
+class Player;
+class Input;
 class SceneMain
 {
 public:
@@ -6,13 +11,15 @@ public:
 	~SceneMain();
 
 	void Init();
-	void Update();
+	void Update(Input& input);
 	void Draw();
 
 private:
 	void DrawGrid();
 
 private:
-	int m_frameCount;
+	int frameCount_;
+	std::shared_ptr<Enemy>pEnemy_;
+	std::shared_ptr<Player>pPlayer_;
 };
 

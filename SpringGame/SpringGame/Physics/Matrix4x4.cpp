@@ -1,7 +1,7 @@
 #include "Matrix4x4.h"
 #include <cmath>
 
-Matrix4x4::Matrix4x4():
+Matrix4x4::Matrix4x4() :
 	x0_(0.0f), x1_(0.0f), x2_(0.0f), x3_(0.0f),
 	y0_(0.0f), y1_(0.0f), y2_(0.0f), y3_(0.0f),
 	z0_(0.0f), z1_(0.0f), z2_(0.0f), z3_(0.0f),
@@ -9,15 +9,25 @@ Matrix4x4::Matrix4x4():
 {
 }
 
-Matrix4x4::Matrix4x4(float x0, float x1, float x2, float x3, 
-	float y0, float y1, float y2, float y3, 
+Matrix4x4::Matrix4x4(float x0, float x1, float x2, float x3,
+	float y0, float y1, float y2, float y3,
 	float z0, float z1, float z2, float z3,
-	float w0, float w1, float w2, float w3):
+	float w0, float w1, float w2, float w3) :
 	x0_(x0), x1_(x1), x2_(x2), x3_(x3),
 	y0_(y0), y1_(y1), y2_(y2), y3_(y3),
 	z0_(z0), z1_(z1), z2_(z2), z3_(z3),
 	w0_(w0), w1_(w1), w2_(w2), w3_(w3)
 {
+}
+
+//íPà çsóÒ
+Matrix4x4 Matrix4x4::Identity()
+{
+	return Matrix4x4(
+		1, 0, 1, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
 }
 
 Matrix4x4 Matrix4x4::operator+(const Matrix4x4& other) const
@@ -113,45 +123,76 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const
 	return mat;
 }
 
-void Matrix4x4::RotateX(float angle)
+//Xé≤âÒì]
+Matrix4x4 Matrix4x4::RotateX(float angle)
 {
-	x0_ = 1.0f;
-	y1_ = cosf(angle);
-	y2_ = -sinf(angle);
-	z1_ = sinf(angle);
-	z2_ = cosf(angle);
-	w3_ = 1.0f;
+	return Matrix4x4(
+		1, 0, 0, 0,
+		0, cosf(angle), -sinf(angle), 0,
+		0, sinf(angle), cosf(angle), 0,
+		0, 0, 0, 1);
 }
 
-void Matrix4x4::RotateY(float angle)
+//Yé≤âÒì]
+Matrix4x4 Matrix4x4::RotateY(float angle)
 {
-	x0_ = cosf(angle);
-	x2_ = sinf(angle);
-	y1_ = 1.0f;
-	z0_ = -sinf(angle);
-	z2_ = cosf(angle);
-	w3_ = 1.0f;
+	return Matrix4x4(
+		cosf(angle), 0, sinf(angle), 0,
+		0, 1, 0, 0,
+		-sinf(angle), 0, cosf(angle), 0,
+		0, 0, 0, 1);
 }
 
-void Matrix4x4::RotateZ(float angle)
+//Zé≤âÒì]
+Matrix4x4 Matrix4x4::RotateZ(float angle)
 {
-	x0_ = cosf(angle);
-	x1_ = -sinf(angle);
-	y0_ = sinf(angle);
-	y1_ = cosf(angle);
-	z2_ = 1.0f;
-	w3_ = 1.0f;
+	return Matrix4x4(
+		cosf(angle), -sinf(angle), 0, 0,
+		sinf(angle), cosf(angle), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
 }
 
 //ïΩçsà⁄ìÆ
-void Matrix4x4::Translate(float x, float y, float z)
+Matrix4x4 Matrix4x4::Translate(const Vector3& vec)
 {
-	x0_ = 1.0f;
-	y1_ = 1.0f;
-	z2_ = 1.0f;
-	w3_ = 1.0f;
-	w0_ = x;
-	w1_ = y;
-	w2_ = z;
+	return Matrix4x4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		vec.x_, vec.y_, vec.z_, 1);
 }
 
+Matrix4x4 Matrix4x4::Scale(const Vector3& vec)
+{
+	return Matrix4x4(
+		vec.x_, 0, 0, 0,
+		0, vec.y_, 0, 0,
+		0, 0, vec.z_, 0,
+		0, 0, 0, 1);
+}
+
+//ÉxÉNÉgÉãÇ∆çsóÒÇÃä|ÇØéZ
+Vector3 Matrix4x4::Transform(const Vector3& vec) const
+{
+	Vector3 result;
+
+	result.x_ = vec.x_ * x0_ + vec.y_ * y0_ + vec.z_ * z0_ + w0_;
+	result.y_ = vec.x_ * x1_ + vec.y_ * y1_ + vec.z_ * z1_ + w1_;
+	result.z_ = vec.x_ * x2_ + vec.y_ * y2_ + vec.z_ * z2_ + w2_;
+
+	return result;
+}
+
+//é©çÏÇÃçsóÒÇDxlibÇÃçsóÒÇ…ïœä∑
+MATRIX Matrix4x4::ToDxlibMatrix() const
+{
+	MATRIX mat;
+
+	mat.m[0][0] = x0_; mat.m[0][1] = x1_; mat.m[0][2] = x2_; mat.m[0][3] = x3_;
+	mat.m[1][0] = y0_; mat.m[1][1] = y1_; mat.m[1][2] = y2_; mat.m[1][3] = y3_;
+	mat.m[2][0] = z0_; mat.m[2][1] = z1_; mat.m[2][2] = z2_; mat.m[2][3] = z3_;
+	mat.m[3][0] = w0_; mat.m[3][1] = w1_; mat.m[3][2] = w2_; mat.m[3][3] = w3_;
+
+	return mat;
+}

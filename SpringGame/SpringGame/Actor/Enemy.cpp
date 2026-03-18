@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "../Physics/Vector3.h"
 #include<Dxlib.h>
+#include<cassert>
 
 Enemy::Enemy() :
 	GameObject(pos_, vel_),
@@ -17,6 +18,7 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
 	modelHandle_ = MV1LoadModel("data/Enemy.mv1");
+	assert(modelHandle_ >= 0);
 	MV1SetPosition(modelHandle_, pos_.ToDxlibVector(pos_));
 	MV1SetScale(modelHandle_, VGet(100.0f, 100.0f, 100.0f));
 }

@@ -15,6 +15,9 @@ public:
 			  float z0, float z1, float z2, float z3,
 		float w0, float w1, float w2, float w3);
 
+	//’PˆÊs—ñ
+	static Matrix4x4 Identity();
+
 	//s—ñ‚Ì‘«‚µZ
 	Matrix4x4 operator+(const Matrix4x4& other) const;
 
@@ -25,15 +28,25 @@ public:
 	Matrix4x4 operator*(const Matrix4x4& other) const;
 
 	//X²‰ñ“]
-	void RotateX(float angle);
+	static Matrix4x4 RotateX(float angle);
 
 	//Y²‰ñ“]
-	void RotateY(float angle);
+	static Matrix4x4 RotateY(float angle);
 
 	//Z²‰ñ“]
-	void RotateZ(float angle);
+	static Matrix4x4 RotateZ(float angle);
 
 	//•½sˆÚ“®
-	void Translate(float x,float y,float z);
+	static Matrix4x4 Translate(const Vector3& vec);
+
+	//Šg‘åk¬
+	static Matrix4x4 Scale(const Vector3& vec);
+
+	//ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z
+	Vector3 Transform(const Vector3& vec)const;
+
+	//Dxlib‚Ìs—ñ‚É•ÏŠ·
+	MATRIX ToDxlibMatrix()const;
+
 };
 

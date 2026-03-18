@@ -38,9 +38,6 @@ public:
 	Vector3 Cross(const Vector3& other) const;
 
 	//Dxlib‚ÌVECTOR‚É•ÏŠ·
-	VECTOR ToDxlibVector(const Vector3& vec)
-	{
-		return VGet(vec.x_, vec.y_, vec.z_);
-	}
+	VECTOR ToDxlibVector(const Vector3& vec) { return VGet(vec.x_, vec.y_, vec.z_); }
 };
 

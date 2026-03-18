@@ -2,6 +2,7 @@
 #include"../Input.h"
 #include"../Physics/Vector3.h"
 #include<Dxlib.h>
+#include<cassert>
 
 namespace
 {
@@ -11,9 +12,10 @@ namespace
 
 Player::Player():
 	GameObject(pos_,vel_),
-	modelHandle_(-1)
+	modelHandle_(-1),
+	angle_(0.0f)
 {
-	pos_ = { -400.0f,0.0f,0.0f };
+	pos_ = { -0.0f,0.0f,0.0f };
 }
 
 Player::~Player()
@@ -24,7 +26,9 @@ Player::~Player()
 void Player::Init()
 {
 	modelHandle_ = MV1LoadModel("data/Player.mv1");
+	assert(modelHandle_ >= 0);
 	MV1SetPosition(modelHandle_,pos_.ToDxlibVector(pos_));
+	MV1SetScale(modelHandle_, VGet(100.0f, 100.0f, 100.0f));
 }
 
 void Player::Update(Input&input)
@@ -45,6 +49,8 @@ void Player::Draw()
 //ˆÚ“®
 void Player::Move(Input&input)
 {
+	vel_ = { 0.0f,0.0f,0.0f };
+
 	//“ü—Í‚É‰‚¶‚Ä‘¬“x‚ğ“ü‚ê‚é
 	if (input.IsPressed("up"))
 	{
@@ -67,4 +73,9 @@ void Player::Move(Input&input)
 //UŒ‚
 void Player::Attack(Input& input)
 {
+}
+
+Vector3 Player::GetCameraTarget() const
+{
+	return Vector3();
 }
