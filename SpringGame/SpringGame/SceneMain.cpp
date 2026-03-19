@@ -27,13 +27,6 @@ void SceneMain::Init()
 	SetUseZBuffer3D(true);		// Zバッファを使います
 	SetWriteZBuffer3D(true);	// 描画する物体はZバッファにも距離を書き込む
 
-	//SetUseLighting(TRUE);
-	//SetLightDirection(VGet(0.0f, -1.0f, 0.0f));
-	//// ディフューズライト
-	//SetLightDifColor(GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-	//// 環境光
-	//SetLightAmbColor(GetColorF(0.3f, 0.3f, 0.3f, 1.0f));
-
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
 	SetCameraNearFar(1.0f, 1500.0f);
@@ -98,9 +91,7 @@ void SceneMain::DrawGrid()
 			VECTOR v3 = VGet((x + 1) * TILE_SIZE, 0.0f, (z + 1) * TILE_SIZE);
 			VECTOR v4 = VGet(x * TILE_SIZE, 0.0f, (z + 1) * TILE_SIZE);
 
-			int color = ((x + z) & 1)
-				? GetColor(60, 120, 60)
-				: GetColor(80, 160, 80);
+			int color = GetColor(80, 160, 80);
 
 			// 三角形2枚で四角形
 			DrawTriangle3D(v1, v2, v3, color, TRUE);
