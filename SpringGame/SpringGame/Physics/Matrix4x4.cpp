@@ -113,45 +113,96 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const
 	return mat;
 }
 
-void Matrix4x4::RotateX(float angle)
+Matrix4x4 Matrix4x4::RotateX(float angle)
 {
-	x0_ = 1.0f;
-	y1_ = cosf(angle);
-	y2_ = -sinf(angle);
-	z1_ = sinf(angle);
-	z2_ = cosf(angle);
-	w3_ = 1.0f;
+	Matrix4x4 mat;
+
+	mat.x0_ = 1.0f;
+	mat.y1_ = cosf(angle);
+	mat.y2_ = -sinf(angle);
+	mat.z1_ = sinf(angle);
+	mat.z2_ = cosf(angle);
+	mat.w3_ = 1.0f;
+
+	return mat;
 }
 
-void Matrix4x4::RotateY(float angle)
+Matrix4x4 Matrix4x4::RotateY(float angle)
 {
-	x0_ = cosf(angle);
-	x2_ = sinf(angle);
-	y1_ = 1.0f;
-	z0_ = -sinf(angle);
-	z2_ = cosf(angle);
-	w3_ = 1.0f;
+	Matrix4x4 mat;
+
+	mat.x0_ = cosf(angle);
+	mat.x2_ = sinf(angle);
+	mat.y1_ = 1.0f;
+	mat.z0_ = -sinf(angle);
+	mat.z2_ = cosf(angle);
+	mat.w3_ = 1.0f;
+
+	return mat;
 }
 
-void Matrix4x4::RotateZ(float angle)
+Matrix4x4 Matrix4x4::RotateZ(float angle)
 {
-	x0_ = cosf(angle);
-	x1_ = -sinf(angle);
-	y0_ = sinf(angle);
-	y1_ = cosf(angle);
-	z2_ = 1.0f;
-	w3_ = 1.0f;
+	Matrix4x4 mat;
+
+	mat.x0_ = cosf(angle);
+	mat.x1_ = -sinf(angle);
+	mat.y0_ = sinf(angle);
+	mat.y1_ = cosf(angle);
+	mat.z2_ = 1.0f;
+	mat.w3_ = 1.0f;
+
+	return mat;
 }
 
 //ïΩçsà⁄ìÆ
-void Matrix4x4::Translate(float x, float y, float z)
+Matrix4x4 Matrix4x4::Translate(float x, float y, float z)
 {
-	x0_ = 1.0f;
-	y1_ = 1.0f;
-	z2_ = 1.0f;
-	w3_ = 1.0f;
-	w0_ = x;
-	w1_ = y;
-	w2_ = z;
+	Matrix4x4 mat;
+
+	mat.x0_ = 1.0f;
+	mat.y1_ = 1.0f;
+	mat.z2_ = 1.0f;
+	mat.w3_ = 1.0f;
+
+	mat.w0_ = x;
+	mat.w1_ = y;
+	mat.w2_ = z;
+
+	return mat;
+}
+
+Matrix4x4 Matrix4x4::Scale(float x, float y, float z)
+{
+	Matrix4x4 mat;
+
+	mat.x0_ = x;
+	mat.y1_ = y;
+	mat.z2_ = z;
+	mat.w3_ = 1.0f;
+
+	return mat;
+}
+
+Vector3 Matrix4x4::TransformForVector(const Vector3& vec) const
+{
+	return Vector3(
+		vec.x_ * x0_ + vec.y_ * y0_ + vec.z_ * z0_ + w0_,
+		vec.x_ * x1_ + vec.y_ * y1_ + vec.z_ * z1_ + w1_,
+		vec.x_ * x2_ + vec.y_ * y2_ + vec.z_ * z2_ + w2_
+	);
+}
+
+//çsóÒÇDxlibópÇ…ïœä∑
+MATRIX Matrix4x4::ToDxLibMatrix()
+{
+	MATRIX m{};
+
+	m.m[0][0] = x0_; m.m[0][1] = x1_; m.m[0][2] = x2_; m.m[0][3] = x3_;
+	m.m[1][0] = y0_; m.m[1][1] = y1_; m.m[1][2] = y2_; m.m[1][3] = y3_;
+	m.m[2][0] = z0_; m.m[2][1] = z1_; m.m[2][2] = z2_; m.m[2][3] = z3_;
+	m.m[3][0] = w0_; m.m[3][1] = w1_; m.m[3][2] = w2_; m.m[3][3] = w3_;
+
+	return m;
 }
 

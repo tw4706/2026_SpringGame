@@ -1,5 +1,6 @@
 #pragma once
 #include"Vector3.h"
+#include<Dxlib.h>
 
 class Matrix4x4
 {
@@ -25,15 +26,24 @@ public:
 	Matrix4x4 operator*(const Matrix4x4& other) const;
 
 	//X²‰ñ“]
-	void RotateX(float angle);
+	static Matrix4x4 RotateX(float angle);
 
 	//Y²‰ñ“]
-	void RotateY(float angle);
+	static Matrix4x4 RotateY(float angle);
 
 	//Z²‰ñ“]
-	void RotateZ(float angle);
+	static Matrix4x4 RotateZ(float angle);
 
 	//•½sˆÚ“®
-	void Translate(float x,float y,float z);
+	static Matrix4x4 Translate(float x,float y,float z);
+
+	//Šgk
+	static Matrix4x4 Scale(float x, float y, float z);
+
+	//ƒxƒNƒgƒ‹•ÏŠ·
+	Vector3 TransformForVector(const Vector3& v) const;
+
+	// DxLib‚ÌMatrix‚É•ÏŠ·
+	MATRIX ToDxLibMatrix(); // Œ^‚Íg‚Á‚Ä‚é‘¤‚É‡‚í‚¹‚é
 };
 

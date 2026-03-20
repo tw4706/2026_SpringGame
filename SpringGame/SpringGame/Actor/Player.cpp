@@ -88,7 +88,17 @@ void Player::UpdateAnalogStick(Input& input)
 		vel_.z_ = playerDir.z_ * kSpeed;
 
 		//プレイヤーの向き
-		moveAngle_ = atan2f(-playerDir.x_, playerDir.z_);
+		float playerAngle = atan2f(-playerDir.x_, playerDir.z_);
+
+		float diff = playerAngle - moveAngle_;
+
+		//角度の上限と下限を設定する(diffが180度以上の間は角度を
+		// 360引くことで違和感なく回転して見える。マイナスは逆のことをしているだけ)
+		while (diff > 3.141592f) diff -= 6.28318f;
+		while (diff < -3.141592f) diff += 6.28318f;
+
+		// 補間
+		moveAngle_ += diff * 0.2f;
 	}
 
 	//右スティックでカメラ操作
@@ -104,14 +114,14 @@ void Player::UpdateMatrix()
 	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_ + 3.141592f);
 
 	//移動
-	Matrix4x4 transMat = Matrix4x4::Translate(pos_);
+	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
 
 	//拡縮
-	Matrix4x4 scaleMat = Matrix4x4::Scale({ 100.0f,100.0f,100.0f });
+	Matrix4x4 scaleMat = Matrix4x4::Scale(100.0f, 100.0f, 100.0f);
 
 	//行列の合成
 	Matrix4x4 mat = scaleMat * rotMat * transMat;
-	MV1SetMatrix(modelHandle_, mat.ToDxlibMatrix());
+	MV1SetMatrix(modelHandle_, mat.ToDxLibMatrix());
 }
 
 Vector3 Player::GetCameraTarget() const
