@@ -11,6 +11,9 @@ public :
 	virtual void Update()abstract;
 	virtual void Draw()abstract;
 
+	//Õ“Ë”»’è
+	virtual void OnCollision(GameObject* other) {}
+
 protected:
 	Vector3 pos_;
 	Vector3 vel_;

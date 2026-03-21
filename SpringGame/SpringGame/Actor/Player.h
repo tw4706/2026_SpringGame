@@ -1,5 +1,6 @@
 #pragma once
 #include "../GameObject.h"
+#include "../Physics/SphereCollider.h"
 
 class Input;
 class Player :public GameObject
@@ -32,9 +33,16 @@ public:
 	//カメラの注視点の取得
 	Vector3 GetCameraTarget()const;
 
+	SphereCollider* GetCollider() { return &collider_; }
+
+	void OnCollision(GameObject* other);
+
 private:
 	int modelHandle_;
 	float cameraAngle_; //カメラ用の角度
 	float moveAngle_;	//プレイヤーの移動用の角度
+	bool isHit_;//衝突判定用フラグ
+
+	SphereCollider collider_;
 };
 

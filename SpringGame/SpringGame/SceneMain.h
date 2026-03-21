@@ -1,5 +1,6 @@
 #pragma once
 #include<memory>
+#include"../Physics/CollisionManager.h"
 
 class Enemy;
 class Player;
@@ -23,5 +24,6 @@ private:
 	std::shared_ptr<Enemy>pEnemy_;
 	std::shared_ptr<Player>pPlayer_;
 	std::shared_ptr<Camera>pCamera_;
+	CollisionManager collisionManager_;
 };
 

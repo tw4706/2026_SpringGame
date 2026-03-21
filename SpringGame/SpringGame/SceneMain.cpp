@@ -46,6 +46,16 @@ void SceneMain::Update(Input&input)
 	pEnemy_->Update();
 	pPlayer_->Update(input);
 	pCamera_->Update();
+
+	//“–‚½‚è”»’è‚Ìˆ—
+	collisionManager_.Clear();
+
+	//“–‚½‚è”»’è‚Ì“o˜^
+	collisionManager_.AddCollider(pPlayer_->GetCollider());
+	collisionManager_.AddCollider(pEnemy_->GetCollider());
+
+	//Õ“Ë”»’è
+	collisionManager_.CheckAllCollision();
 }
 
 void SceneMain::Draw()

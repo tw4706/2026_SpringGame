@@ -139,6 +139,8 @@
   <ItemGroup>
     <ClCompile Include="Actor\Enemy.cpp" />
     <ClCompile Include="Actor\Player.cpp" />
+    <ClCompile Include="Physics\Collider.cpp" />
+    <ClCompile Include="Physics\CollisionManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
@@ -146,21 +148,29 @@
     <ClCompile Include="Physics\Camera.cpp" />
     <ClCompile Include="Physics\Vector3.cpp" />
     <ClCompile Include="SceneMain.cpp" />
+    <ClCompile Include="Physics\SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Enemy.h" />
     <ClInclude Include="Actor\Player.h" />
+    <ClInclude Include="Physics\Collider.h" />
+    <ClInclude Include="Physics\CollisionManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Physics\Matrix4x4.h" />
     <ClInclude Include="Physics\Camera.h" />
     <ClInclude Include="Physics\Vector3.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SceneMain.h" />
+    <ClInclude Include="Physics\SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />
     <None Include="data\Player.mv1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SpringGame.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,7 @@
 #pragma once
 #include "../GameObject.h"
+#include "../Physics/SphereCollider.h"
+
 class Enemy :public GameObject
 {
 public:
@@ -10,7 +12,13 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	SphereCollider* GetCollider() { return &collider_; }
+
+	void OnCollision(GameObject* other);
+
 private:
 	int modelHandle_;
+	SphereCollider collider_;
+	bool isHit_;
 };
 

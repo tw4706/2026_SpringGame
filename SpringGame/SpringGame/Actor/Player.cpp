@@ -2,24 +2,39 @@
 #include"../Input.h"
 #include"../Physics/Matrix4x4.h"
 #include"../Physics/Vector3.h"
+#include "../Actor/Enemy.h"
 #include<Dxlib.h>
 #include<cassert>
 
 namespace
 {
+	//初期位置
+	const Vector3 kFirstPos = { 0.0f,0.0f,0.0f };
+
 	//プレイヤーの移動速度
 	constexpr float kSpeed = 8.0f;
 
 	constexpr float kCameraSpeed = 0.05f;
+
+	//当たり判定のサイズ
+	constexpr float kColSize = 50.0f;
+
+	const Vector3 kColOffset = { 0.0f,100.0f,0.0f };
+
+	//モデルのサイズ
+	constexpr float kModelScal = 100.0f;
 }
 
 Player::Player() :
 	GameObject(pos_, vel_),
 	modelHandle_(-1),
 	cameraAngle_(0.0f),
-	moveAngle_(0.0f)
+	moveAngle_(0.0f),
+	collider_(kColSize),
+	isHit_(false)
 {
-	pos_ = { -0.0f,0.0f,0.0f };
+	pos_ = kFirstPos;
+	collider_.SetOwner(this);
 }
 
 Player::~Player()
@@ -35,6 +50,10 @@ void Player::Init()
 
 void Player::Update(Input& input)
 {
+	isHit_ = false;
+
+	collider_.SetPos(pos_ + kColOffset);
+
 	//移動
 	Move(input);
 }
@@ -42,6 +61,14 @@ void Player::Update(Input& input)
 void Player::Draw()
 {
 	MV1DrawModel(modelHandle_);
+
+	// 当たり判定の描画
+	unsigned int color = isHit_ ? 0xff0000 : 0x00ff00;
+
+	DrawSphere3D(
+		collider_.GetPos().ToDxlibVector(),  // 中心
+		collider_.GetRadian(),				// 半径
+		16, color, color, FALSE);
 }
 
 //移動
@@ -117,7 +144,7 @@ void Player::UpdateMatrix()
 	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
 
 	//拡縮
-	Matrix4x4 scaleMat = Matrix4x4::Scale(100.0f, 100.0f, 100.0f);
+	Matrix4x4 scaleMat = Matrix4x4::Scale(kModelScal, kModelScal, kModelScal);
 
 	//行列の合成
 	Matrix4x4 mat = scaleMat * rotMat * transMat;
@@ -127,4 +154,13 @@ void Player::UpdateMatrix()
 Vector3 Player::GetCameraTarget() const
 {
 	return pos_;
+}
+
+void Player::OnCollision(GameObject* other)
+{
+	// 相手がEnemyかチェック
+	if (dynamic_cast<Enemy*>(other))
+	{
+		isHit_ = true;
+	}
 }
