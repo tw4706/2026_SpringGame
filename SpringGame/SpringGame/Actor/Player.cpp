@@ -46,6 +46,9 @@ void Player::Init()
 {
 	modelHandle_ = MV1LoadModel("data/Player.mv1");
 	assert(modelHandle_ >= 0);
+
+	animation_.Init(modelHandle_);
+	animation_.ChangeState(AnimationState::Idle);
 }
 
 void Player::Update(Input& input)
@@ -56,6 +59,9 @@ void Player::Update(Input& input)
 
 	//移動
 	Move(input);
+
+	//アニメーションの更新
+	animation_.Update(1.0f / 60.0f);
 }
 
 void Player::Draw()
@@ -90,6 +96,16 @@ void Player::Move(Input& input)
 
 	//行列の更新
 	UpdateMatrix();
+
+	//移動してるかどうかでアニメーションを変更する
+	if (fabs(vel_.x_) > 0.01f || fabs(vel_.z_) > 0.01f)
+	{
+		animation_.ChangeState(AnimationState::Run);
+	}
+	else
+	{
+		animation_.ChangeState(AnimationState::Idle);
+	}
 }
 
 //攻撃

@@ -1,6 +1,7 @@
 #pragma once
 #include "../GameObject.h"
 #include "../Physics/SphereCollider.h"
+#include"../Animation.h"
 
 class Input;
 class Player :public GameObject
@@ -43,6 +44,7 @@ private:
 	float moveAngle_;	//プレイヤーの移動用の角度
 	bool isHit_;//衝突判定用フラグ
 
-	SphereCollider collider_;
+	SphereCollider collider_;//当たり判定用変数
+	Animation animation_;
 };
 
