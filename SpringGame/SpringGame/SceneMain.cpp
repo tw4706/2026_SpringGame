@@ -34,6 +34,7 @@ void SceneMain::Init()
 	//ŠeƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—
 	pEnemy_->Init();
 	pPlayer_->Init();
+	pEnemy_->SetPlayer(pPlayer_.get());
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
 }

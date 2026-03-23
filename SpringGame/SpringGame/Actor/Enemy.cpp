@@ -3,6 +3,8 @@
 #include "../Actor/Player.h"
 #include<Dxlib.h>
 #include<cassert>
+#include<cmath>
+#include<algorithm>
 
 namespace
 {
@@ -14,10 +16,19 @@ namespace
 
 	//モデルのサイズ
 	const VECTOR kModelScale = { 100.0f,100.0f, 100.0f };
+
+	//追従開始距離
+	constexpr float kChaseRange = 300.0f;
+
+	//停止距離
+	constexpr float kStopRange = 150.0f;
+
+	//敵の速度
+	constexpr float kSpeed = 4.0f;
 }
 
 Enemy::Enemy() :
-	GameObject(pos_, vel_),
+	GameObject(Vector3(400.0f, 0.0f, 0.0f), Vector3(0, 0, 0)),
 	modelHandle_(-1),
 	collider_(kColSize),
 	isHit_(false),
@@ -45,6 +56,43 @@ void Enemy::Init()
 
 void Enemy::Update()
 {
+	if (!pPlayer_)return;
+
+	//プレイヤーの向きのベクトル
+	Vector3 toPlayer = pPlayer_->GetPos() - pos_;
+	float distance = toPlayer.Length();
+
+	//正規化
+	Vector3 dir = { 0,0,0 };
+	if (distance > 0.001f)
+	{
+		dir = toPlayer.Normalize();
+	}
+
+	//追従
+	if (distance < kChaseRange)
+	{
+		if (distance > kStopRange)
+		{
+			//停止距離に近いほど減速する
+			float t = (distance - kStopRange) / (kChaseRange - kStopRange);
+			t = std::clamp(t, 0.0f, 1.0f);
+
+			vel_ = dir * kSpeed * t;
+		}
+		else
+		{
+			//完全停止
+			vel_ = Vector3(0, 0, 0);
+		}
+	}
+	else
+	{
+		vel_ *= 0.9f;
+	}
+
+	pos_ += vel_;
+
 	// タイマー減少
 	if (hitTimer_ > 0.0f)
 	{
@@ -56,6 +104,9 @@ void Enemy::Update()
 	}
 
 	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
+	MV1SetPosition(modelHandle_, pos_.ToDxlibVector());
+	DrawFormatString(0, 32, GetColor(255, 255, 255),
+		"Enemy: %.2f %.2f %.2f", pos_.x_, pos_.y_, pos_.z_);
 }
 
 void Enemy::Draw()

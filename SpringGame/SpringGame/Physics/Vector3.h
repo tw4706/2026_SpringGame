@@ -21,6 +21,8 @@ public:
 
 	void operator+=(const Vector3& other);//‰ÁZ
 	void operator-=(const Vector3& other);//Œ¸Z
+	void operator*=(float scalar);//Ï
+	void operator/=(float scalar);//¤
 
 	//ƒxƒNƒgƒ‹‚Ì³‹K‰»
 	Vector3 Normalize() const;

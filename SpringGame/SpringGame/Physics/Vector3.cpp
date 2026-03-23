@@ -49,11 +49,29 @@ void Vector3::operator-=(const Vector3& other)
 	z_ -= other.z_;
 }
 
+void Vector3::operator*=(float scalar)
+{
+	x_ *= scalar;
+	y_ *= scalar;
+	z_ *= scalar;
+}
+
+void Vector3::operator/=(float scalar)
+{
+	x_ /= scalar;
+	y_ /= scalar;
+	z_ /= scalar;
+}
+
 //ÉxÉNÉgÉãÇÃê≥ãKâª
 Vector3 Vector3::Normalize() const
 {
 	float len = Length();
-	if (len == 0.0f)return Vector3(0.0f, 0.0f, 0.0f);
+
+	if (len < 0.0001f)
+	{
+		return Vector3(0.0f, 0.0f, 0.0f);
+	}
 
 	return Vector3(x_ / len, y_ / len, z_ / len);
 }

@@ -4,7 +4,7 @@
 namespace
 {
     const char* kAnimIdle = "Idle";
-    const char* kAnimRun = "Run";
+    const char* kAnimRun = "Running_A";
     const char* kAnimAttack = "Attack";
     const char* kAnimDeath = "Death";
 }

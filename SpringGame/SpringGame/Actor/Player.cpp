@@ -125,14 +125,17 @@ void Player::Move(Input& input)
 	//行列の更新
 	UpdateMatrix();
 
-	//移動してるかどうかでアニメーションを変更する
-	if (fabs(vel_.x_) > 0.01f || fabs(vel_.z_) > 0.01f)
+	//攻撃中はアニメーションを変更しない
+	if (!isAttacking_)
 	{
-		animation_.ChangeState(AnimationState::Run);
-	}
-	else
-	{
-		animation_.ChangeState(AnimationState::Idle);
+		if (fabs(vel_.x_) > 0.01f || fabs(vel_.z_) > 0.01f)
+		{
+			animation_.ChangeState(AnimationState::Run);
+		}
+		else
+		{
+			animation_.ChangeState(AnimationState::Idle);
+		}
 	}
 }
 
