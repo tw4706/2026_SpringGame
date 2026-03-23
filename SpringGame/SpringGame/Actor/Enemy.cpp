@@ -20,7 +20,8 @@ Enemy::Enemy() :
 	GameObject(pos_, vel_),
 	modelHandle_(-1),
 	collider_(kColSize),
-	isHit_(false)
+	isHit_(false),
+	hitTimer_(0.0f)
 {
 	pos_ = kFirstPos;
 	collider_.SetOwner(this);
@@ -37,11 +38,22 @@ void Enemy::Init()
 	assert(modelHandle_ >= 0);
 	MV1SetPosition(modelHandle_, pos_.ToDxlibVector());
 	MV1SetScale(modelHandle_, kModelScale);
+
+	collider_.SetEnable(true);
+	collider_.SetColliderType(ColliderType::Charactor);
 }
 
 void Enemy::Update()
 {
-	isHit_ = false;
+	// タイマー減少
+	if (hitTimer_ > 0.0f)
+	{
+		hitTimer_ -= 1.0f / 60.0f;
+	}
+	else
+	{
+		isHit_ = false;
+	}
 
 	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
 }
@@ -59,11 +71,12 @@ void Enemy::Draw()
 		16, color, color, FALSE);
 }
 
+void Enemy::OnHit(GameObject* attacker)
+{
+	isHit_ = true;
+}
+
 void Enemy::OnCollision(GameObject* other)
 {
-	// 相手がPlayerかチェック
-	if (dynamic_cast<Player*>(other))
-	{
-		isHit_ = true;
-	}
+	isHit_ = true;
 }

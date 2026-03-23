@@ -15,6 +15,8 @@ public:
 	void Update(Input&input);
 	void Draw()override;
 
+	void OnHit(GameObject* attacker)override;
+
 	//移動処理
 	void Move(Input& input);
 	//攻撃処理
@@ -34,7 +36,9 @@ public:
 	//カメラの注視点の取得
 	Vector3 GetCameraTarget()const;
 
+	//当たり判定の取得
 	SphereCollider* GetCollider() { return &collider_; }
+	SphereCollider* GetAttackCollider() { return &attackCollider_; }
 
 	void OnCollision(GameObject* other);
 
@@ -43,8 +47,11 @@ private:
 	float cameraAngle_; //カメラ用の角度
 	float moveAngle_;	//プレイヤーの移動用の角度
 	bool isHit_;//衝突判定用フラグ
+	float attackTimer_;
+	bool isAttacking_;
 
 	SphereCollider collider_;//当たり判定用変数
+	SphereCollider attackCollider_;//攻撃の当たり判定用変数
 	Animation animation_;
 };
 

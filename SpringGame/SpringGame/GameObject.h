@@ -13,6 +13,7 @@ public :
 
 	//Õ“Ë”»’è
 	virtual void OnCollision(GameObject* other) {}
+	virtual void OnHit(GameObject* attacker) {};
 
 protected:
 	Vector3 pos_;

@@ -18,6 +18,7 @@ namespace
 
 	//当たり判定のサイズ
 	constexpr float kColSize = 50.0f;
+	constexpr float kAttackColSize = 50.0f;
 
 	const Vector3 kColOffset = { 0.0f,100.0f,0.0f };
 
@@ -30,11 +31,17 @@ Player::Player() :
 	modelHandle_(-1),
 	cameraAngle_(0.0f),
 	moveAngle_(0.0f),
-	collider_(kColSize),
+	attackTimer_(0.0f),
+	isAttacking_(false),
+	collider_(0.0f),
+	attackCollider_(0.0f),
 	isHit_(false)
 {
 	pos_ = kFirstPos;
+	collider_ = SphereCollider(kColSize);
+	attackCollider_ = SphereCollider(kAttackColSize);
 	collider_.SetOwner(this);
+	attackCollider_.SetOwner(this);
 }
 
 Player::~Player()
@@ -49,6 +56,12 @@ void Player::Init()
 
 	animation_.Init(modelHandle_);
 	animation_.ChangeState(AnimationState::Idle);
+
+	collider_.SetEnable(true);
+	attackCollider_.SetEnable(false);
+
+	collider_.SetColliderType(ColliderType::Charactor);
+	attackCollider_.SetColliderType(ColliderType::Attack);
 }
 
 void Player::Update(Input& input)
@@ -59,6 +72,9 @@ void Player::Update(Input& input)
 
 	//移動
 	Move(input);
+
+	//攻撃
+	Attack(input);
 
 	//アニメーションの更新
 	animation_.Update(1.0f / 60.0f);
@@ -75,6 +91,18 @@ void Player::Draw()
 		collider_.GetPos().ToDxlibVector(),  // 中心
 		collider_.GetRadian(),				// 半径
 		16, color, color, FALSE);
+
+	//攻撃判定の描画
+	if (isAttacking_)
+	{
+		DrawSphere3D(
+			attackCollider_.GetPos().ToDxlibVector(),
+			attackCollider_.GetRadian(),
+			16,
+			0xffff00,
+			0xffff00,
+			FALSE);
+	}
 }
 
 //移動
@@ -111,6 +139,36 @@ void Player::Move(Input& input)
 //攻撃
 void Player::Attack(Input& input)
 {
+	//ボタン押した瞬間
+	if (input.IsTriggered("attack") && !isAttacking_)
+	{
+		isAttacking_ = true;
+		attackTimer_ = 0.5f; //攻撃時間
+
+		animation_.ChangeState(AnimationState::Attack);
+		attackCollider_.SetEnable(true);
+	}
+
+	//攻撃中
+	if (isAttacking_)
+	{
+		attackTimer_ -= 1.0f / 60.0f;
+
+		//プレイヤーの前方向
+		Vector3 forward = {-sinf(moveAngle_),0.0f,cosf(moveAngle_)};
+
+		//攻撃位置
+		Vector3 attackPos = pos_ + forward * 100.0f + kColOffset;
+
+		attackCollider_.SetPos(attackPos);
+
+		//時間終了で攻撃終了
+		if (attackTimer_ <= 0.0f)
+		{
+			isAttacking_ = false;
+			attackCollider_.SetEnable(false);
+		}
+	}
 }
 
 void Player::UpdateAnalogStick(Input& input)
@@ -179,4 +237,9 @@ void Player::OnCollision(GameObject* other)
 	{
 		isHit_ = true;
 	}
+}
+
+void Player::OnHit(GameObject* attacker)
+{
+	isHit_ = true;
 }

@@ -12,6 +12,8 @@ public:
 	void Update()override;
 	void Draw()override;
 
+	void OnHit(GameObject* attacker)override;
+
 	SphereCollider* GetCollider() { return &collider_; }
 
 	void OnCollision(GameObject* other);
@@ -20,5 +22,6 @@ private:
 	int modelHandle_;
 	SphereCollider collider_;
 	bool isHit_;
+	float hitTimer_;
 };
 

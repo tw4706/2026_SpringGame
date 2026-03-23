@@ -52,6 +52,7 @@ void SceneMain::Update(Input&input)
 
 	//当たり判定の登録
 	collisionManager_.AddCollider(pPlayer_->GetCollider());
+	collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
 	collisionManager_.AddCollider(pEnemy_->GetCollider());
 
 	//衝突判定
@@ -75,7 +76,6 @@ void SceneMain::DrawGrid()
 	//// 直線の始点と終点
 	//VECTOR startPos;
 	//VECTOR endPos;
-
 	//for (int z = -300; z <= 300; z += 100)
 	//{
 	//	startPos = VGet(-300.0f, 0.0f, static_cast<float>(z));

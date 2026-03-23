@@ -25,12 +25,15 @@ bool CollisionManager::CheckSphereSphere(SphereCollider* a, SphereCollider* b)
 
 void CollisionManager::CheckAllCollision()
 {
+
 	for (size_t i = 0; i < colliders_.size(); i++)
 	{
 		for (size_t j = i + 1; j < colliders_.size(); j++)
 		{
 			Collider* a = colliders_[i];
 			Collider* b = colliders_[j];
+
+			if (!a->IsEnable() || !b->IsEnable()) continue;
 
 			// Œ^‚Å•ªŠò
 			if (a->GetCollisionType() == CollisionType::Sphere &&
