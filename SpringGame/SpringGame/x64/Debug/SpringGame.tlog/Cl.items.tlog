@@ -1,6 +1,7 @@
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Actor\Enemy.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Enemy.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Actor\Player.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Player.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Animation.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Animation.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Model.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Model.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\Collider.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Collider.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\CollisionManager.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\CollisionManager.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\GameObject.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Debug\GameObject.obj

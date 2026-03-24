@@ -29,7 +29,6 @@ namespace
 
 Enemy::Enemy() :
 	GameObject(Vector3(400.0f, 0.0f, 0.0f), Vector3(0, 0, 0)),
-	modelHandle_(-1),
 	collider_(kColSize),
 	isHit_(false),
 	hitTimer_(0.0f)
@@ -40,15 +39,14 @@ Enemy::Enemy() :
 
 Enemy::~Enemy()
 {
-	MV1DeleteModel(modelHandle_);
+	model_.Release();
 }
 
 void Enemy::Init()
 {
-	modelHandle_ = MV1LoadModel("data/Enemy.mv1");
-	assert(modelHandle_ >= 0);
-	MV1SetPosition(modelHandle_, pos_.ToDxlibVector());
-	MV1SetScale(modelHandle_, kModelScale);
+	model_ .Load("data/Enemy.mv1");
+	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
+	MV1SetScale(model_.GetHandle(), kModelScale);
 
 	collider_.SetEnable(true);
 	collider_.SetColliderType(ColliderType::Charactor);
@@ -104,14 +102,14 @@ void Enemy::Update()
 	}
 
 	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
-	MV1SetPosition(modelHandle_, pos_.ToDxlibVector());
+	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 	DrawFormatString(0, 32, GetColor(255, 255, 255),
 		"Enemy: %.2f %.2f %.2f", pos_.x_, pos_.y_, pos_.z_);
 }
 
 void Enemy::Draw()
 {
-	MV1DrawModel(modelHandle_);
+	model_.Draw();
 
 	// “–‚½‚è”»’è‚Ì•`‰æ
 	unsigned int color = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 0);

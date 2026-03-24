@@ -1,4 +1,5 @@
 #pragma once
+#include"../Model.h"
 #include "../GameObject.h"
 #include "../Physics/SphereCollider.h"
 
@@ -22,11 +23,11 @@ public:
 	void SetPlayer(Player* player) { pPlayer_ = player; }
 
 private:
-	int modelHandle_;
 	SphereCollider collider_;
 	bool isHit_;
 	float hitTimer_;
 
 	Player* pPlayer_=nullptr;//プレイヤーのポインタ(参照用)
+	Model model_;
 };
 

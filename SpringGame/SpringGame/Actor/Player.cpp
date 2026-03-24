@@ -28,7 +28,6 @@ namespace
 
 Player::Player() :
 	GameObject(pos_, vel_),
-	modelHandle_(-1),
 	cameraAngle_(0.0f),
 	moveAngle_(0.0f),
 	attackTimer_(0.0f),
@@ -46,15 +45,14 @@ Player::Player() :
 
 Player::~Player()
 {
-	MV1DeleteModel(modelHandle_);
+	model_.Release();
 }
 
 void Player::Init()
 {
-	modelHandle_ = MV1LoadModel("data/Player.mv1");
-	assert(modelHandle_ >= 0);
+	model_.Load("data/Player.mv1");
 
-	animation_.Init(modelHandle_);
+	animation_.Init(model_.GetHandle());
 	animation_.ChangeState(AnimationState::Idle);
 
 	collider_.SetEnable(true);
@@ -82,14 +80,14 @@ void Player::Update(Input& input)
 
 void Player::Draw()
 {
-	MV1DrawModel(modelHandle_);
+	model_.Draw();
 
-	// “–‚½‚è”»’è‚Ì•`‰æ
+	//“–‚½‚è”»’è‚Ì•`‰æ
 	unsigned int color = isHit_ ? 0xff0000 : 0x00ff00;
 
 	DrawSphere3D(
-		collider_.GetPos().ToDxlibVector(),  // ’†S
-		collider_.GetRadian(),				// ”¼Œa
+		collider_.GetPos().ToDxlibVector(),		//’†S
+		collider_.GetRadian(),					//”¼Œa
 		16, color, color, FALSE);
 
 	//UŒ‚”»’è‚Ì•`‰æ
@@ -225,7 +223,7 @@ void Player::UpdateMatrix()
 
 	//s—ñ‚Ì‡¬
 	Matrix4x4 mat = scaleMat * rotMat * transMat;
-	MV1SetMatrix(modelHandle_, mat.ToDxLibMatrix());
+	MV1SetMatrix(model_.GetHandle(), mat.ToDxLibMatrix());
 }
 
 Vector3 Player::GetCameraTarget() const

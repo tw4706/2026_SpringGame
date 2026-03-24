@@ -2,6 +2,7 @@
 #include "../GameObject.h"
 #include "../Physics/SphereCollider.h"
 #include"../Animation.h"
+#include"../Model.h"
 
 class Input;
 class Player :public GameObject
@@ -43,15 +44,15 @@ public:
 	void OnCollision(GameObject* other);
 
 private:
-	int modelHandle_;
 	float cameraAngle_; //カメラ用の角度
 	float moveAngle_;	//プレイヤーの移動用の角度
 	bool isHit_;//衝突判定用フラグ
 	float attackTimer_;
 	bool isAttacking_;
 
-	SphereCollider collider_;//当たり判定用変数
-	SphereCollider attackCollider_;//攻撃の当たり判定用変数
+	SphereCollider collider_;		//当たり判定用変数
+	SphereCollider attackCollider_;	//攻撃の当たり判定用変数
 	Animation animation_;
+	Model model_;					//モデル
 };
 
