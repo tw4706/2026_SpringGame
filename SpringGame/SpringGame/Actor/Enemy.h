@@ -1,5 +1,6 @@
 #pragma once
 #include"../Model.h"
+#include"../Animation.h"
 #include "../GameObject.h"
 #include "../Physics/SphereCollider.h"
 
@@ -21,6 +22,8 @@ public:
 	void OnCollision(GameObject* other);
 
 	void SetPlayer(Player* player) { pPlayer_ = player; }
+private:
+	AnimationState GetState()const;
 
 private:
 	SphereCollider collider_;
@@ -29,5 +32,7 @@ private:
 
 	Player* pPlayer_=nullptr;//プレイヤーのポインタ(参照用)
 	Model model_;
+	Animation animation_;
+	AnimationState state_;
 };
 

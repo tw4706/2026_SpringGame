@@ -4,10 +4,16 @@
 
 namespace
 {
-	const char* kAnimIdle = "Jump_Idle";
-	const char* kAnimRun = "Running_A";
-	const char* kAnimAttack = "Jump_Full";
-	const char* kAnimDeath = "Walking_B";
+	//ƒvƒŒƒCƒ„[
+	const char* kPlayerIdle = "Jump_Idle";
+	const char* kPlayerRun = "Running_A";
+	const char* kPlayerAttack = "Jump_Full";
+	const char* kPlayerDeath = "Walking_B";
+
+	//“G
+	const char* kEnemyIdle = "Idle_A";
+	const char* kEnemyRun = "Idle_B";
+	const char* kEnemyDeath = "Death_A";
 
 	constexpr float kAnimationSpeed = 30.0f;
 }
@@ -29,9 +35,10 @@ Animation::~Animation()
 {
 }
 
-void Animation::Init(int modelHandle)
+void Animation::Init(int modelHandle,AnimType type)
 {
 	modelHandle_ = modelHandle;
+	type_ = type;
 }
 
 void Animation::Update(float deltaTime)
@@ -43,7 +50,6 @@ void Animation::Update(float deltaTime)
 
 	if (currentAttach_ != -1)
 	{
-		printf("totalTime = %f\n", totalTime_);
 		currentTime_ += deltaTime * speed_;
 
 		if (totalTime_ > 0.0f)
@@ -91,29 +97,44 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 
 void Animation::ChangeState(AnimationState state)
 {
-	if (state_ == state) return;
+	if (state_ == state && currentAttach_ != -1) return;
 
 	state_ = state;
 
 	int animIndex = -1;
 
-	switch (state_)
+	if (type_ == AnimType::Player)
 	{
-	case AnimationState::Idle:
-		animIndex = MV1GetAnimIndex(modelHandle_, kAnimIdle);
-		break;
-
-	case AnimationState::Run:
-		animIndex = MV1GetAnimIndex(modelHandle_, kAnimRun);
-		break;
-
-	case AnimationState::Attack:
-		animIndex = MV1GetAnimIndex(modelHandle_, kAnimAttack);
-		break;
-
-	case AnimationState::Death:
-		animIndex = MV1GetAnimIndex(modelHandle_, kAnimDeath);
-		break;
+		switch (state_)
+		{
+		case AnimationState::Idle:
+			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerIdle);
+			break;
+		case AnimationState::Run:
+			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerRun);
+			break;
+		case AnimationState::Attack:
+			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerAttack);
+			break;
+		case AnimationState::Death:
+			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerDeath);
+			break;
+		}
+	}
+	else if (type_ == AnimType::Enemy)
+	{
+		switch (state_)
+		{
+		case AnimationState::Idle:
+			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyIdle);
+			break;
+		case AnimationState::Run:
+			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyRun);
+			break;
+		case AnimationState::Death:
+			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyDeath);
+			break;
+		}
 	}
 
 	if (animIndex != -1)

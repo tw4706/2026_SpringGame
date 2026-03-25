@@ -1,5 +1,11 @@
 #pragma once
 
+enum class AnimType
+{
+    Player,
+    Enemy
+};
+
 enum class AnimationState
 {
     Idle,
@@ -14,7 +20,7 @@ public:
 	Animation();
 	~Animation();
 
-	void Init(int modelHandle);
+	void Init(int modelHandle,AnimType type);
     void Update(float deltaTime);
 
 	//モデルのアニメーションの再生
@@ -36,5 +42,6 @@ private:
     float totalTime_;
 
     AnimationState state_;
+    AnimType type_;
 };
 

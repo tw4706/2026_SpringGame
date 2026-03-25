@@ -52,7 +52,7 @@ void Player::Init()
 {
 	model_.Load("data/Player.mv1");
 
-	animation_.Init(model_.GetHandle());
+	animation_.Init(model_.GetHandle(),AnimType::Player);
 	animation_.ChangeState(AnimationState::Idle);
 
 	collider_.SetEnable(true);

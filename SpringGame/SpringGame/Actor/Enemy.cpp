@@ -48,6 +48,9 @@ void Enemy::Init()
 	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 	MV1SetScale(model_.GetHandle(), kModelScale);
 
+	animation_.Init(model_.GetHandle(), AnimType::Enemy);
+	animation_.ChangeState(AnimationState::Idle);
+
 	collider_.SetEnable(true);
 	collider_.SetColliderType(ColliderType::Charactor);
 }
@@ -91,6 +94,10 @@ void Enemy::Update()
 
 	pos_ += vel_;
 
+	state_ = GetState();
+	animation_.ChangeState(state_);
+	animation_.Update(1.0f / 60.0f);
+
 	// タイマー減少
 	if (hitTimer_ > 0.0f)
 	{
@@ -103,8 +110,10 @@ void Enemy::Update()
 
 	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
 	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
+#ifdef DEBUG_
 	DrawFormatString(0, 32, GetColor(255, 255, 255),
 		"Enemy: %.2f %.2f %.2f", pos_.x_, pos_.y_, pos_.z_);
+#endif
 }
 
 void Enemy::Draw()
@@ -128,4 +137,16 @@ void Enemy::OnHit(GameObject* attacker)
 void Enemy::OnCollision(GameObject* other)
 {
 	isHit_ = true;
+}
+
+AnimationState Enemy::GetState()const
+{
+	float speed = vel_.Length();
+
+	if (speed > 0.1f)
+	{
+		return AnimationState::Run;
+	}
+
+	return AnimationState::Idle;
 }
