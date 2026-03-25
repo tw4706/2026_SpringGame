@@ -23,6 +23,10 @@ Animation::Animation() :
 	currentAttach_(-1),
 	currentAnim_(-1),
 	currentTime_(0.0f),
+	prevAttach_(-1),
+	blendTime_(0.0f),
+	blendDuration_(0.3f),
+	isBlending_(false),
 	speed_(1.0f),
 	isLoop_(true),
 	totalTime_(0.0f),
@@ -71,26 +75,103 @@ void Animation::Update(float deltaTime)
 		}
 
 		MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
+
+		if (prevAttach_ != -1)
+		{
+			float prevTime = MV1GetAttachAnimTime(modelHandle_, prevAttach_);
+			float prevTotal = MV1GetAttachAnimTotalTime(modelHandle_, prevAttach_);
+
+			prevTime += deltaTime * speed_;
+
+			if (prevTotal > 0.0f)
+			{
+				if (isLoop_)
+				{
+					if (prevTime > prevTotal)
+					{
+						prevTime = fmod(prevTime, prevTotal);
+					}
+				}
+				else
+				{
+					if (prevTime > prevTotal)
+					{
+						prevTime = prevTotal;
+					}
+				}
+			}
+
+			MV1SetAttachAnimTime(modelHandle_, prevAttach_, prevTime);
+		}
+	}
+	if (isBlending_)
+	{
+		blendTime_ += deltaTime;
+
+		float t = 1.0f;
+
+		if (blendDuration_ > 0.0f)
+		{
+			t = blendTime_ / blendDuration_;
+		}
+
+		if (t > 1.0f) t = 1.0f;
+
+		// 新アニメ
+		MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, t);
+
+		// 旧アニメ
+		if (prevAttach_ != -1)
+		{
+			MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f - t);
+		}
+
+		// 完了
+		if (t >= 1.0f)
+		{
+			if (prevAttach_ != -1)
+			{
+				MV1DetachAnim(modelHandle_, prevAttach_);
+				prevAttach_ = -1;
+			}
+			isBlending_ = false;
+		}
 	}
 }
 
 void Animation::Play(int animIndex, float speed, bool isLoop)
 {
-	if (currentAnim_ == animIndex) return;
+
+	if (currentAnim_ == animIndex && currentAttach_ != -1) return;
 
 	speed_ = speed;
 	isLoop_ = isLoop;
 
-	if (currentAttach_ != -1)
+	if (prevAttach_ != -1)
 	{
-		MV1DetachAnim(modelHandle_, currentAttach_);
+		MV1DetachAnim(modelHandle_, prevAttach_);
+		prevAttach_ = -1;
 	}
+
+	//現在再生しているアニメーションを保存
+	prevAttach_ = currentAttach_;
 
 	currentAnim_ = animIndex;
 	currentTime_ = 0.0f;
 
 	currentAttach_ = MV1AttachAnim(modelHandle_, currentAnim_);
 	totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttach_);
+
+	blendTime_ = 0.0f;
+	isBlending_ = true;
+
+	//ウェイト初期化
+	MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, 0.0f);
+
+	if (prevAttach_ != -1)
+	{
+		MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f);
+	}
 
 	MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
 }
