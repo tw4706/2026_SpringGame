@@ -21,7 +21,7 @@ private:
 
 private:
 	int frameCount_;
-	std::shared_ptr<Enemy>pEnemy_;
+	std::vector<std::shared_ptr<Enemy>> enemies_;
 	std::shared_ptr<Player>pPlayer_;
 	std::shared_ptr<Camera>pCamera_;
 	CollisionManager collisionManager_;

@@ -31,7 +31,9 @@ Enemy::Enemy() :
 	GameObject(Vector3(400.0f, 0.0f, 0.0f), Vector3(0, 0, 0)),
 	collider_(kColSize),
 	isHit_(false),
-	hitTimer_(0.0f)
+	hitTimer_(0.0f),
+	isDead_(false),
+	isDestroy_(false)
 {
 	pos_ = kFirstPos;
 	collider_.SetOwner(this);
@@ -58,6 +60,25 @@ void Enemy::Init()
 void Enemy::Update()
 {
 	if (!pPlayer_)return;
+
+	//死亡処理
+	if (isDead_)
+	{
+		vel_ = Vector3(0, 0, 0);
+
+		animation_.Update(1.0f / 60.0f);
+
+		//アニメーションが終わったら削除
+		if (animation_.IsEnd())
+		{
+			isDestroy_ = true;
+		}
+
+		//位置更新
+		MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
+
+		return;
+	}
 
 	//プレイヤーの向きのベクトル
 	Vector3 toPlayer = pPlayer_->GetPos() - pos_;
@@ -131,7 +152,13 @@ void Enemy::Draw()
 
 void Enemy::OnHit(GameObject* attacker)
 {
+	if (isDead_) return;
+
 	isHit_ = true;
+	isDead_ = true;
+
+	//死亡アニメーション開始
+	animation_.ChangeState(AnimationState::Death);
 }
 
 void Enemy::OnCollision(GameObject* other)

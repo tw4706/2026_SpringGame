@@ -29,6 +29,7 @@ Animation::Animation() :
 	isBlending_(false),
 	speed_(1.0f),
 	isLoop_(true),
+	isAnimEnd_(false),
 	totalTime_(0.0f),
 	state_(AnimationState::Idle)
 {
@@ -70,6 +71,7 @@ void Animation::Update(float deltaTime)
 				if (currentTime_ > totalTime_)
 				{
 					currentTime_ = totalTime_;
+					isAnimEnd_ = true;
 				}
 			}
 		}
@@ -144,6 +146,7 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 
 	if (currentAnim_ == animIndex && currentAttach_ != -1) return;
 
+	isAnimEnd_ = false;
 	speed_ = speed;
 	isLoop_ = isLoop;
 

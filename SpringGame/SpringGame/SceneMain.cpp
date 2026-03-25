@@ -8,7 +8,6 @@
 SceneMain::SceneMain() :
 	frameCount_(0)
 {
-	pEnemy_ = std::make_shared<Enemy>();
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
 }
@@ -32,9 +31,12 @@ void SceneMain::Init()
 	SetCameraNearFar(1.0f, 1500.0f);
 
 	//各クラスの初期化処理
-	pEnemy_->Init();
+	auto enemy = std::make_shared<Enemy>();
+	enemy->Init();
+	enemy->SetPlayer(pPlayer_.get());
+	enemies_.push_back(enemy);
+	
 	pPlayer_->Init();
-	pEnemy_->SetPlayer(pPlayer_.get());
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
 }
@@ -44,7 +46,10 @@ void SceneMain::Update(Input&input)
 	frameCount_++;
 
 	//各クラスの更新処理
-	pEnemy_->Update();
+	for (auto& enemy : enemies_)
+	{
+		enemy->Update();
+	}
 	pPlayer_->Update(input);
 	pCamera_->Update();
 
@@ -54,10 +59,22 @@ void SceneMain::Update(Input&input)
 	//当たり判定の登録
 	collisionManager_.AddCollider(pPlayer_->GetCollider());
 	collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
-	collisionManager_.AddCollider(pEnemy_->GetCollider());
+	for (auto& enemy : enemies_)
+	{
+		collisionManager_.AddCollider(enemy->GetCollider());
+	}
 
 	//衝突判定
 	collisionManager_.CheckAllCollision();
+
+	//敵の削除処理
+	enemies_.erase(
+		std::remove_if(enemies_.begin(), enemies_.end(),
+			[](const std::shared_ptr<Enemy>& e)
+			{
+				return e->IsDestroy();
+			}),
+		enemies_.end());
 }
 
 void SceneMain::Draw()
@@ -65,7 +82,10 @@ void SceneMain::Draw()
 	DrawGrid();
 
 	//各クラスの描画処理
-	pEnemy_->Draw();
+	for (auto& enemy : enemies_)
+	{
+		enemy->Draw();
+	}
 	pPlayer_->Draw();
 
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));

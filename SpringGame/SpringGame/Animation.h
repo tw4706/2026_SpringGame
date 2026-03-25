@@ -28,6 +28,9 @@ public:
 
     void ChangeState(AnimationState state);
 
+    //アニメーションの終了を通知する関数
+    bool IsEnd()const { return isAnimEnd_; }
+
 
 private:
 	int modelHandle_;
@@ -40,10 +43,9 @@ private:
     float blendTime_;     // 経過時間
     float blendDuration_; // ブレンド時間
     bool isBlending_;
-
     float speed_;
     bool isLoop_;
-
+    bool isAnimEnd_;
     float totalTime_;
 
     AnimationState state_;
