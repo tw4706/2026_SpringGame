@@ -74,6 +74,9 @@ void Player::Update(Input& input)
 	//攻撃
 	Attack(input);
 
+	state_ = GetState();
+	animation_.ChangeState(state_);
+
 	//アニメーションの更新
 	animation_.Update(1.0f / 60.0f);
 }
@@ -106,35 +109,47 @@ void Player::Draw()
 //移動
 void Player::Move(Input& input)
 {
-	vel_ = { 0.0f,0.0f,0.0f };
+	vel_ = { 0.0f, 0.0f, 0.0f };
 
-	//入力に応じて速度を入れる
-	if (input.IsPressed("up"))				vel_.z_ += kSpeed;
-	if (input.IsPressed("down"))			vel_.z_ -= kSpeed;
-	if (input.IsPressed("left"))			vel_.x_ -= kSpeed;
-	if (input.IsPressed("right"))			vel_.x_ += kSpeed;
+	// キーボード入力から方向作る
+	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
+
+	if (input.IsPressed("up"))    inputDir.z_ += 1.0f;
+	if (input.IsPressed("down"))  inputDir.z_ -= 1.0f;
+	if (input.IsPressed("left"))  inputDir.x_ -= 1.0f;
+	if (input.IsPressed("right")) inputDir.x_ += 1.0f;
+
+	//入力があるときだけ
+	if (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f)
+	{
+		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraAngle_);
+		Vector3 playerDir = rotMat.TransformForVector(inputDir);
+
+		//正規化
+		playerDir.Normalize();
+
+		//移動
+		vel_.x_ = playerDir.x_ * kSpeed;
+		vel_.z_ = playerDir.z_ * kSpeed;
+
+		//向き更新
+		float playerAngle = atan2f(-playerDir.x_, playerDir.z_);
+
+		float diff = playerAngle - moveAngle_;
+		while (diff > 3.141592f) diff -= 6.28318f;
+		while (diff < -3.141592f) diff += 6.28318f;
+
+		moveAngle_ += diff * 0.2f;
+	}
 
 	//アナログスティックの更新
-	UpdateAnalogStick(input);
+	//UpdateAnalogStick(input);
 
 	//位置の反映
 	pos_ += vel_;
 
 	//行列の更新
 	UpdateMatrix();
-
-	//攻撃中はアニメーションを変更しない
-	if (!isAttacking_)
-	{
-		if (fabs(vel_.x_) > 0.01f || fabs(vel_.z_) > 0.01f)
-		{
-			animation_.ChangeState(AnimationState::Run);
-		}
-		else
-		{
-			animation_.ChangeState(AnimationState::Idle);
-		}
-	}
 }
 
 //攻撃
@@ -146,7 +161,6 @@ void Player::Attack(Input& input)
 		isAttacking_ = true;
 		attackTimer_ = 0.5f; //攻撃時間
 
-		animation_.ChangeState(AnimationState::Attack);
 		attackCollider_.SetEnable(true);
 	}
 
@@ -238,6 +252,25 @@ void Player::OnCollision(GameObject* other)
 	{
 		isHit_ = true;
 	}
+}
+
+AnimationState Player::GetState() const
+{
+	//攻撃
+	if (isAttacking_)
+	{
+		return AnimationState::Attack;
+	}
+
+	//移動
+	bool isMoving = (fabs(vel_.x_) > 0.1f || fabs(vel_.z_) > 0.1f);
+
+	if (isMoving)
+	{
+		return AnimationState::Run;
+	}
+
+	return AnimationState::Idle;
 }
 
 void Player::OnHit(GameObject* attacker)

@@ -1,12 +1,15 @@
 #include "Animation.h"
 #include<Dxlib.h>
+#include <cmath>
 
 namespace
 {
-    const char* kAnimIdle = "Idle";
-    const char* kAnimRun = "Running_A";
-    const char* kAnimAttack = "Attack";
-    const char* kAnimDeath = "Death";
+	const char* kAnimIdle = "Jump_Idle";
+	const char* kAnimRun = "Running_A";
+	const char* kAnimAttack = "Jump_Full";
+	const char* kAnimDeath = "Walking_B";
+
+	constexpr float kAnimationSpeed = 30.0f;
 }
 
 Animation::Animation() :
@@ -14,16 +17,10 @@ Animation::Animation() :
 	currentAttach_(-1),
 	currentAnim_(-1),
 	currentTime_(0.0f),
-	nextAttach_(-1),
-	nextAnim_(-1),
-	nextTime_(0.0f),
 	speed_(1.0f),
 	isLoop_(true),
-	blendRate_(0.0f),
-	blendSpeed_(5.0f),
-	isBlending_(false),
 	totalTime_(0.0f),
-    state_(AnimationState::Idle)
+	state_(AnimationState::Idle)
 {
 
 }
@@ -39,53 +36,36 @@ void Animation::Init(int modelHandle)
 
 void Animation::Update(float deltaTime)
 {
-    // 現在アニメ
-    if (currentAttach_ != -1)
-    {
-        currentTime_ += deltaTime * speed_;
-        MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
-    }
+	if (currentAttach_ != -1 && totalTime_ == 0.0f)
+	{
+		totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttach_);
+	}
 
-    // 次アニメ
-    if (nextAttach_ != -1)
-    {
-        nextTime_ += deltaTime * speed_;
-        MV1SetAttachAnimTime(modelHandle_, nextAttach_, nextTime_);
-    }
+	if (currentAttach_ != -1)
+	{
+		printf("totalTime = %f\n", totalTime_);
+		currentTime_ += deltaTime * speed_;
 
-    // ブレンド処理
-    if (isBlending_)
-    {
-        blendRate_ += deltaTime * blendSpeed_;
+		if (totalTime_ > 0.0f)
+		{
+			if (isLoop_)
+			{
+				if (currentTime_ > totalTime_)
+				{
+					currentTime_ = fmod(currentTime_, totalTime_);
+				}
+			}
+			else
+			{
+				if (currentTime_ > totalTime_)
+				{
+					currentTime_ = totalTime_;
+				}
+			}
+		}
 
-        if (blendRate_ >= 1.0f)
-        {
-            blendRate_ = 1.0f;
-            isBlending_ = false;
-
-            if (currentAttach_ != -1)
-            {
-                MV1DetachAnim(modelHandle_, currentAttach_);
-            }
-
-            currentAttach_ = nextAttach_;
-            currentAnim_ = nextAnim_;
-            currentTime_ = nextTime_;
-
-            nextAttach_ = -1;
-        }
-    }
-
-    // ブレンド比率適用
-    if (currentAttach_ != -1)
-    {
-        MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, 1.0f - blendRate_);
-    }
-
-    if (nextAttach_ != -1)
-    {
-        MV1SetAttachAnimBlendRate(modelHandle_, nextAttach_, blendRate_);
-    }
+		MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
+	}
 }
 
 void Animation::Play(int animIndex, float speed, bool isLoop)
@@ -95,54 +75,56 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	speed_ = speed;
 	isLoop_ = isLoop;
 
-	// 次アニメとしてセット
-	nextAnim_ = animIndex;
-	nextTime_ = 0.0f;
+	if (currentAttach_ != -1)
+	{
+		MV1DetachAnim(modelHandle_, currentAttach_);
+	}
 
-	nextAttach_ = MV1AttachAnim(modelHandle_, nextAnim_);
-	MV1SetAttachAnimTime(modelHandle_, nextAttach_, nextTime_);
+	currentAnim_ = animIndex;
+	currentTime_ = 0.0f;
 
-	// ブレンド開始
-	blendRate_ = 0.0f;
-	isBlending_ = true;
+	currentAttach_ = MV1AttachAnim(modelHandle_, currentAnim_);
+	totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttach_);
+
+	MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
 }
 
 void Animation::ChangeState(AnimationState state)
 {
-    if (state_ == state) return;
+	if (state_ == state) return;
 
-    state_ = state;
+	state_ = state;
 
-    int animIndex = -1;
+	int animIndex = -1;
 
-    switch (state_)
-    {
-    case AnimationState::Idle:
-        animIndex = MV1GetAnimIndex(modelHandle_, kAnimIdle);
-        break;
+	switch (state_)
+	{
+	case AnimationState::Idle:
+		animIndex = MV1GetAnimIndex(modelHandle_, kAnimIdle);
+		break;
 
-    case AnimationState::Run:
-        animIndex = MV1GetAnimIndex(modelHandle_, kAnimRun);
-        break;
+	case AnimationState::Run:
+		animIndex = MV1GetAnimIndex(modelHandle_, kAnimRun);
+		break;
 
-    case AnimationState::Attack:
-        animIndex = MV1GetAnimIndex(modelHandle_, kAnimAttack);
-        break;
+	case AnimationState::Attack:
+		animIndex = MV1GetAnimIndex(modelHandle_, kAnimAttack);
+		break;
 
-    case AnimationState::Death:
-        animIndex = MV1GetAnimIndex(modelHandle_, kAnimDeath);
-        break;
-    }
+	case AnimationState::Death:
+		animIndex = MV1GetAnimIndex(modelHandle_, kAnimDeath);
+		break;
+	}
 
-    if (animIndex != -1)
-    {
-        bool loop = true;
+	if (animIndex != -1)
+	{
+		bool loop = true;
 
-        if (state_ == AnimationState::Attack || state_ == AnimationState::Death)
-        {
-            loop = false;
-        }
+		if (state_ == AnimationState::Attack || state_ == AnimationState::Death)
+		{
+			loop = false;
+		}
 
-        Play(animIndex, 1.0f, loop);
-    }
+		Play(animIndex, kAnimationSpeed, loop);
+	}
 }

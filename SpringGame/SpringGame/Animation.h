@@ -30,17 +30,8 @@ private:
     int currentAnim_;
     float currentTime_;
 
-    //次アニメ（ブレンド用）
-    int nextAttach_;
-    int nextAnim_;
-    float nextTime_;
-
     float speed_;
     bool isLoop_;
-
-    float blendRate_;
-    float blendSpeed_;
-    bool isBlending_;
 
     float totalTime_;
 
