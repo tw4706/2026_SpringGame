@@ -5,6 +5,7 @@
 #include "../Physics/SphereCollider.h"
 
 class Player;
+class Camera;
 class Enemy :public GameObject
 {
 public:
@@ -23,6 +24,10 @@ public:
 
 	void SetPlayer(Player* player) { pPlayer_ = player; }
 
+	void SetPos(const Vector3& pos) { pos_ = pos; }
+
+	void SetCamera(Camera* camera) { pCamera_ = camera; }
+
 	bool IsDestroy()const { return isDestroy_; }
 private:
 	AnimationState GetState()const;
@@ -33,8 +38,10 @@ private:
 	float hitTimer_;
 	bool isDead_;
 	bool isDestroy_;
+	bool isSpawning_;
 
 	Player* pPlayer_=nullptr;//プレイヤーのポインタ(参照用)
+	Camera* pCamera_ = nullptr;
 	Model model_;
 	Animation animation_;
 	AnimationState state_;

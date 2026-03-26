@@ -11,6 +11,7 @@ namespace
 	const char* kPlayerDeath = "Walking_B";
 
 	//敵
+	const char* kEnemySpawn = "Spawn_Ground";
 	const char* kEnemyIdle = "Idle_A";
 	const char* kEnemyRun = "Idle_B";
 	const char* kEnemyDeath = "Death_A";
@@ -31,7 +32,8 @@ Animation::Animation() :
 	isLoop_(true),
 	isAnimEnd_(false),
 	totalTime_(0.0f),
-	state_(AnimationState::Idle)
+	state_(AnimationState::Idle),
+	prevState_(AnimationState::Idle)
 {
 
 }
@@ -156,8 +158,20 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 		prevAttach_ = -1;
 	}
 
-	//現在再生しているアニメーションを保存
-	prevAttach_ = currentAttach_;
+	//現在再生しているアニメーションを保存(生成状態の時はブレンドさせない)
+	if (prevState_ == AnimationState::Spawn)
+	{
+		if (currentAttach_ != -1)
+		{
+			MV1DetachAnim(modelHandle_, currentAttach_);
+		}
+
+		prevAttach_ = -1; //ブレンドなし
+	}
+	else
+	{
+		prevAttach_ = currentAttach_;
+	}
 
 	currentAnim_ = animIndex;
 	currentTime_ = 0.0f;
@@ -183,6 +197,7 @@ void Animation::ChangeState(AnimationState state)
 {
 	if (state_ == state && currentAttach_ != -1) return;
 
+	prevState_=state_;
 	state_ = state;
 
 	int animIndex = -1;
@@ -218,6 +233,9 @@ void Animation::ChangeState(AnimationState state)
 		case AnimationState::Death:
 			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyDeath);
 			break;
+		case AnimationState::Spawn:
+			animIndex = MV1GetAnimIndex(modelHandle_, kEnemySpawn);
+			break;
 		}
 	}
 
@@ -225,7 +243,9 @@ void Animation::ChangeState(AnimationState state)
 	{
 		bool loop = true;
 
-		if (state_ == AnimationState::Attack || state_ == AnimationState::Death)
+		if (state_ == AnimationState::Attack ||
+			state_ == AnimationState::Death||
+			state_ == AnimationState::Spawn)
 		{
 			loop = false;
 		}

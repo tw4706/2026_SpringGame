@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "../Physics/Vector3.h"
+#include "../Physics/Camera.h"
 #include "../Actor/Player.h"
 #include<Dxlib.h>
 #include<cassert>
@@ -25,6 +26,9 @@ namespace
 
 	//敵の速度
 	constexpr float kSpeed = 4.0f;
+
+	constexpr float kShakeTimeHit = 0.2f;
+	constexpr float kShakePowerHit = 15.0f;
 }
 
 Enemy::Enemy() :
@@ -33,7 +37,8 @@ Enemy::Enemy() :
 	isHit_(false),
 	hitTimer_(0.0f),
 	isDead_(false),
-	isDestroy_(false)
+	isDestroy_(false),
+	isSpawning_(true)
 {
 	pos_ = kFirstPos;
 	collider_.SetOwner(this);
@@ -51,15 +56,35 @@ void Enemy::Init()
 	MV1SetScale(model_.GetHandle(), kModelScale);
 
 	animation_.Init(model_.GetHandle(), AnimType::Enemy);
-	animation_.ChangeState(AnimationState::Idle);
+	animation_.ChangeState(AnimationState::Spawn);
 
 	collider_.SetEnable(true);
 	collider_.SetColliderType(ColliderType::Charactor);
+	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
 }
 
 void Enemy::Update()
 {
 	if (!pPlayer_)return;
+
+	//生成時の処理
+	if (isSpawning_)
+	{
+		animation_.Update(1.0f / 60.0f);
+
+		//終わったら通常状態へ
+		if (animation_.IsEnd())
+		{
+			isSpawning_ = false;
+			animation_.ChangeState(AnimationState::Idle);
+		}
+
+		//当たり判定も更新
+		collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
+
+		MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
+		return;
+	}
 
 	//死亡処理
 	if (isDead_)
@@ -156,6 +181,11 @@ void Enemy::OnHit(GameObject* attacker)
 
 	isHit_ = true;
 	isDead_ = true;
+
+	if (pCamera_)
+	{
+		pCamera_->Shake(kShakeTimeHit, kShakePowerHit);
+	}
 
 	//死亡アニメーション開始
 	animation_.ChangeState(AnimationState::Death);

@@ -8,6 +8,7 @@ enum class AnimType
 
 enum class AnimationState
 {
+    Spawn,
     Idle,
     Run,
     Attack,
@@ -49,6 +50,7 @@ private:
     float totalTime_;
 
     AnimationState state_;
+    AnimationState prevState_;
     AnimType type_;
 };
 

@@ -5,6 +5,11 @@
 #include"../Physics/Camera.h"
 #include <Dxlib.h>
 
+namespace
+{
+	constexpr float kEnemyMax = 3;
+}
+
 SceneMain::SceneMain() :
 	frameCount_(0)
 {
@@ -38,10 +43,21 @@ void SceneMain::Init()
 	skyTexture_[5] = LoadGraph("data/backGround_bk.png");
 
 	//各クラスの初期化処理
-	auto enemy = std::make_shared<Enemy>();
-	enemy->Init();
-	enemy->SetPlayer(pPlayer_.get());
-	enemies_.push_back(enemy);
+	for (int i = 0; i < 3; i++)
+	{
+		auto enemy = std::make_shared<Enemy>();
+		enemy->Init();
+		enemy->SetPlayer(pPlayer_.get());
+
+		float range = 1000.0f;
+
+		float x = ((float)rand() / RAND_MAX) * range * 2 - range;
+		float z = ((float)rand() / RAND_MAX) * range * 2 - range;
+
+		enemy->SetPos({ x, 0.0f, z });
+
+		enemies_.push_back(enemy);
+	}
 	
 	pPlayer_->Init();
 	pCamera_->SetPlayer(pPlayer_);
@@ -82,6 +98,23 @@ void SceneMain::Update(Input&input)
 				return e->IsDestroy();
 			}),
 		enemies_.end());
+
+	//常時何体かわいているようにする
+	while (enemies_.size() < kEnemyMax)
+	{
+		auto enemy = std::make_shared<Enemy>();
+
+		float range = 1000.0f;
+
+		float x = ((float)rand() / RAND_MAX) * range * 2 - range;
+		float z = ((float)rand() / RAND_MAX) * range * 2 - range;
+
+		enemy->SetPos({ x, 0.0f, z });
+		enemy->SetPlayer(pPlayer_.get());
+		enemy->SetCamera(pCamera_.get());
+		enemy->Init();
+		enemies_.push_back(enemy);
+	}
 }
 
 void SceneMain::Draw()
@@ -174,7 +207,7 @@ void SceneMain::DrawSkybox()
 {
 	//SetUseBackCulling(false);
 
-	float size = 300.0f;
+	float size = 400.0f;
 
 	VECTOR cam = GetCameraPosition();
 
@@ -193,7 +226,7 @@ void SceneMain::DrawSkybox()
 	};
 
 	SetUseLighting(FALSE);
-	SetUseZBuffer3D(TRUE);
+	SetUseZBuffer3D(FALSE);
 	SetWriteZBuffer3D(FALSE);
 	SetDrawZ(0.0f);
 	// 前
@@ -205,8 +238,8 @@ void SceneMain::DrawSkybox()
 	// 左
 	DrawSkyQuad(v[4], v[0], v[3], v[7], skyTexture_[1]);
 
-	// 右
-	DrawSkyQuad(v[5], v[1], v[2], v[6], skyTexture_[0]);
+	// 右 ←修正
+	DrawSkyQuad(v[1], v[5], v[6], v[2], skyTexture_[0]);
 
 	// 上
 	DrawSkyQuad(v[0], v[1], v[5], v[4], skyTexture_[2]);
