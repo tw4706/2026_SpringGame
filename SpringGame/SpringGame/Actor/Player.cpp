@@ -24,6 +24,9 @@ namespace
 
 	//モデルのサイズ
 	constexpr float kModelScal = 100.0f;
+
+	//移動制限するための定数
+	const float kWalkLimit = 950.0f;
 }
 
 Player::Player() :
@@ -147,6 +150,12 @@ void Player::Move(Input& input)
 
 	//位置の反映
 	pos_ += vel_;
+
+	//移動の制限
+	if (pos_.x_ > kWalkLimit)  pos_.x_ = kWalkLimit;
+	if (pos_.x_ < -kWalkLimit) pos_.x_ = -kWalkLimit;
+	if (pos_.z_ > kWalkLimit)  pos_.z_ = kWalkLimit;
+	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
 
 	//行列の更新
 	UpdateMatrix();

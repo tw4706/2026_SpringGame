@@ -11,6 +11,11 @@ Vector3::Vector3(float x, float y, float z) :
 {
 }
 
+Vector3::Vector3(const VECTOR& v):
+	x_(v.x),y_(v.y),z_(v.z)
+{
+}
+
 //ƒxƒNƒgƒ‹‚Ì‘«‚µŽZ
 Vector3 Vector3::operator+(const Vector3& other) const
 {

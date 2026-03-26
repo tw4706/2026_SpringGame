@@ -8,6 +8,10 @@ public:
 
 	Vector3();
 	Vector3(float x, float y, float z);
+
+	//変換するためのコンストラクタ
+	Vector3(const VECTOR& v);
+
 	virtual ~Vector3() {};
 
 	//ベクトルの足し算
@@ -40,6 +44,6 @@ public:
 	Vector3 Cross(const Vector3& other) const;
 
 	//DxlibのVECTORに変換
-	VECTOR ToDxlibVector() { return VGet(x_, y_, z_); }
+	VECTOR ToDxlibVector()const { return VGet(x_, y_, z_); }
 };
 

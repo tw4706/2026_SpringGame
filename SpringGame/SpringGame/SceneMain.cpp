@@ -28,7 +28,14 @@ void SceneMain::Init()
 
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
-	SetCameraNearFar(1.0f, 1500.0f);
+	SetCameraNearFar(10.0f, 2000.0f);
+
+	skyTexture_[0] = LoadGraph("data/backGround_rt.png");
+	skyTexture_[1] = LoadGraph("data/backGround_lf.png");
+	skyTexture_[2] = LoadGraph("data/backGround_up.png");
+	skyTexture_[3] = LoadGraph("data/backGround_dn.png");
+	skyTexture_[4] = LoadGraph("data/backGround_ft.png");
+	skyTexture_[5] = LoadGraph("data/backGround_bk.png");
 
 	//各クラスの初期化処理
 	auto enemy = std::make_shared<Enemy>();
@@ -79,6 +86,8 @@ void SceneMain::Update(Input&input)
 
 void SceneMain::Draw()
 {
+	DrawSkybox();
+
 	DrawGrid();
 
 	//各クラスの描画処理
@@ -110,7 +119,7 @@ void SceneMain::DrawGrid()
 	//	DrawLine3D(startPos, endPos, 0x0000ff);
 	//}
 
-	const int GRID_NUM = 6;      // 片側のマス数
+	const int GRID_NUM = 10;      // 片側のマス数
 	const float TILE_SIZE = 100.0f;
 
 	for (int z = -GRID_NUM; z < GRID_NUM; z++)
@@ -129,4 +138,84 @@ void SceneMain::DrawGrid()
 			DrawTriangle3D(v1, v3, v4, color, TRUE);
 		}
 	}
+}
+
+void SceneMain::DrawSkyQuad(VECTOR a, VECTOR b, VECTOR c, VECTOR d, int tex)
+{
+	VERTEX3D v[4];
+
+	v[0].pos = a; v[0].u = 0; v[0].v = 0;
+	v[1].pos = b; v[1].u = 1; v[1].v = 0;
+	v[2].pos = c; v[2].u = 1; v[2].v = 1;
+	v[3].pos = d; v[3].u = 0; v[3].v = 1;
+
+	for (int i = 0; i < 4; i++)
+	{
+		v[i].dif.r = 255;
+		v[i].dif.g = 255;
+		v[i].dif.b = 255;
+		v[i].dif.a = 255;
+
+		v[i].spc.r = 0;
+		v[i].spc.g = 0;
+		v[i].spc.b = 0;
+		v[i].spc.a = 0;
+	}
+
+	// 三角形1
+	DrawPolygon3D(&v[0], 3, tex, TRUE);
+
+	// 三角形2
+	VERTEX3D v2[3] = { v[0], v[2], v[3] };
+	DrawPolygon3D(v2, 3, tex, TRUE);
+}
+
+void SceneMain::DrawSkybox()
+{
+	//SetUseBackCulling(false);
+
+	float size = 300.0f;
+
+	VECTOR cam = GetCameraPosition();
+
+	// 8頂点
+	VECTOR v[8] =
+	{
+		VGet(cam.x - size, cam.y + size, cam.z - size),
+		VGet(cam.x + size, cam.y + size, cam.z - size),
+		VGet(cam.x + size, cam.y - size, cam.z - size),
+		VGet(cam.x - size, cam.y - size, cam.z - size),
+
+		VGet(cam.x - size, cam.y + size, cam.z + size),
+		VGet(cam.x + size, cam.y + size, cam.z + size),
+		VGet(cam.x + size, cam.y - size, cam.z + size),
+		VGet(cam.x - size, cam.y - size, cam.z + size),
+	};
+
+	SetUseLighting(FALSE);
+	SetUseZBuffer3D(TRUE);
+	SetWriteZBuffer3D(FALSE);
+	SetDrawZ(0.0f);
+	// 前
+	DrawSkyQuad(v[4], v[5], v[6], v[7], skyTexture_[4]);
+
+	// 後
+	DrawSkyQuad(v[1], v[0], v[3], v[2], skyTexture_[5]);
+
+	// 左
+	DrawSkyQuad(v[4], v[0], v[3], v[7], skyTexture_[1]);
+
+	// 右
+	DrawSkyQuad(v[5], v[1], v[2], v[6], skyTexture_[0]);
+
+	// 上
+	DrawSkyQuad(v[0], v[1], v[5], v[4], skyTexture_[2]);
+
+	// 下
+	DrawSkyQuad(v[7], v[6], v[2], v[3], skyTexture_[3]);
+
+	SetWriteZBuffer3D(TRUE);
+	SetUseLighting(TRUE);
+
+	printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);
 }

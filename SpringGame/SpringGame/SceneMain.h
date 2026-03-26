@@ -19,8 +19,13 @@ public:
 private:
 	void DrawGrid();
 
+	void DrawSkyQuad(VECTOR a, VECTOR b, VECTOR c, VECTOR d, int tex);
+
+	void DrawSkybox();
+
 private:
 	int frameCount_;
+	int skyTexture_[6];
 	std::vector<std::shared_ptr<Enemy>> enemies_;
 	std::shared_ptr<Player>pPlayer_;
 	std::shared_ptr<Camera>pCamera_;
