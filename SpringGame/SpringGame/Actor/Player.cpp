@@ -44,6 +44,9 @@ Player::Player() :
 	attackCollider_ = SphereCollider(kAttackColSize);
 	collider_.SetOwner(this);
 	attackCollider_.SetOwner(this);
+
+	//コライダーを登録
+	GameObject::pCollider_ = &collider_;
 }
 
 Player::~Player()

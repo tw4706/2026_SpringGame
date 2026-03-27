@@ -4,6 +4,7 @@
 #include"../Input.h"
 #include"../Physics/Camera.h"
 #include"../ScoreManager.h"
+#include"../ScorePop.h"
 #include <Dxlib.h>
 
 namespace
@@ -49,6 +50,7 @@ void SceneMain::Init()
 		auto enemy = std::make_shared<Enemy>();
 		enemy->Init();
 		enemy->SetPlayer(pPlayer_.get());
+		enemy->SetScene(this);
 
 		float range = 1000.0f;
 
@@ -76,6 +78,11 @@ void SceneMain::Update(Input&input)
 	{
 		enemy->Update();
 	}
+
+	for (auto& p : pScorePops_)
+	{
+		p.Update();
+	}
 	pPlayer_->Update(input);
 	pCamera_->Update();
 
@@ -102,6 +109,12 @@ void SceneMain::Update(Input&input)
 			}),
 		enemies_.end());
 
+	// è¡Ç∑
+	pScorePops_.erase(
+		std::remove_if(pScorePops_.begin(), pScorePops_.end(),
+			[](const ScorePop& p) { return p.IsDead(); }),
+		pScorePops_.end());
+
 	//èÌéûâΩëÃÇ©ÇÌÇ¢ÇƒÇ¢ÇÈÇÊÇ§Ç…Ç∑ÇÈ
 	while (enemies_.size() < kEnemyMax)
 	{
@@ -115,6 +128,7 @@ void SceneMain::Update(Input&input)
 		enemy->SetPos({ x, 0.0f, z });
 		enemy->SetPlayer(pPlayer_.get());
 		enemy->SetCamera(pCamera_.get());
+		enemy->SetScene(this);
 		enemy->Init();
 		enemies_.push_back(enemy);
 	}
@@ -131,6 +145,10 @@ void SceneMain::Draw()
 	{
 		enemy->Draw();
 	}
+	for (auto& p : pScorePops_)
+	{
+		p.Draw();
+	}
 	pPlayer_->Draw();
 #ifdef DEBUG_
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
@@ -139,6 +157,11 @@ void SceneMain::Draw()
 
 	//ì_êîï\é¶
 	DrawFormatString(0, 32, GetColor(255, 0, 0),"Score : %d", ScoreManager::GetScore());
+}
+
+void SceneMain::AddScorePop(const Vector3& pos, int value)
+{
+	pScorePops_.emplace_back(pos, value);
 }
 
 void SceneMain::DrawGrid()
@@ -235,7 +258,7 @@ void SceneMain::DrawSkybox()
 	SetUseLighting(FALSE);
 	SetUseZBuffer3D(FALSE);
 	SetWriteZBuffer3D(FALSE);
-	SetDrawZ(0.0f);
+
 	// ëO
 	DrawSkyQuad(v[4], v[5], v[6], v[7], skyTexture_[4]);
 
@@ -249,14 +272,14 @@ void SceneMain::DrawSkybox()
 	DrawSkyQuad(v[1], v[5], v[6], v[2], skyTexture_[0]);
 
 	// è„
-	DrawSkyQuad(v[0], v[1], v[5], v[4], skyTexture_[2]);
+	//DrawSkyQuad(v[0], v[1], v[5], v[4], skyTexture_[2]);
 
 	// â∫
-	DrawSkyQuad(v[7], v[6], v[2], v[3], skyTexture_[3]);
+	//DrawSkyQuad(v[7], v[6], v[2], v[3], skyTexture_[3]);
 
 	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(TRUE);
-	SetDrawZ(1.0f);
+	//SetDrawZ(1.0f);
 	SetUseLighting(TRUE);
 
 //	printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);

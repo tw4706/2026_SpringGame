@@ -1,6 +1,7 @@
 #pragma once
 #include"Physics/Vector3.h"
 
+class Collider;
 class GameObject
 {
 public :
@@ -15,9 +16,13 @@ public :
 	virtual void OnCollision(GameObject* other) {}
 	virtual void OnHit(GameObject* attacker) {};
 
+	//“–‚½‚è”»’è‚ÌŽæ“¾
+	Collider* GetCollider()const { return pCollider_; }
+
 protected:
 	Vector3 pos_;
 	Vector3 vel_;
 	float dir_;
+	Collider* pCollider_ = nullptr;
 };
 

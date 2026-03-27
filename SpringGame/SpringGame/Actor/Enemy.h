@@ -6,6 +6,7 @@
 
 class Player;
 class Camera;
+class SceneMain;
 class Enemy :public GameObject
 {
 public:
@@ -27,6 +28,7 @@ public:
 	void SetPos(const Vector3& pos) { pos_ = pos; }
 
 	void SetCamera(Camera* camera) { pCamera_ = camera; }
+	void SetScene(SceneMain* scene) { pScene_ = scene; }
 
 	bool IsDestroy()const { return isDestroy_; }
 private:
@@ -42,6 +44,7 @@ private:
 
 	Player* pPlayer_=nullptr;//プレイヤーのポインタ(参照用)
 	Camera* pCamera_ = nullptr;
+	SceneMain* pScene_ = nullptr;
 	Model model_;
 	Animation animation_;
 	AnimationState state_;

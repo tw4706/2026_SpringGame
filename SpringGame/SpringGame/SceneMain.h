@@ -6,6 +6,7 @@ class Enemy;
 class Player;
 class Input;
 class Camera;
+class ScorePop;
 class SceneMain
 {
 public:
@@ -15,6 +16,8 @@ public:
 	void Init();
 	void Update(Input& input);
 	void Draw();
+
+	void AddScorePop(const Vector3& pos, int value);
 
 private:
 	void DrawGrid();
@@ -27,6 +30,7 @@ private:
 	int frameCount_;
 	int skyTexture_[6];
 	std::vector<std::shared_ptr<Enemy>> enemies_;
+	std::vector<ScorePop>pScorePops_;
 	std::shared_ptr<Player>pPlayer_;
 	std::shared_ptr<Camera>pCamera_;
 	CollisionManager collisionManager_;

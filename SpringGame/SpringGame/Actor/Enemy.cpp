@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "../SceneMain.h"
 #include "../ScoreManager.h"
 #include "../Physics/Vector3.h"
 #include "../Physics/Camera.h"
@@ -46,6 +47,9 @@ Enemy::Enemy() :
 {
 	pos_ = kFirstPos;
 	collider_.SetOwner(this);
+
+	//ƒRƒ‰ƒCƒ_[‚ð“o˜^
+	GameObject::pCollider_ = &collider_;
 }
 
 Enemy::~Enemy()
@@ -193,8 +197,16 @@ void Enemy::OnHit(GameObject* attacker)
 	isHit_ = true;
 	isDead_ = true;
 
+	//“–‚½‚è”»’è‚ð–³Œø‚É‚·‚é
+	collider_.SetEnable(false);
+
 	//“_”‰ÁŽZ
 	ScoreManager::AddScore(kEnemyScore);
+
+	if (pScene_)
+	{
+		pScene_->AddScorePop(pos_ + Vector3(0, 200.0f, 0), kEnemyScore);
+	}
 
 	if (pCamera_)
 	{
@@ -208,6 +220,12 @@ void Enemy::OnHit(GameObject* attacker)
 void Enemy::OnCollision(GameObject* other)
 {
 	isHit_ = true;
+
+	//ƒvƒŒƒCƒ„[‚ÌUŒ‚”»’è‚¾‚¯‚ðŒ©‚é
+	if (other->GetCollider()->GetColliderType() == ColliderType::Attack)
+	{
+		OnHit(other);
+	}
 }
 
 AnimationState Enemy::GetState()const

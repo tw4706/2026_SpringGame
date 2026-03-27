@@ -33,7 +33,26 @@ void CollisionManager::CheckAllCollision()
 			Collider* a = colliders_[i];
 			Collider* b = colliders_[j];
 
+			ColliderType typeA = a->GetColliderType();
+			ColliderType typeB = b->GetColliderType();
+
 			if (!a->IsEnable() || !b->IsEnable()) continue;
+
+			//ƒLƒƒƒ‰ƒNƒ^[“¯Žm‚Í–³Ž‹
+			if (typeA == ColliderType::Charactor && typeB == ColliderType::Charactor)
+			{
+				continue;
+			}
+
+			//Ž©g‚ÌUŒ‚”»’è‚à–³Ž‹
+			if (typeA == ColliderType::Attack && typeB == ColliderType::Charactor)
+			{
+				if (a->GetOwner() == b->GetOwner()) continue;
+			}
+			if (typeB == ColliderType::Attack && typeA == ColliderType::Charactor)
+			{
+				if (a->GetOwner() == b->GetOwner()) continue;
+			}
 
 			// Œ^‚Å•ªŠò
 			if (a->GetCollisionType() == CollisionType::Sphere &&
