@@ -3,6 +3,7 @@
 #include"../Actor/Enemy.h"
 #include"../Input.h"
 #include"../Physics/Camera.h"
+#include"../ScoreManager.h"
 #include <Dxlib.h>
 
 namespace
@@ -43,7 +44,7 @@ void SceneMain::Init()
 	skyTexture_[5] = LoadGraph("data/backGround_bk.png");
 
 	//各クラスの初期化処理
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < kEnemyMax; i++)
 	{
 		auto enemy = std::make_shared<Enemy>();
 		enemy->Init();
@@ -69,6 +70,8 @@ void SceneMain::Update(Input&input)
 	frameCount_++;
 
 	//各クラスの更新処理
+	ScoreManager::Update();
+
 	for (auto& enemy : enemies_)
 	{
 		enemy->Update();
@@ -129,9 +132,13 @@ void SceneMain::Draw()
 		enemy->Draw();
 	}
 	pPlayer_->Draw();
-
+#ifdef DEBUG_
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
+#endif
+
+	//点数表示
+	DrawFormatString(0, 32, GetColor(255, 0, 0),"Score : %d", ScoreManager::GetScore());
 }
 
 void SceneMain::DrawGrid()
@@ -247,8 +254,10 @@ void SceneMain::DrawSkybox()
 	// 下
 	DrawSkyQuad(v[7], v[6], v[2], v[3], skyTexture_[3]);
 
+	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(TRUE);
+	SetDrawZ(1.0f);
 	SetUseLighting(TRUE);
 
-	printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);
+//	printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);
 }

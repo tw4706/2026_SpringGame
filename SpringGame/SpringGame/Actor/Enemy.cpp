@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "../ScoreManager.h"
 #include "../Physics/Vector3.h"
 #include "../Physics/Camera.h"
 #include "../Actor/Player.h"
@@ -29,6 +30,9 @@ namespace
 
 	constexpr float kShakeTimeHit = 0.2f;
 	constexpr float kShakePowerHit = 15.0f;
+
+	//ìGÇì|ÇµÇΩÇ∆Ç´ÇÃÉ|ÉCÉìÉg
+	constexpr int kEnemyScore = 100;
 }
 
 Enemy::Enemy() :
@@ -140,6 +144,13 @@ void Enemy::Update()
 
 	pos_ += vel_;
 
+	//ìGÇÃå¸Ç´Çí«è]ÇµÇƒÇ¢ÇÈç€Ç…ÉvÉåÉCÉÑÅ[ï˚å¸Ç…çáÇÌÇπÇÈ
+	if (vel_.Length() > 0.001f)
+	{
+		float angleY = atan2f(-dir.x_, -dir.z_);
+		MV1SetRotationXYZ(model_.GetHandle(), VGet(0.0f, angleY, 0.0f));
+	}
+
 	state_ = GetState();
 	animation_.ChangeState(state_);
 	animation_.Update(1.0f / 60.0f);
@@ -181,6 +192,9 @@ void Enemy::OnHit(GameObject* attacker)
 
 	isHit_ = true;
 	isDead_ = true;
+
+	//ì_êîâ¡éZ
+	ScoreManager::AddScore(kEnemyScore);
 
 	if (pCamera_)
 	{

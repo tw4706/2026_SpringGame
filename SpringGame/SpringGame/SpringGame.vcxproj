@@ -151,6 +151,7 @@
     <ClCompile Include="Physics\Vector3.cpp" />
     <ClCompile Include="SceneMain.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Enemy.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneMain.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
+    <ClInclude Include="ScoreManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />
