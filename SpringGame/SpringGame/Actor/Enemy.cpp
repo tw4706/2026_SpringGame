@@ -66,7 +66,7 @@ void Enemy::Init()
 	animation_.Init(model_.GetHandle(), AnimType::Enemy);
 	animation_.ChangeState(AnimationState::Spawn);
 
-	collider_.SetEnable(true);
+	collider_.SetEnable(false);
 	collider_.SetColliderType(ColliderType::Charactor);
 	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
 }
@@ -85,6 +85,8 @@ void Enemy::Update()
 		{
 			isSpawning_ = false;
 			animation_.ChangeState(AnimationState::Idle);
+
+			collider_.SetEnable(true);
 		}
 
 		//当たり判定も更新
@@ -219,12 +221,15 @@ void Enemy::OnHit(GameObject* attacker)
 
 void Enemy::OnCollision(GameObject* other)
 {
+	if (isDead_ || isSpawning_) return;
+
 	isHit_ = true;
 
-	//プレイヤーの攻撃判定だけを見る
 	if (other->GetCollider()->GetColliderType() == ColliderType::Attack)
 	{
 		OnHit(other);
+
+		other->GetCollider()->SetEnable(false);
 	}
 }
 

@@ -171,9 +171,7 @@ void Player::Attack(Input& input)
 	if (input.IsTriggered("attack") && !isAttacking_)
 	{
 		isAttacking_ = true;
-		attackTimer_ = 0.5f; //UŒ‚ŠÔ
-
-		attackCollider_.SetEnable(true);
+		attackTimer_ = 0.3f; //UŒ‚ŠÔ
 	}
 
 	//UŒ‚’†
@@ -186,8 +184,16 @@ void Player::Attack(Input& input)
 
 		//UŒ‚ˆÊ’u
 		Vector3 attackPos = pos_ + forward * 100.0f + kColOffset;
-
 		attackCollider_.SetPos(attackPos);
+
+		if (attackTimer_ > 0.25f) //ˆêu‚¾‚¯ON
+		{
+			attackCollider_.SetEnable(true);
+		}
+		else
+		{
+			attackCollider_.SetEnable(false);
+		}
 
 		//ŠÔI—¹‚ÅUŒ‚I—¹
 		if (attackTimer_ <= 0.0f)
