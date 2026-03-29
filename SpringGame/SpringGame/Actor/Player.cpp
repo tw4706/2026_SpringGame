@@ -23,7 +23,7 @@ namespace
 	const Vector3 kColOffset = { 0.0f,100.0f,0.0f };
 
 	//モデルのサイズ
-	constexpr float kModelScal = 100.0f;
+	constexpr float kModelScale = 0.5f;
 
 	//移動制限するための定数
 	const float kWalkLimit = 950.0f;
@@ -251,7 +251,7 @@ void Player::UpdateMatrix()
 	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
 
 	//拡縮
-	Matrix4x4 scaleMat = Matrix4x4::Scale(kModelScal, kModelScal, kModelScal);
+	Matrix4x4 scaleMat = Matrix4x4::Scale(kModelScale, kModelScale, kModelScale);
 
 	//行列の合成
 	Matrix4x4 mat = scaleMat * rotMat * transMat;

@@ -18,7 +18,7 @@ namespace
 	const Vector3 kFirstPos = { 400.0f,0.0f,0.0f };
 
 	//モデルのサイズ
-	const VECTOR kModelScale = { 100.0f,100.0f, 100.0f };
+	const VECTOR kModelScale = { 0.5f,0.5f, 0.5f };
 
 	//追従開始距離
 	constexpr float kChaseRange = 300.0f;
