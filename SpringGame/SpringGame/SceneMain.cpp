@@ -13,7 +13,8 @@ namespace
 }
 
 SceneMain::SceneMain() :
-	frameCount_(0)
+	frameCount_(0),
+	shadowMap_(-1)
 {
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
@@ -26,12 +27,12 @@ SceneMain::~SceneMain()
 
 void SceneMain::Init()
 {
-	// カリングの設定（裏面のポリゴンは見えないようにする）
+	//カリングの設定（裏面のポリゴンは見えないようにする）
 	SetUseBackCulling(false);
 
-	// Zバッファの設定
-	SetUseZBuffer3D(true);		// Zバッファを使います
-	SetWriteZBuffer3D(true);	// 描画する物体はZバッファにも距離を書き込む
+	//Zバッファの設定
+	SetUseZBuffer3D(true);		//Zバッファを使います
+	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
 
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
@@ -43,6 +44,19 @@ void SceneMain::Init()
 	skyTexture_[3] = LoadGraph("data/backGround_dn.png");
 	skyTexture_[4] = LoadGraph("data/backGround_ft.png");
 	skyTexture_[5] = LoadGraph("data/backGround_bk.png");
+
+	// ===== ShadowMap =====
+	//shadowMap_ = MakeShadowMap(1024, 1024);
+
+	//SetLightEnable(TRUE);
+	//SetLightDirection(VGet(-0.3f, -1.0f, -0.3f));
+
+	//SetShadowMapDrawArea(
+	//	shadowMap_,
+	//	VGet(-300, 0, -300),
+	//	VGet(300, 300, 300));
+
+	//SetShadowMapAdjustDepth(shadowMap_, 0.01f);
 
 	//各クラスの初期化処理
 	for (int i = 0; i < kEnemyMax; i++)
@@ -109,7 +123,7 @@ void SceneMain::Update(Input&input)
 			}),
 		enemies_.end());
 
-	// 消す
+	//消す
 	pScorePops_.erase(
 		std::remove_if(pScorePops_.begin(), pScorePops_.end(),
 			[](const ScorePop& p) { return p.IsDead(); }),
@@ -136,20 +150,25 @@ void SceneMain::Update(Input&input)
 
 void SceneMain::Draw()
 {
+	// Skybox（影なし）
+	//SetUseShadowMap(0, -1);
 	DrawSkybox();
 
-	DrawGrid();
+	// 影あり
+	//SetUseShadowMap(0, shadowMap_);
 
-	//各クラスの描画処理
+	//SetUseLighting(FALSE);
+	DrawGrid();
+	//SetUseLighting(TRUE);
+
 	for (auto& enemy : enemies_)
 	{
 		enemy->Draw();
 	}
-	for (auto& p : pScorePops_)
-	{
-		p.Draw();
-	}
 	pPlayer_->Draw();
+
+	//SetUseShadowMap(0, -1);
+
 #ifdef DEBUG_
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
@@ -182,7 +201,7 @@ void SceneMain::DrawGrid()
 	//	DrawLine3D(startPos, endPos, 0x0000ff);
 	//}
 
-	const int GRID_NUM = 10;      // 片側のマス数
+	const int GRID_NUM = 10;      //片側のマス数
 	const float TILE_SIZE = 100.0f;
 
 	for (int z = -GRID_NUM; z < GRID_NUM; z++)
@@ -196,7 +215,7 @@ void SceneMain::DrawGrid()
 
 			int color = GetColor(80, 160, 80);
 
-			// 三角形2枚で四角形
+			//三角形2枚で四角形を表現する
 			DrawTriangle3D(v1, v2, v3, color, TRUE);
 			DrawTriangle3D(v1, v3, v4, color, TRUE);
 		}
@@ -225,18 +244,16 @@ void SceneMain::DrawSkyQuad(VECTOR a, VECTOR b, VECTOR c, VECTOR d, int tex)
 		v[i].spc.a = 0;
 	}
 
-	// 三角形1
+	//三角形1
 	DrawPolygon3D(&v[0], 3, tex, TRUE);
 
-	// 三角形2
+	//三角形2
 	VERTEX3D v2[3] = { v[0], v[2], v[3] };
 	DrawPolygon3D(v2, 3, tex, TRUE);
 }
 
 void SceneMain::DrawSkybox()
 {
-	//SetUseBackCulling(false);
-
 	float size = 400.0f;
 
 	VECTOR cam = GetCameraPosition();
@@ -259,23 +276,23 @@ void SceneMain::DrawSkybox()
 	SetUseZBuffer3D(FALSE);
 	SetWriteZBuffer3D(FALSE);
 
-	// 前
+	//前
 	DrawSkyQuad(v[4], v[5], v[6], v[7], skyTexture_[4]);
 
-	// 後
+	//後
 	DrawSkyQuad(v[1], v[0], v[3], v[2], skyTexture_[5]);
 
-	// 左
+	//左
 	DrawSkyQuad(v[4], v[0], v[3], v[7], skyTexture_[1]);
 
-	// 右 ←修正
+	//右
 	DrawSkyQuad(v[1], v[5], v[6], v[2], skyTexture_[0]);
 
-	// 上
+	//上
 	//DrawSkyQuad(v[0], v[1], v[5], v[4], skyTexture_[2]);
 
-	// 下
-	//DrawSkyQuad(v[7], v[6], v[2], v[3], skyTexture_[3]);
+	//下
+	DrawSkyQuad(v[7], v[6], v[2], v[3], skyTexture_[3]);
 
 	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(TRUE);

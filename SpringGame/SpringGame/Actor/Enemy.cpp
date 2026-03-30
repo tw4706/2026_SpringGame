@@ -18,7 +18,7 @@ namespace
 	const Vector3 kFirstPos = { 400.0f,0.0f,0.0f };
 
 	//モデルのサイズ
-	const VECTOR kModelScale = { 0.5f,0.5f, 0.5f };
+	const VECTOR kModelScale = { 0.8f,0.8f, 0.8f };
 
 	//追従開始距離
 	constexpr float kChaseRange = 300.0f;
@@ -90,7 +90,7 @@ void Enemy::Update()
 		}
 
 		//当たり判定も更新
-		collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
+		collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
 
 		MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 		return;
@@ -171,7 +171,7 @@ void Enemy::Update()
 		isHit_ = false;
 	}
 
-	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
+	collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
 	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 #ifdef DEBUG_
 	DrawFormatString(0, 32, GetColor(255, 255, 255),

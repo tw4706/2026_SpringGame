@@ -3,7 +3,7 @@
 #include"../Physics/Matrix4x4.h"
 #include"../Physics/Vector3.h"
 #include "../Actor/Enemy.h"
-#include<Dxlib.h>
+#include"DxLib.h"
 #include<cassert>
 
 namespace
@@ -20,7 +20,8 @@ namespace
 	constexpr float kColSize = 50.0f;
 	constexpr float kAttackColSize = 50.0f;
 
-	const Vector3 kColOffset = { 0.0f,100.0f,0.0f };
+	//当たり判定位置の調整
+	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };
 
 	//モデルのサイズ
 	constexpr float kModelScale = 0.5f;

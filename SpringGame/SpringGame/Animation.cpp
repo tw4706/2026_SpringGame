@@ -11,10 +11,10 @@ namespace
 	const char* kPlayerDeath = "CharacterArmature|Death";
 
 	//“G
-	const char* kEnemySpawn = "Spawn_Ground";
-	const char* kEnemyIdle = "Idle_A";
-	const char* kEnemyRun = "Idle_B";
-	const char* kEnemyDeath = "Death_A";
+	const char* kEnemySpawn = "MonsterArmature|Jump";
+	const char* kEnemyIdle = "MonsterArmature|Idle";
+	const char* kEnemyRun = "MonsterArmature|Walk";
+	const char* kEnemyDeath = "MonsterArmature|Death";
 
 	constexpr float kAnimationSpeed = 30.0f;
 }

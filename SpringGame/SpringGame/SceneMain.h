@@ -29,6 +29,8 @@ private:
 private:
 	int frameCount_;
 	int skyTexture_[6];
+	int shadowMap_;
+
 	std::vector<std::shared_ptr<Enemy>> enemies_;
 	std::vector<ScorePop>pScorePops_;
 	std::shared_ptr<Player>pPlayer_;
