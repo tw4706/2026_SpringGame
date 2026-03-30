@@ -78,6 +78,10 @@ void Player::Update(Input& input)
 	//ˆÚ“®
 	Move(input);
 
+	//ˆÚ“®‚É‰‚¶‚Ä“–‚½‚è”»’è‚ğ‘O‚É‚¸‚ç‚·
+	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
+	collider_.SetPos(pos_ + kColOffset + forward * 30.0f);
+
 	//UŒ‚
 	Attack(input);
 
