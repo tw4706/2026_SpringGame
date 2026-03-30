@@ -5,10 +5,10 @@
 namespace
 {
 	//ÉvÉåÉCÉÑÅ[
-	const char* kPlayerIdle = "Jump_Idle";
-	const char* kPlayerRun = "Running_A";
-	const char* kPlayerAttack = "Jump_Full";
-	const char* kPlayerDeath = "Walking_B";
+	const char* kPlayerIdle = "CharacterArmature|Idle";
+	const char* kPlayerRun = "CharacterArmature|Run";
+	const char* kPlayerAttack = "CharacterArmature|Punch";
+	const char* kPlayerDeath = "CharacterArmature|Death";
 
 	//ìG
 	const char* kEnemySpawn = "Spawn_Ground";
