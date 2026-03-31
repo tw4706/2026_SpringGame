@@ -37,6 +37,7 @@ private:
 
 private:
 	int frameCount_;
+	float playTime_;//§ŒÀŠÔ
 	int skyTexture_[6];
 	int shadowMap_;
 

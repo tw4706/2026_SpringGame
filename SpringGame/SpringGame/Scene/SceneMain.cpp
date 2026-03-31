@@ -6,17 +6,21 @@
 #include"../ScoreManager.h"
 #include"../ScorePop.h"
 #include"SceneController.h"
+#include "ClearScene.h"
+#include<algorithm>
 #include <Dxlib.h>
 
 namespace
 {
 	constexpr float kEnemyMax = 3;
 	constexpr int kFadeInterval = 60;
+	constexpr float kClearFadeTime = 5.0f;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
 	Scene(contorller),
 	frameCount_(0),
+	playTime_(0.0f),
 	shadowMap_(-1),
 	update_(&SceneMain::NormalUpdate),
 	draw_(&SceneMain::NormalDraw)
@@ -70,7 +74,6 @@ void SceneMain::Init()
 	
 	pPlayer_->Init();
 	pCamera_->SetPlayer(pPlayer_);
-	printfDx("SetPlayer done\n");
 	pCamera_->Init();
 
 	frameCount_ = kFadeInterval;
@@ -93,6 +96,7 @@ void SceneMain::AddScorePop(const Vector3& pos, int value)
 
 void SceneMain::FadeInUpdate(Input& input)
 {
+	mode_ = FadeMode::In;
 	if (frameCount_-- <= 0)
 	{
 		update_ = &SceneMain::NormalUpdate;
@@ -103,6 +107,8 @@ void SceneMain::FadeInUpdate(Input& input)
 void SceneMain::NormalUpdate(Input& input)
 {
 	frameCount_++;
+
+	playTime_ += 1.0f / 60.0f;
 
 	//各クラスの更新処理
 	ScoreManager::Update();
@@ -165,10 +171,17 @@ void SceneMain::NormalUpdate(Input& input)
 		enemy->Init();
 		enemies_.push_back(enemy);
 	}
+
+	//60秒経ったらクリアシーンへ
+	if (playTime_ >= kClearFadeTime)
+	{
+		controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+	}
 }
 
 void SceneMain::FadeOutUpdate(Input&input)
 {
+	mode_ = FadeMode::Out;
 	if (frameCount_++ >= kFadeInterval)
 	{
 		//シーン遷移
@@ -181,8 +194,23 @@ void SceneMain::FadeDraw()
 	// フェード + 通常描画
 	NormalDraw();
 
-	int alpha = 255 * frameCount_ / kFadeInterval;
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	//フェードの描画
+	float rate = 0.0f;
+
+	if (mode_ == FadeMode::In)
+	{
+		//黒から透明
+		rate = (float)frameCount_ / kFadeInterval;
+	}
+	else
+	{
+		//透明から黒
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+	}
+
+	rate = std::clamp(rate, 0.0f, 1.0f);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
 	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
@@ -204,6 +232,10 @@ void SceneMain::NormalDraw()
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 #endif
+	int remain = (int)(kClearFadeTime - playTime_);
+
+	//残り時間表示
+	DrawFormatString(0, 48, GetColor(255, 255, 0),"TIME LEFT: %d", remain);
 
 	//点数表示
 	DrawFormatString(0, 32, GetColor(255, 0, 0), "Score : %d", ScoreManager::GetScore());

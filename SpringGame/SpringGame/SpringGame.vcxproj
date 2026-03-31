@@ -140,6 +140,7 @@
     <ClCompile Include="Actor\Enemy.cpp" />
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Physics\CollisionManager.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Actor\Enemy.h" />
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Physics\CollisionManager.h" />
