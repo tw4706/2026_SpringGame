@@ -18,6 +18,10 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
 						{PeripheralType::pad1,PAD_INPUT_B} };
+	inputTable_["retry"] = { {PeripheralType::keyboard,KEY_INPUT_RETURN},
+						{PeripheralType::pad1,PAD_INPUT_START} };
+	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
+						{PeripheralType::pad1,PAD_INPUT_Y} };
 
 	//•Ï‚È’l‚ª“ü‚ç‚È‚¢‚æ‚¤‚É˜g‚ðŠJ‚¯‚Ä‚¨‚­
 	for (const auto& input : inputTable_)

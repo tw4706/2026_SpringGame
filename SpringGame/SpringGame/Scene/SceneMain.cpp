@@ -14,16 +14,16 @@ namespace
 {
 	constexpr float kEnemyMax = 3;
 	constexpr int kFadeInterval = 60;
-	constexpr float kClearFadeTime = 5.0f;
+	constexpr float kClearFadeTime =6.0f;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
 	Scene(contorller),
 	frameCount_(0),
 	playTime_(0.0f),
-	shadowMap_(-1),
-	update_(&SceneMain::NormalUpdate),
-	draw_(&SceneMain::NormalDraw)
+	skyTexture_{},
+	update_(&SceneMain::FadeInUpdate),
+	draw_(&SceneMain::FadeDraw)
 {
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
@@ -46,6 +46,7 @@ void SceneMain::Init()
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
 	SetCameraNearFar(10.0f, 2000.0f);
+	SetFontSize(40);
 
 	skyTexture_[0] = LoadGraph("data/backGround_rt.png");
 	skyTexture_[1] = LoadGraph("data/backGround_lf.png");
@@ -94,9 +95,36 @@ void SceneMain::AddScorePop(const Vector3& pos, int value)
 	pScorePops_.emplace_back(pos, value);
 }
 
+void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, int screenW)
+{
+	int width = GetDrawStringWidth(text, strlen(text));
+	int x = (screenW - width) / 2;
+
+	// ===== 太い縁取り（8方向）=====
+	for (int dy = -3; dy <= 3; dy++)
+	{
+		for (int dx = -3; dx <= 3; dx++)
+		{
+			if (dx == 0 && dy == 0) continue;
+
+			DrawString(x + dx, y + dy, text, GetColor(0, 0, 0));
+		}
+	}
+
+	// ===== 本体 =====
+	DrawString(x, y, text, color);
+
+	// ===== 本体 =====
+	DrawString(x, y, text, color);
+}
+
 void SceneMain::FadeInUpdate(Input& input)
 {
 	mode_ = FadeMode::In;
+
+	pPlayer_->Update(input);
+	pCamera_->Update();
+
 	if (frameCount_-- <= 0)
 	{
 		update_ = &SceneMain::NormalUpdate;
@@ -217,14 +245,23 @@ void SceneMain::FadeDraw()
 
 void SceneMain::NormalDraw()
 {
-	SetUseZBuffer3D(FALSE);
-	DrawSkybox();
+	SetUseLighting(FALSE);
 	SetUseZBuffer3D(TRUE);
+	SetWriteZBuffer3D(FALSE);
+
+	SetDrawMode(DX_DRAWMODE_NEAREST);
+	DrawSkybox();
+	SetDrawMode(DX_DRAWMODE_BILINEAR);
 	DrawGrid();
 
+	//各クラスの描画処理
 	for (auto& enemy : enemies_)
 	{
 		enemy->Draw();
+	}
+	for (auto& p : pScorePops_)
+	{
+		p.Draw();
 	}
 	pPlayer_->Draw();
 
@@ -232,13 +269,16 @@ void SceneMain::NormalDraw()
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 #endif
-	int remain = (int)(kClearFadeTime - playTime_);
+	char timeText[64];
+	sprintf_s(timeText, "TIME LEFT : %d", (int)(kClearFadeTime - playTime_));
 
-	//残り時間表示
-	DrawFormatString(0, 48, GetColor(255, 255, 0),"TIME LEFT: %d", remain);
+	DrawCenterTextWithOutline(timeText, 40, GetColor(255, 255, 255));
 
 	//点数表示
-	DrawFormatString(0, 32, GetColor(255, 0, 0), "Score : %d", ScoreManager::GetScore());
+	char scoreText[64];
+	sprintf_s(scoreText, "SCORE : %d", ScoreManager::GetScore());
+
+	DrawCenterTextWithOutline(scoreText, 90, GetColor(255, 80, 80));
 }
 
 void SceneMain::DrawGrid()

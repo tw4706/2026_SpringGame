@@ -12,7 +12,8 @@ enum class AnimationState
     Idle,
     Run,
     Attack,
-    Death
+    Death,
+    Dodge
 };
 
 class Animation

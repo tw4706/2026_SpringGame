@@ -38,6 +38,7 @@ namespace
 
 Enemy::Enemy() :
 	GameObject(Vector3(400.0f, 0.0f, 0.0f), Vector3(0, 0, 0)),
+	state_(AnimationState::Spawn),
 	collider_(kColSize),
 	isHit_(false),
 	hitTimer_(0.0f),
@@ -182,15 +183,15 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	model_.Draw();
-
+#ifdef DEBUG_
 	// “–‚½‚è”»’è‚Ì•`‰æ
 	unsigned int color = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 0);
 
-
-	//DrawSphere3D(
-	//	collider_.GetPos().ToDxlibVector(), // ’†S
-	//	collider_.GetRadian(),				// ”¼Œa
-	//	16, color, color, FALSE);
+	DrawSphere3D(
+		collider_.GetPos().ToDxlibVector(), // ’†S
+		collider_.GetRadian(),				// ”¼Œa
+		16, color, color, FALSE);
+#endif
 }
 
 void Enemy::OnHit(GameObject* attacker)

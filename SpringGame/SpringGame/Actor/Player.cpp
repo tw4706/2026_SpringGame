@@ -28,14 +28,19 @@ namespace
 
 	//移動制限するための定数
 	const float kWalkLimit = 950.0f;
+
+	constexpr float kDodgeTime = 0.25f;
+	constexpr float kDodgeSpeed = 18.0f;
 }
 
 Player::Player() :
 	GameObject(pos_, vel_),
+	state_(PlayerState::Idle),
 	cameraAngle_(0.0f),
 	moveAngle_(0.0f),
 	attackTimer_(0.0f),
-	isAttacking_(false),
+	invincibleTimer_(0.0f),
+	dodgeTimer_(0.0f),
 	collider_(0.0f),
 	attackCollider_(0.0f),
 	isHit_(false)
@@ -59,7 +64,7 @@ void Player::Init()
 {
 	model_.Load("data/Player.mv1");
 
-	animation_.Init(model_.GetHandle(),AnimType::Player);
+	animation_.Init(model_.GetHandle(), AnimType::Player);
 	animation_.ChangeState(AnimationState::Idle);
 
 	collider_.SetEnable(true);
@@ -73,140 +78,230 @@ void Player::Update(Input& input)
 {
 	isHit_ = false;
 
-	collider_.SetPos(pos_ + kColOffset);
+	UpdateTimers();
+	HandleInput(input);
+	UpdateAction(input);
+	UpdateState();
+	UpdateAnimation();
+	UpdateCollision();
 
-	//移動
-	Move(input);
-
-	//移動に応じて当たり判定を前にずらす
-	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
-	collider_.SetPos(pos_ + kColOffset + forward * 30.0f);
-
-	//攻撃
-	Attack(input);
-
-	state_ = GetState();
-	animation_.ChangeState(state_);
-
-	//アニメーションの更新
-	animation_.Update(1.0f / 60.0f);
+	//行列の更新 
+	UpdateMatrix();
 }
 
 void Player::Draw()
 {
 	model_.Draw();
 
+#ifdef DEBUG_
 	//当たり判定の描画
 	unsigned int color = isHit_ ? 0xff0000 : 0x00ff00;
 
-	//DrawSphere3D(
-	//	collider_.GetPos().ToDxlibVector(),		//中心
-	//	collider_.GetRadian(),					//半径
-	//	16, color, color, FALSE);
+	DrawSphere3D(
+		collider_.GetPos().ToDxlibVector(),		//中心
+		collider_.GetRadian(),					//半径
+		16, color, color, FALSE);
 
 	//攻撃判定の描画
-	//if (isAttacking_)
-	//{
-	//	DrawSphere3D(
-	//		attackCollider_.GetPos().ToDxlibVector(),
-	//		attackCollider_.GetRadian(),
-	//		16,
-	//		0xffff00,
-	//		0xffff00,
-	//		FALSE);
-	//}
+	if (state_ == PlayerState::Attack)
+	{
+		DrawSphere3D(
+			attackCollider_.GetPos().ToDxlibVector(),
+			attackCollider_.GetRadian(),
+			16,
+			0xffff00,
+			0xffff00,
+			FALSE);
+	}
+#endif
 }
 
-//移動
 void Player::Move(Input& input)
 {
 	vel_ = { 0.0f, 0.0f, 0.0f };
-
-	// キーボード入力から方向作る
+	// キーボード入力から方向作る 
 	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
-
-	if (input.IsPressed("up"))    inputDir.z_ += 1.0f;
-	if (input.IsPressed("down"))  inputDir.z_ -= 1.0f;
-	if (input.IsPressed("left"))  inputDir.x_ -= 1.0f;
+	if (input.IsPressed("up")) inputDir.z_ += 1.0f;
+	if (input.IsPressed("down")) inputDir.z_ -= 1.0f;
+	if (input.IsPressed("left")) inputDir.x_ -= 1.0f;
 	if (input.IsPressed("right")) inputDir.x_ += 1.0f;
-
-	//入力があるときだけ
+	//入力があるときだけ 
 	if (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f)
 	{
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraAngle_);
 		Vector3 playerDir = rotMat.TransformForVector(inputDir);
 
-		//正規化
+		//正規化 
 		playerDir.Normalize();
 
-		//移動
+		//移動 
 		vel_.x_ = playerDir.x_ * kSpeed;
 		vel_.z_ = playerDir.z_ * kSpeed;
 
-		//向き更新
+		//向き更新 
 		float playerAngle = atan2f(-playerDir.x_, playerDir.z_);
-
 		float diff = playerAngle - moveAngle_;
+
 		while (diff > 3.141592f) diff -= 6.28318f;
 		while (diff < -3.141592f) diff += 6.28318f;
 
 		moveAngle_ += diff * 0.2f;
 	}
 
-	//アナログスティックの更新
+	//アナログスティックの更新 
 	//UpdateAnalogStick(input);
-
+	
 	//位置の反映
 	pos_ += vel_;
 
-	//移動の制限
-	if (pos_.x_ > kWalkLimit)  pos_.x_ = kWalkLimit;
+	//移動の制限 
+	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
 	if (pos_.x_ < -kWalkLimit) pos_.x_ = -kWalkLimit;
-	if (pos_.z_ > kWalkLimit)  pos_.z_ = kWalkLimit;
+	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
 	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
-
-	//行列の更新
-	UpdateMatrix();
 }
 
-//攻撃
-void Player::Attack(Input& input)
+void Player::StartAttack()
 {
-	//ボタン押した瞬間
-	if (input.IsTriggered("attack") && !isAttacking_)
+	state_ = PlayerState::Attack;
+	attackTimer_ = 0.3f;
+}
+
+void Player::StartDodge()
+{
+	state_ = PlayerState::Dodge;
+	dodgeTimer_ = kDodgeTime;
+	invincibleTimer_ = kDodgeTime;
+}
+
+void Player::UpdateTimers()
+{
+	const float deltatime = 1.0f / 60.0f;
+
+	if (attackTimer_ > 0.0f) attackTimer_ -= deltatime;
+	if (dodgeTimer_ > 0.0f) dodgeTimer_ -= deltatime;
+	if (invincibleTimer_ > 0.0f) invincibleTimer_ -= deltatime;
+}
+
+void Player::HandleInput(Input& input)
+{
+	if (input.IsTriggered("dodge") && state_ != PlayerState::Dodge)
 	{
-		isAttacking_ = true;
-		attackTimer_ = 0.3f; //攻撃時間
+		StartDodge();
+		return;
 	}
 
-	//攻撃中
-	if (isAttacking_)
+	if (input.IsTriggered("attack") && state_ != PlayerState::Attack)
 	{
-		attackTimer_ -= 1.0f / 60.0f;
+		StartAttack();
+		return;
+	}
+}
 
-		//プレイヤーの前方向
-		Vector3 forward = {-sinf(moveAngle_),0.0f,cosf(moveAngle_)};
+void Player::UpdateAction(Input& input)
+{
+	switch (state_)
+	{
+	case PlayerState::Idle:
+	case PlayerState::Run:
+		Move(input);
+		break;
 
-		//攻撃位置
-		Vector3 attackPos = pos_ + forward * 100.0f + kColOffset;
-		attackCollider_.SetPos(attackPos);
+	case PlayerState::Attack:
+		UpdateAttack();
+		break;
 
-		if (attackTimer_ > 0.25f) //一瞬だけON
-		{
-			attackCollider_.SetEnable(true);
-		}
+	case PlayerState::Dodge:
+		UpdateDodge();
+		break;
+	}
+}
+
+void Player::UpdateState()
+{
+	if (state_ == PlayerState::Attack && attackTimer_ <= 0.0f)
+		state_ = PlayerState::Idle;
+
+	if (state_ == PlayerState::Dodge && dodgeTimer_ <= 0.0f)
+		state_ = PlayerState::Idle;
+
+	if (state_ == PlayerState::Idle || state_ == PlayerState::Run)
+	{
+		if (fabs(vel_.x_) > 0.1f || fabs(vel_.z_) > 0.1f)
+			state_ = PlayerState::Run;
 		else
-		{
-			attackCollider_.SetEnable(false);
-		}
-
-		//時間終了で攻撃終了
-		if (attackTimer_ <= 0.0f)
-		{
-			isAttacking_ = false;
-			attackCollider_.SetEnable(false);
-		}
+			state_ = PlayerState::Idle;
 	}
+}
+
+void Player::UpdateAttack()
+{
+	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
+	Vector3 attackPos = pos_ + forward * 100.0f + kColOffset;
+
+	attackCollider_.SetPos(attackPos);
+
+	if (attackTimer_ > 0.25f)
+	{
+		attackCollider_.SetEnable(true);
+	}
+	else
+	{
+		attackCollider_.SetEnable(false);
+	}
+
+	if (attackTimer_ <= 0.0f)
+	{
+		attackCollider_.SetEnable(false);
+	}
+}
+
+void Player::UpdateDodge()
+{
+	Vector3 dir = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
+
+	pos_ += dir * kDodgeSpeed;
+
+	//制限
+	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
+	if (pos_.x_ < -kWalkLimit) pos_.x_ = -kWalkLimit;
+	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
+	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
+
+	collider_.SetEnable(false);
+	collider_.SetPos(pos_ + kColOffset);
+
+	if (dodgeTimer_ <= 0.0f)
+	{
+		collider_.SetEnable(true);
+		collider_.SetPos(pos_ + kColOffset);
+	}
+}
+
+void Player::UpdateAnimation()
+{
+	AnimationState animState = AnimationState::Idle;
+
+	switch (state_)
+	{
+	case PlayerState::Idle:   animState = AnimationState::Idle; break;
+	case PlayerState::Run:    animState = AnimationState::Run; break;
+	case PlayerState::Attack: animState = AnimationState::Attack; break;
+	case PlayerState::Dodge:  animState = AnimationState::Dodge; break;
+	}
+
+	animation_.ChangeState(animState);
+	animation_.Update(1.0f / 60.0f);
+}
+
+void Player::UpdateCollision()
+{
+	if (state_ != PlayerState::Attack)
+	{
+		attackCollider_.SetEnable(false);
+	}
+
+	collider_.SetPos(pos_ + kColOffset);
 }
 
 void Player::UpdateAnalogStick(Input& input)
@@ -270,6 +365,8 @@ Vector3 Player::GetCameraTarget() const
 
 void Player::OnCollision(GameObject* other)
 {
+	if (IsInvincible()) return;
+
 	// 相手がEnemyかチェック
 	if (dynamic_cast<Enemy*>(other))
 	{
@@ -277,26 +374,9 @@ void Player::OnCollision(GameObject* other)
 	}
 }
 
-AnimationState Player::GetState() const
-{
-	//攻撃
-	if (isAttacking_)
-	{
-		return AnimationState::Attack;
-	}
-
-	//移動
-	bool isMoving = (fabs(vel_.x_) > 0.1f || fabs(vel_.z_) > 0.1f);
-
-	if (isMoving)
-	{
-		return AnimationState::Run;
-	}
-
-	return AnimationState::Idle;
-}
-
 void Player::OnHit(GameObject* attacker)
 {
+	if (IsInvincible()) return;
+
 	isHit_ = true;
 }

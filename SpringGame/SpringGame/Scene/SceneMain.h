@@ -19,6 +19,7 @@ public:
 	void Draw();
 
 	void AddScorePop(const Vector3& pos, int value);
+	void DrawCenterTextWithOutline(const char* text, int y, int color, int screenW = 1280);
 
 private:
 	void FadeInUpdate(Input& input);
@@ -39,7 +40,6 @@ private:
 	int frameCount_;
 	float playTime_;//êßå¿éûä‘
 	int skyTexture_[6];
-	int shadowMap_;
 
 	std::vector<std::shared_ptr<Enemy>> enemies_;
 	std::vector<ScorePop>pScorePops_;

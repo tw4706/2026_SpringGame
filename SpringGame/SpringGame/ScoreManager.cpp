@@ -35,4 +35,5 @@ int ScoreManager::GetScore()
 void ScoreManager::Reset()
 {
 	score_ = 0;
+	dispScore_ = 0;
 }

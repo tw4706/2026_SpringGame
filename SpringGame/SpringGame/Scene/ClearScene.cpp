@@ -45,8 +45,9 @@ void ClearScene::FadeInUpdate(Input& input)
 
 void ClearScene::NormalUpdate(Input& input)
 {
-	if (input.IsTriggered("attack"))
+	if (input.IsTriggered("retry"))
 	{
+		ScoreManager::Reset();
 		controller_.ChangeScene(std::make_shared<SceneMain>(controller_));
 	}
 }
