@@ -1,5 +1,5 @@
 #include "Enemy.h"
-#include "../SceneMain.h"
+#include "../Scene/SceneMain.h"
 #include "../ScoreManager.h"
 #include "../Physics/Vector3.h"
 #include "../Physics/Camera.h"
@@ -186,10 +186,11 @@ void Enemy::Draw()
 	// “–‚½‚è”»’è‚Ì•`‰æ
 	unsigned int color = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 0);
 
-	DrawSphere3D(
-		collider_.GetPos().ToDxlibVector(), // ’†S
-		collider_.GetRadian(),				// ”¼Œa
-		16, color, color, FALSE);
+
+	//DrawSphere3D(
+	//	collider_.GetPos().ToDxlibVector(), // ’†S
+	//	collider_.GetRadian(),				// ”¼Œa
+	//	16, color, color, FALSE);
 }
 
 void Enemy::OnHit(GameObject* attacker)

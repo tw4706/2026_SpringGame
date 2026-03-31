@@ -99,22 +99,22 @@ void Player::Draw()
 	//“–‚½‚è”»’è‚Ì•`‰æ
 	unsigned int color = isHit_ ? 0xff0000 : 0x00ff00;
 
-	DrawSphere3D(
-		collider_.GetPos().ToDxlibVector(),		//’†S
-		collider_.GetRadian(),					//”¼Œa
-		16, color, color, FALSE);
+	//DrawSphere3D(
+	//	collider_.GetPos().ToDxlibVector(),		//’†S
+	//	collider_.GetRadian(),					//”¼Œa
+	//	16, color, color, FALSE);
 
 	//UŒ‚”»’è‚Ì•`‰æ
-	if (isAttacking_)
-	{
-		DrawSphere3D(
-			attackCollider_.GetPos().ToDxlibVector(),
-			attackCollider_.GetRadian(),
-			16,
-			0xffff00,
-			0xffff00,
-			FALSE);
-	}
+	//if (isAttacking_)
+	//{
+	//	DrawSphere3D(
+	//		attackCollider_.GetPos().ToDxlibVector(),
+	//		attackCollider_.GetRadian(),
+	//		16,
+	//		0xffff00,
+	//		0xffff00,
+	//		FALSE);
+	//}
 }
 
 //ˆÚ“®

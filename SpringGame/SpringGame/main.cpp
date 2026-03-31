@@ -2,7 +2,8 @@
 #include "Game.h"
 #include "Input.h"
 #include <memory>
-#include "SceneMain.h"
+#include "../Scene/SceneMain.h"
+#include "../Scene/SceneController.h"
 
 
 
@@ -27,8 +28,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//シーンの作成
 	Input input;
-	std::shared_ptr<SceneMain>pScene = std::make_shared<SceneMain>();
-	pScene->Init();
+	SceneController controller;//シーン遷移のためのコントロールオブジェクト
+	//最初のシーンをセットする
+	//何かしらシーンがないと,UpdateもDrawもできないため
+	controller.ChangeScene(std::make_shared<SceneMain>(controller));
 	while (ProcessMessage() != -1)
 	{
 		LONGLONG start = GetNowHiPerformanceCount();
@@ -37,9 +40,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ClearDrawScreen();
 		//（ゲーム内容）
 		input.Update();
-		pScene->Update(input);
-
-		pScene->Draw();
+		//シーンの更新
+		controller.Update(input);
+		//シーンの描画
+		controller.Draw();
 
 		if (CheckHitKey(KEY_INPUT_ESCAPE))
 		{

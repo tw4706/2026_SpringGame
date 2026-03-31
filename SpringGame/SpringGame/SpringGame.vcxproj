@@ -149,7 +149,9 @@
     <ClCompile Include="Physics\Matrix4x4.cpp" />
     <ClCompile Include="Physics\Camera.cpp" />
     <ClCompile Include="Physics\Vector3.cpp" />
-    <ClCompile Include="SceneMain.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\SceneController.cpp" />
+    <ClCompile Include="Scene\SceneMain.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ScorePop.cpp" />
@@ -168,7 +170,9 @@
     <ClInclude Include="Physics\Camera.h" />
     <ClInclude Include="Physics\Vector3.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SceneMain.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\SceneController.h" />
+    <ClInclude Include="Scene\SceneMain.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ScorePop.h" />
