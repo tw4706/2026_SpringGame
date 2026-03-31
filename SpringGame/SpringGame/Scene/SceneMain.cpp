@@ -18,8 +18,8 @@ SceneMain::SceneMain(SceneController& contorller) :
 	Scene(contorller),
 	frameCount_(0),
 	shadowMap_(-1),
-	update_(&SceneMain::FadeInUpdate),
-	draw_(&SceneMain::FadeDraw)
+	update_(&SceneMain::NormalUpdate),
+	draw_(&SceneMain::NormalDraw)
 {
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
@@ -70,6 +70,7 @@ void SceneMain::Init()
 	
 	pPlayer_->Init();
 	pCamera_->SetPlayer(pPlayer_);
+	printfDx("SetPlayer done\n");
 	pCamera_->Init();
 
 	frameCount_ = kFadeInterval;
@@ -92,7 +93,6 @@ void SceneMain::AddScorePop(const Vector3& pos, int value)
 
 void SceneMain::FadeInUpdate(Input& input)
 {
-	NormalUpdate(input);
 	if (frameCount_-- <= 0)
 	{
 		update_ = &SceneMain::NormalUpdate;
@@ -169,7 +169,6 @@ void SceneMain::NormalUpdate(Input& input)
 
 void SceneMain::FadeOutUpdate(Input&input)
 {
-	NormalUpdate(input);
 	if (frameCount_++ >= kFadeInterval)
 	{
 		//ÉVÅ[ÉìëJà⁄

@@ -66,6 +66,11 @@ void Camera::UpdateCamera()
 
 	//ƒJƒƒ‰‚Ìİ’è
 	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(), cameraTarget_.ToDxlibVector());
+
+	/*printfDx("target: %f %f %f\n",
+		cameraTarget_.x_,
+		cameraTarget_.y_,
+		cameraTarget_.z_);*/
 }
 
 void Camera::Shake(float time, float power)

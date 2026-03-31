@@ -32,6 +32,7 @@ void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 
 		scenes_.back() = scene;// この行の時点で元のシーンは自動的に削除されています。
 	}
+	scene->Init();
 }
 
 void SceneController::PushScene(std::shared_ptr<Scene> scene)
