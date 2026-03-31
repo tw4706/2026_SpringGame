@@ -32,7 +32,7 @@ namespace
 
 	constexpr float kDodgeTime = 0.25f;
 	constexpr float kDodgeSpeed = 18.0f;
-	constexpr float kJustDodgeWindow = 0.1f;
+	constexpr int kJustDodgeFrame = 1;
 }
 
 Player::Player() :
@@ -44,8 +44,9 @@ Player::Player() :
 	invincibleTimer_(0.0f),
 	dodgeTimer_(0.0f),
 	afterImageTimer_(0.0f),
-	justDodgeTimer_(0.0f),
 	isJustDodge_(false),
+	isJustDodgeTriggered_(false),
+	justDodgeFrame_(0),
 	collider_(0.0f),
 	attackCollider_(0.0f),
 	isHit_(false)
@@ -88,24 +89,23 @@ void Player::Init()
 	attackCollider_.SetColliderType(ColliderType::Attack);
 }
 
-void Player::Update(Input& input)
+void Player::Update(Input& input, float dt)
 {
 	isHit_ = false;
-	isJustDodge_ = false;
 
 	//タイマーの更新
-	UpdateTimers();
+	UpdateTimers(dt);
 	//入力処理
 	HandleInput(input);
 
 	//状態別の処理
-	UpdateAction(input);
+	UpdateAction(input,dt);
 
 	//状態遷移の処理
 	UpdateState();
 
 	//アニメーションの更新
-	UpdateAnimation();
+	UpdateAnimation(dt);
 
 	//当たり判定の更新
 	UpdateCollision();
@@ -115,7 +115,7 @@ void Player::Update(Input& input)
 
 	for (auto it = afterImages_.begin(); it != afterImages_.end(); )
 	{
-		it->life -= 1.0f / 60.0f;
+		it->life -= dt;
 
 		if (it->life <= 0.0f)
 		{
@@ -175,7 +175,7 @@ void Player::Draw()
 #endif
 }
 
-void Player::Move(Input& input)
+void Player::Move(Input& input,float dt)
 {
 	//移動ベクトルの初期化
 	vel_ = { 0.0f, 0.0f, 0.0f };
@@ -217,7 +217,7 @@ void Player::Move(Input& input)
 	//UpdateAnalogStick(input);
 	
 	//位置の反映
-	pos_ += vel_;
+	pos_ += vel_ * dt * 60.0f;
 
 	//移動の制限 
 	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
@@ -239,18 +239,17 @@ void Player::StartDodge()
 	invincibleTimer_ = kDodgeTime;
 
 	//ジャスト回避の判定開始
-	justDodgeTimer_ = kJustDodgeWindow;
+	justDodgeFrame_ = kJustDodgeFrame;
 	isJustDodge_ = false;
 }
 
-void Player::UpdateTimers()
+void Player::UpdateTimers(float deltaTime)
 {
-	const float deltatime = 1.0f / 60.0f;
 
-	if (attackTimer_ > 0.0f) attackTimer_ -= deltatime;
-	if (dodgeTimer_ > 0.0f) dodgeTimer_ -= deltatime;
-	if (invincibleTimer_ > 0.0f) invincibleTimer_ -= deltatime;
-	if (justDodgeTimer_ > 0.0f)justDodgeTimer_ -= deltatime;
+	if (attackTimer_ > 0.0f) attackTimer_ -= deltaTime;
+	if (dodgeTimer_ > 0.0f) dodgeTimer_ -= deltaTime;
+	if (invincibleTimer_ > 0.0f) invincibleTimer_ -= deltaTime;
+	if (justDodgeFrame_ > 0)justDodgeFrame_--;
 }
 
 void Player::HandleInput(Input& input)
@@ -268,13 +267,13 @@ void Player::HandleInput(Input& input)
 	}
 }
 
-void Player::UpdateAction(Input& input)
+void Player::UpdateAction(Input& input,float dt)
 {
 	switch (state_)
 	{
 	case PlayerState::Idle:
 	case PlayerState::Run:
-		Move(input);
+		Move(input,dt);
 		break;
 
 	case PlayerState::Attack:
@@ -282,7 +281,7 @@ void Player::UpdateAction(Input& input)
 		break;
 
 	case PlayerState::Dodge:
-		UpdateDodge();
+		UpdateDodge(dt);
 		break;
 	}
 }
@@ -327,12 +326,12 @@ void Player::UpdateAttack()
 	}
 }
 
-void Player::UpdateDodge()
+void Player::UpdateDodge(float dt)
 {
 	//前方向に高速移動する
 	Vector3 dir = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 
-	pos_ += dir * kDodgeSpeed;
+	pos_ += dir * kDodgeSpeed * dt * 60.0f;
 
 	//制限
 	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
@@ -341,7 +340,6 @@ void Player::UpdateDodge()
 	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
 
 	//回避中は当たり判定を無効
-	collider_.SetEnable(false);
 	collider_.SetPos(pos_ + kColOffset);
 
 	//無敵終了後に当たり判定を有効にする
@@ -351,7 +349,7 @@ void Player::UpdateDodge()
 		collider_.SetPos(pos_ + kColOffset);
 	}
 
-	afterImageTimer_ -= 1.0f / 60.0f;
+	afterImageTimer_ -= dt;
 
 	if (afterImageTimer_ <= 0.0f)
 	{
@@ -360,7 +358,7 @@ void Player::UpdateDodge()
 	}
 }
 
-void Player::UpdateAnimation()
+void Player::UpdateAnimation(float dt)
 {
 	AnimationState animState = AnimationState::Idle;
 
@@ -373,7 +371,7 @@ void Player::UpdateAnimation()
 	}
 
 	animation_.ChangeState(animState);
-	animation_.Update(1.0f / 60.0f);
+	animation_.Update(dt);
 }
 
 void Player::UpdateCollision()
@@ -450,15 +448,29 @@ void Player::OnCollision(GameObject* other)
 	if (dynamic_cast<Enemy*>(other))
 	{
 		//ジャスト回避判定
-		if (state_ == PlayerState::Dodge && justDodgeTimer_ > 0.0f)
+		if (state_ == PlayerState::Dodge && justDodgeFrame_ > 0)
 		{
-			isJustDodge_ = true;
+			if (!isJustDodge_)
+			{
+				isJustDodge_ = true;
+				isJustDodgeTriggered_ = true;
+			}
 		}
 
 		if (IsInvincible()) return;
 
 		isHit_ = true;
 	}
+}
+
+bool Player::ConsumeJustDodge()
+{
+	if (isJustDodgeTriggered_)
+	{
+		isJustDodgeTriggered_ = false;
+		return true;
+	}
+	return false;
 }
 
 void Player::OnHit(GameObject* attacker)

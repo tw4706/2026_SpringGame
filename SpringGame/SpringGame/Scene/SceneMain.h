@@ -40,6 +40,9 @@ private:
 	int frameCount_;
 	float playTime_;//制限時間
 	int skyTexture_[6];
+	float dt_;
+	float timeScale_;//時間のスケール(スロー演出などで使用)
+	float slowTimer_;
 
 	std::vector<std::shared_ptr<Enemy>> enemies_;
 	std::vector<ScorePop>pScorePops_;

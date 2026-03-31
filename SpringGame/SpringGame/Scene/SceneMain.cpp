@@ -27,6 +27,9 @@ SceneMain::SceneMain(SceneController& contorller) :
 	frameCount_(0),
 	playTime_(0.0f),
 	skyTexture_{},
+	timeScale_(1.0f),
+	slowTimer_(0.0f),
+	dt_(0.0f),
 	update_(&SceneMain::FadeInUpdate),
 	draw_(&SceneMain::FadeDraw)
 {
@@ -85,10 +88,12 @@ void SceneMain::Init()
 	pCamera_->Init();
 
 	frameCount_ = kFadeInterval;
+	dt_ = (1.0f / 60.0f) * timeScale_;
 }
 
 void SceneMain::Update(Input& input)
 {
+	dt_ = (1.0f / 60.0f) * timeScale_;
 	(this->*update_)(input);
 }
 
@@ -126,7 +131,7 @@ void SceneMain::FadeInUpdate(Input& input)
 {
 	mode_ = FadeMode::In;
 
-	pPlayer_->Update(input);
+	pPlayer_->Update(input,dt_);
 	pCamera_->Update();
 
 	if (frameCount_-- <= 0)
@@ -141,7 +146,7 @@ void SceneMain::NormalUpdate(Input& input)
 	frameCount_++;
 
 	//制限時間の更新
-	playTime_ += 1.0f / 60.0f;
+	playTime_ += dt_;
 
 	//スコアの更新処理
 	ScoreManager::Update();
@@ -149,15 +154,31 @@ void SceneMain::NormalUpdate(Input& input)
 	//各クラスの更新処理
 	for (auto& enemy : enemies_)
 	{
-		enemy->Update();
+		enemy->Update(dt_);
 	}
 
 	for (auto& p : pScorePops_)
 	{
 		p.Update();
 	}
-	pPlayer_->Update(input);
+	pPlayer_->Update(input, dt_);
 	pCamera_->Update();
+
+	if (pPlayer_->ConsumeJustDodge())
+	{
+		timeScale_ = 0.4f;   //スロー倍率
+		slowTimer_ = 0.2f;   //スロー時間
+	}
+	//スロー時間の更新
+	if (slowTimer_ > 0.0f)
+	{
+		slowTimer_ -= dt_;
+
+		if (slowTimer_ <= 0.0f)
+		{
+			timeScale_ = 1.0f;
+		}
+	}
 
 	//当たり判定の処理
 	collisionManager_.Clear();
@@ -271,6 +292,13 @@ void SceneMain::NormalDraw()
 		p.Draw();
 	}
 	pPlayer_->Draw();
+
+	if (timeScale_ < 1.0f)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+		DrawBox(0, 0, 1280, 720, GetColor(180, 100, 255), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 
 #ifdef DEBUG_
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));

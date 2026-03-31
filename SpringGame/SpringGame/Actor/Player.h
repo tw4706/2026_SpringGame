@@ -30,33 +30,33 @@ public:
 
 	void Init()override;
 	void Update()override{};
-	void Update(Input&input);
+	void Update(Input&input, float dt);
 	void Draw()override;
 
 	//被ダメージ時の処理
 	void OnHit(GameObject* attacker)override;
 
 	//移動処理
-	void Move(Input& input);
+	void Move(Input& input, float dt);
 	//攻撃処理
 	void StartAttack();
 	//回避処理
 	void StartDodge();
 
 	//各種タイマーの更新処理
-	void UpdateTimers();
+	void UpdateTimers(float deltaTime);
 	//入力受付(攻撃や回避の開始など)
 	void HandleInput(Input&input);
 	//状態に応じた処理の分岐を行う
-	void UpdateAction(Input&input);
+	void UpdateAction(Input&input,float dt);
 	//状態遷移の処理
 	void UpdateState();
 	//攻撃中の処理
 	void UpdateAttack();
 	//回避中の処理
-	void UpdateDodge();
+	void UpdateDodge(float dt);
 	//アニメーションの更新
-	void UpdateAnimation();
+	void UpdateAnimation(float dt);
 	//当たり判定の更新
 	void UpdateCollision();
 	//アナログスティックの更新処理
@@ -81,7 +81,9 @@ public:
 	//無敵状態かどうか
 	bool IsInvincible()const { return invincibleTimer_ > 0.0f; }
 	//ジャスト回避の状態かどうか
+	bool ConsumeJustDodge();
 	bool IsJustDodge()const { return isJustDodge_; }
+	bool IsJustDodgeTriggered()const { return isJustDodgeTriggered_; }
 
 private:
 	float cameraAngle_;						//カメラ用の角度
@@ -91,8 +93,9 @@ private:
 	float dodgeTimer_;						//回避時間
 	float invincibleTimer_;					//無敵時間
 	float afterImageTimer_;					//残像の生成時間
-	float justDodgeTimer_;					//ジャスト回避の時間
 	bool isJustDodge_;						//ジャスト回避のフラグ
+	bool isJustDodgeTriggered_;				//ジャスト回避の判定がされたかどうか
+	int justDodgeFrame_;					//ジャスト回避の猶予フレーム数
 
 	SphereCollider collider_;				//当たり判定用変数
 	SphereCollider attackCollider_;			//攻撃の当たり判定用変数

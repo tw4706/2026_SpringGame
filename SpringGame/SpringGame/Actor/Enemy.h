@@ -14,7 +14,8 @@ public:
 	virtual~Enemy();
 
 	void Init()override;
-	void Update()override;
+	void Update()override {};
+	void Update(float dt);
 	void Draw()override;
 
 	void OnHit(GameObject* attacker)override;

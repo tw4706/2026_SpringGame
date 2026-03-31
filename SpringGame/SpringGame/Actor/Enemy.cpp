@@ -72,14 +72,14 @@ void Enemy::Init()
 	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
 }
 
-void Enemy::Update()
+void Enemy::Update(float dt)
 {
 	if (!pPlayer_)return;
 
 	//生成時の処理
 	if (isSpawning_)
 	{
-		animation_.Update(1.0f / 60.0f);
+		animation_.Update(dt);
 
 		//終わったら通常状態へ
 		if (animation_.IsEnd())
@@ -102,7 +102,7 @@ void Enemy::Update()
 	{
 		vel_ = Vector3(0, 0, 0);
 
-		animation_.Update(1.0f / 60.0f);
+		animation_.Update(dt);
 
 		//アニメーションが終わったら削除
 		if (animation_.IsEnd())
@@ -149,7 +149,7 @@ void Enemy::Update()
 		vel_ *= 0.9f;
 	}
 
-	pos_ += vel_;
+	pos_ += vel_ * dt * 60.0f;
 
 	//敵の向きを追従している際にプレイヤー方向に合わせる
 	if (vel_.Length() > 0.001f)
@@ -160,12 +160,12 @@ void Enemy::Update()
 
 	state_ = GetState();
 	animation_.ChangeState(state_);
-	animation_.Update(1.0f / 60.0f);
+	animation_.Update(dt);
 
 	// タイマー減少
 	if (hitTimer_ > 0.0f)
 	{
-		hitTimer_ -= 1.0f / 60.0f;
+		hitTimer_ -= dt;
 	}
 	else
 	{

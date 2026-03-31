@@ -38,10 +38,9 @@ void CollisionManager::CheckAllCollision()
 
 			if (!a->IsEnable() || !b->IsEnable()) continue;
 
-			//ƒLƒƒƒ‰ƒNƒ^[“¯Žm‚Í–³Ž‹
 			if (typeA == ColliderType::Charactor && typeB == ColliderType::Charactor)
 			{
-				continue;
+				if (a->GetOwner() == b->GetOwner()) continue;
 			}
 
 			//Ž©g‚ÌUŒ‚”»’è‚à–³Ž‹
@@ -54,7 +53,7 @@ void CollisionManager::CheckAllCollision()
 				if (a->GetOwner() == b->GetOwner()) continue;
 			}
 
-			// Œ^‚Å•ªŠò
+			//Œ^‚Å•ªŠò
 			if (a->GetCollisionType() == CollisionType::Sphere &&
 				b->GetCollisionType() == CollisionType::Sphere)
 			{
@@ -62,7 +61,7 @@ void CollisionManager::CheckAllCollision()
 					static_cast<SphereCollider*>(a),
 					static_cast<SphereCollider*>(b)))
 				{
-					// Õ“Ë’Ê’m
+					//Õ“Ë’Ê’m
 					a->OnCollision(b);
 					b->OnCollision(a);
 				}
