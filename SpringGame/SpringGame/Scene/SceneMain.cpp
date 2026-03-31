@@ -12,9 +12,14 @@
 
 namespace
 {
+	//敵の最大で出現する数
 	constexpr float kEnemyMax = 3;
+
+	//フェードの間隔
 	constexpr int kFadeInterval = 60;
-	constexpr float kClearFadeTime =6.0f;
+
+	//制限時間
+	constexpr float kClearFadeTime = 60.0f;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
@@ -31,7 +36,7 @@ SceneMain::SceneMain(SceneController& contorller) :
 
 SceneMain::~SceneMain()
 {
-	
+
 }
 
 void SceneMain::Init()
@@ -43,11 +48,13 @@ void SceneMain::Init()
 	SetUseZBuffer3D(true);		//Zバッファを使います
 	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
 
+	//カメラ設定
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
 	SetCameraNearFar(10.0f, 2000.0f);
 	SetFontSize(40);
 
+	//スカイボックス用のテクスチャのロード
 	skyTexture_[0] = LoadGraph("data/backGround_rt.png");
 	skyTexture_[1] = LoadGraph("data/backGround_lf.png");
 	skyTexture_[2] = LoadGraph("data/backGround_up.png");
@@ -63,8 +70,8 @@ void SceneMain::Init()
 		enemy->SetPlayer(pPlayer_.get());
 		enemy->SetScene(this);
 
+		//敵をランダムな位置に配置する
 		float range = 1000.0f;
-
 		float x = ((float)rand() / RAND_MAX) * range * 2 - range;
 		float z = ((float)rand() / RAND_MAX) * range * 2 - range;
 
@@ -72,7 +79,7 @@ void SceneMain::Init()
 
 		enemies_.push_back(enemy);
 	}
-	
+
 	pPlayer_->Init();
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
@@ -80,7 +87,7 @@ void SceneMain::Init()
 	frameCount_ = kFadeInterval;
 }
 
-void SceneMain::Update(Input&input)
+void SceneMain::Update(Input& input)
 {
 	(this->*update_)(input);
 }
@@ -100,7 +107,7 @@ void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, in
 	int width = GetDrawStringWidth(text, strlen(text));
 	int x = (screenW - width) / 2;
 
-	// ===== 太い縁取り（8方向）=====
+	//太い縁取り
 	for (int dy = -3; dy <= 3; dy++)
 	{
 		for (int dx = -3; dx <= 3; dx++)
@@ -111,10 +118,7 @@ void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, in
 		}
 	}
 
-	// ===== 本体 =====
-	DrawString(x, y, text, color);
-
-	// ===== 本体 =====
+	//本体
 	DrawString(x, y, text, color);
 }
 
@@ -136,11 +140,13 @@ void SceneMain::NormalUpdate(Input& input)
 {
 	frameCount_++;
 
+	//制限時間の更新
 	playTime_ += 1.0f / 60.0f;
 
-	//各クラスの更新処理
+	//スコアの更新処理
 	ScoreManager::Update();
 
+	//各クラスの更新処理
 	for (auto& enemy : enemies_)
 	{
 		enemy->Update();
@@ -207,7 +213,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 }
 
-void SceneMain::FadeOutUpdate(Input&input)
+void SceneMain::FadeOutUpdate(Input& input)
 {
 	mode_ = FadeMode::Out;
 	if (frameCount_++ >= kFadeInterval)
@@ -219,7 +225,7 @@ void SceneMain::FadeOutUpdate(Input&input)
 
 void SceneMain::FadeDraw()
 {
-	// フェード + 通常描画
+	//通常の描画
 	NormalDraw();
 
 	//フェードの描画
@@ -238,6 +244,7 @@ void SceneMain::FadeDraw()
 
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
+	//画面全体を黒にする
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
 	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -354,9 +361,10 @@ void SceneMain::DrawSkybox()
 {
 	float size = 800.0f;
 
+	//カメラの位置を取得
 	VECTOR cam = GetCameraPosition();
 
-	// 8頂点
+	//8頂点で立方体を表現する
 	VECTOR v[8] =
 	{
 		VGet(cam.x - size, cam.y + size, cam.z - size),
@@ -370,10 +378,12 @@ void SceneMain::DrawSkybox()
 		VGet(cam.x - size, cam.y - size, cam.z + size),
 	};
 
+	//背景なので光影無し
 	SetUseLighting(FALSE);
 	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(FALSE);
 
+	//各面の描画処理
 	// 前
 	DrawSkyQuad(v[5], v[4], v[7], v[6], skyTexture_[4]);
 
@@ -397,5 +407,5 @@ void SceneMain::DrawSkybox()
 	SetDrawZ(1.0f);
 	SetUseLighting(TRUE);
 
-//	printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);
+	//printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);
 }

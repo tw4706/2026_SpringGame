@@ -32,6 +32,8 @@ void ScorePop::Update()
 void ScorePop::Draw()
 {
     //3Dから2D変換
+	//ConvWorldPosToScreenPosは、
+    //ワールド座標をスクリーン座標に変換する関数
     VECTOR screen = ConvWorldPosToScreenPos(pos_.ToDxlibVector());
 
     DrawFormatString((int)screen.x,(int)screen.y,

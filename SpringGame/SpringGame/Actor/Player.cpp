@@ -5,6 +5,7 @@
 #include "../Actor/Enemy.h"
 #include"DxLib.h"
 #include<cassert>
+#include<algorithm>
 
 namespace
 {
@@ -18,7 +19,7 @@ namespace
 
 	//当たり判定のサイズ
 	constexpr float kColSize = 50.0f;
-	constexpr float kAttackColSize = 50.0f;
+	constexpr float kAttackColSize = 80.0f;
 
 	//当たり判定位置の調整
 	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };
@@ -31,6 +32,7 @@ namespace
 
 	constexpr float kDodgeTime = 0.25f;
 	constexpr float kDodgeSpeed = 18.0f;
+	constexpr float kJustDodgeWindow = 0.1f;
 }
 
 Player::Player() :
@@ -41,13 +43,21 @@ Player::Player() :
 	attackTimer_(0.0f),
 	invincibleTimer_(0.0f),
 	dodgeTimer_(0.0f),
+	afterImageTimer_(0.0f),
+	justDodgeTimer_(0.0f),
+	isJustDodge_(false),
 	collider_(0.0f),
 	attackCollider_(0.0f),
 	isHit_(false)
 {
+	//初期位置
 	pos_ = kFirstPos;
+
+	//当たり判定(キャラクター・攻撃)
 	collider_ = SphereCollider(kColSize);
 	attackCollider_ = SphereCollider(kAttackColSize);
+
+	//当たり判定の所有者
 	collider_.SetOwner(this);
 	attackCollider_.SetOwner(this);
 
@@ -62,11 +72,15 @@ Player::~Player()
 
 void Player::Init()
 {
+	//モデルのロード
 	model_.Load("data/Player.mv1");
+	ghostModel_.Load("data/PlayerAfterImage.mv1");
 
+	//アニメーションの初期化
 	animation_.Init(model_.GetHandle(), AnimType::Player);
 	animation_.ChangeState(AnimationState::Idle);
 
+	//当たり判定の設定
 	collider_.SetEnable(true);
 	attackCollider_.SetEnable(false);
 
@@ -77,23 +91,68 @@ void Player::Init()
 void Player::Update(Input& input)
 {
 	isHit_ = false;
+	isJustDodge_ = false;
 
+	//タイマーの更新
 	UpdateTimers();
+	//入力処理
 	HandleInput(input);
+
+	//状態別の処理
 	UpdateAction(input);
+
+	//状態遷移の処理
 	UpdateState();
+
+	//アニメーションの更新
 	UpdateAnimation();
+
+	//当たり判定の更新
 	UpdateCollision();
 
 	//行列の更新 
 	UpdateMatrix();
+
+	for (auto it = afterImages_.begin(); it != afterImages_.end(); )
+	{
+		it->life -= 1.0f / 60.0f;
+
+		if (it->life <= 0.0f)
+		{
+			MV1DeleteModel(it->modelHandle);
+			it = afterImages_.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	afterImages_.erase(
+		std::remove_if(afterImages_.begin(), afterImages_.end(),
+			[](const AfterImage& a) { return a.life <= 0.0f; }),
+		afterImages_.end()
+	);
 }
 
 void Player::Draw()
 {
+
+	for (auto& img : afterImages_)
+	{
+		Matrix4x4 mat =
+			Matrix4x4::Scale(kModelScale, kModelScale, kModelScale) *
+			Matrix4x4::RotateY(img.angle + 3.141592f) *
+			Matrix4x4::Translate(img.pos.x_, img.pos.y_, img.pos.z_);
+
+		MV1SetMatrix(img.modelHandle, mat.ToDxLibMatrix());
+		MV1DrawModel(img.modelHandle);
+	}
+
+	//モデルの描画
 	model_.Draw();
 
-#ifdef DEBUG_
+#ifdef _DEBUG
 	//当たり判定の描画
 	unsigned int color = isHit_ ? 0xff0000 : 0x00ff00;
 
@@ -118,16 +177,20 @@ void Player::Draw()
 
 void Player::Move(Input& input)
 {
+	//移動ベクトルの初期化
 	vel_ = { 0.0f, 0.0f, 0.0f };
-	// キーボード入力から方向作る 
+
+	//キーボード入力から方向作る 
 	Vector3 inputDir = { 0.0f, 0.0f, 0.0f };
 	if (input.IsPressed("up")) inputDir.z_ += 1.0f;
 	if (input.IsPressed("down")) inputDir.z_ -= 1.0f;
 	if (input.IsPressed("left")) inputDir.x_ -= 1.0f;
 	if (input.IsPressed("right")) inputDir.x_ += 1.0f;
+
 	//入力があるときだけ 
 	if (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f)
 	{
+		//カメラの角度を基準にして移動方向を回転させる
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraAngle_);
 		Vector3 playerDir = rotMat.TransformForVector(inputDir);
 
@@ -142,9 +205,11 @@ void Player::Move(Input& input)
 		float playerAngle = atan2f(-playerDir.x_, playerDir.z_);
 		float diff = playerAngle - moveAngle_;
 
+		//キャラクターの角度を補間する
 		while (diff > 3.141592f) diff -= 6.28318f;
 		while (diff < -3.141592f) diff += 6.28318f;
 
+		//スムーズに回転させる
 		moveAngle_ += diff * 0.2f;
 	}
 
@@ -172,6 +237,10 @@ void Player::StartDodge()
 	state_ = PlayerState::Dodge;
 	dodgeTimer_ = kDodgeTime;
 	invincibleTimer_ = kDodgeTime;
+
+	//ジャスト回避の判定開始
+	justDodgeTimer_ = kJustDodgeWindow;
+	isJustDodge_ = false;
 }
 
 void Player::UpdateTimers()
@@ -181,6 +250,7 @@ void Player::UpdateTimers()
 	if (attackTimer_ > 0.0f) attackTimer_ -= deltatime;
 	if (dodgeTimer_ > 0.0f) dodgeTimer_ -= deltatime;
 	if (invincibleTimer_ > 0.0f) invincibleTimer_ -= deltatime;
+	if (justDodgeTimer_ > 0.0f)justDodgeTimer_ -= deltatime;
 }
 
 void Player::HandleInput(Input& input)
@@ -236,6 +306,7 @@ void Player::UpdateState()
 
 void Player::UpdateAttack()
 {
+	//プレイヤーの前方に攻撃判定を生成する
 	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 	Vector3 attackPos = pos_ + forward * 100.0f + kColOffset;
 
@@ -258,6 +329,7 @@ void Player::UpdateAttack()
 
 void Player::UpdateDodge()
 {
+	//前方向に高速移動する
 	Vector3 dir = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 
 	pos_ += dir * kDodgeSpeed;
@@ -268,13 +340,23 @@ void Player::UpdateDodge()
 	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
 	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
 
+	//回避中は当たり判定を無効
 	collider_.SetEnable(false);
 	collider_.SetPos(pos_ + kColOffset);
 
+	//無敵終了後に当たり判定を有効にする
 	if (dodgeTimer_ <= 0.0f)
 	{
 		collider_.SetEnable(true);
 		collider_.SetPos(pos_ + kColOffset);
+	}
+
+	afterImageTimer_ -= 1.0f / 60.0f;
+
+	if (afterImageTimer_ <= 0.0f)
+	{
+		afterImages_.push_back({ MV1DuplicateModel(ghostModel_.GetHandle()), pos_, moveAngle_, 0.3f });
+		afterImageTimer_ = 0.02f; //速さ
 	}
 }
 
@@ -365,11 +447,16 @@ Vector3 Player::GetCameraTarget() const
 
 void Player::OnCollision(GameObject* other)
 {
-	if (IsInvincible()) return;
-
-	// 相手がEnemyかチェック
 	if (dynamic_cast<Enemy*>(other))
 	{
+		//ジャスト回避判定
+		if (state_ == PlayerState::Dodge && justDodgeTimer_ > 0.0f)
+		{
+			isJustDodge_ = true;
+		}
+
+		if (IsInvincible()) return;
+
 		isHit_ = true;
 	}
 }

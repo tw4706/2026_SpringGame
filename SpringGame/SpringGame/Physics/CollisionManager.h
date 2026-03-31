@@ -6,6 +6,7 @@ class SphereCollider;
 class CollisionManager
 {
 public:
+	//当たり判定の登録
 	void AddCollider(Collider* col);
 
 	//初期化
@@ -18,7 +19,7 @@ public:
 	void CheckAllCollision();
 
 private:
-	//コライダーの配列(格納する場所)
+	//当たり判定のリスト
 	std::vector<Collider*>colliders_;
 };
 
