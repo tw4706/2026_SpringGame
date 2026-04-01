@@ -8,12 +8,14 @@ namespace
 	const Vector3 kTargetToCamera = { 0.0f,280.0f,-660.0f };
 }
 
-Camera::Camera():
+Camera::Camera() :
 	GameObject(pos_, vel_),
 	angle_(0.0f),
 	shakeTime_(0.0f),
 	shakePower_(0.0f),
-	cameraTarget_(0.0f,0.0f,0.0f)
+	fovTarget_(0.0f),
+	fov_(0.0f),
+	cameraTarget_(0.0f, 0.0f, 0.0f)
 {
 }
 
@@ -24,6 +26,9 @@ Camera::~Camera()
 
 void Camera::Init()
 {
+	fov_ = DX_PI / 2.0f;
+	fovTarget_ = DX_PI / 3.0f;
+
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	float playerAngle = pPlayer_->GetCameraAngle();
@@ -32,7 +37,7 @@ void Camera::Init()
 
 	pos_ = cameraTarget_ + offset;
 
-	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(),cameraTarget_.ToDxlibVector());
+	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(), cameraTarget_.ToDxlibVector());
 }
 
 void Camera::Update()
@@ -51,6 +56,13 @@ void Camera::UpdateCamera()
 	//カメラはプレイヤーと同じ方向を見る
 	float playerAngle = pPlayer_->GetCameraAngle();
 
+	//ズームの補間
+	fov_ += (fovTarget_ - fov_) * 0.05f;
+
+	//ズーム後少しずつ元に戻す
+	fovTarget_ += (DX_PI_F / 3.0f - fovTarget_) * 0.1f;
+	SetupCamera_Perspective(fov_);
+
 	//回転
 	Matrix4x4 rotMat = Matrix4x4::RotateY(playerAngle);
 	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
@@ -66,17 +78,17 @@ void Camera::UpdateCamera()
 
 	//カメラの設定
 	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(), cameraTarget_.ToDxlibVector());
-
-	/*printfDx("target: %f %f %f\n",
-		cameraTarget_.x_,
-		cameraTarget_.y_,
-		cameraTarget_.z_);*/
 }
 
 void Camera::Shake(float time, float power)
 {
 	shakeTime_ = time;
 	shakePower_ = power;
+}
+
+void Camera::StartZoom(float fov)
+{
+	fovTarget_ = fov;
 }
 
 Vector3 Camera::UpdateShake()
@@ -92,7 +104,7 @@ Vector3 Camera::UpdateShake()
 	float ry = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
 	float rz = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
 
-	Vector3 shake = {rx * shakePower_,ry * shakePower_,rz * shakePower_};
+	Vector3 shake = { rx * shakePower_,ry * shakePower_,rz * shakePower_ };
 
 	return shake;
 }

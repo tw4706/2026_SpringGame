@@ -52,12 +52,6 @@ void SceneMain::Init()
 	//Zバッファの設定
 	SetUseZBuffer3D(true);		//Zバッファを使います
 	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
-
-	//カメラ設定
-	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
-	Effekseer_Sync3DSetting();
-	SetupCamera_Perspective(DX_PI_F / 3.0f);
-	SetCameraNearFar(10.0f, 2000.0f);
 	SetFontSize(40);
 
 	//スカイボックス用のテクスチャのロード
@@ -142,7 +136,7 @@ void SceneMain::FadeInUpdate(Input& input)
 	{
 		enemy->Update(dt_);
 	}
-	pPlayer_->Update(input,dt_);
+	pPlayer_->Update(input, dt_);
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
@@ -181,6 +175,7 @@ void SceneMain::NormalUpdate(Input& input)
 	{
 		timeScale_ = 0.4f;   //スロー倍率
 		slowTimer_ = 0.2f;   //スロー時間
+		pCamera_->StartZoom(DX_PI_F / 6.0f);
 	}
 	//スロー時間の更新
 	if (slowTimer_ > 0.0f)
@@ -286,10 +281,6 @@ void SceneMain::FadeDraw()
 
 void SceneMain::NormalDraw()
 {
-	DrawSkybox();
-
-	SetUseZBuffer3D(TRUE);
-	SetWriteZBuffer3D(TRUE);
 
 	DrawGrid();
 
@@ -297,8 +288,6 @@ void SceneMain::NormalDraw()
 		enemy->Draw();
 
 	pPlayer_->Draw();
-
-
 
 
 	if (timeScale_ < 1.0f)
@@ -326,22 +315,6 @@ void SceneMain::NormalDraw()
 
 void SceneMain::DrawGrid()
 {
-	//// 直線の始点と終点
-	//VECTOR startPos;
-	//VECTOR endPos;
-	//for (int z = -300; z <= 300; z += 100)
-	//{
-	//	startPos = VGet(-300.0f, 0.0f, static_cast<float>(z));
-	//	endPos = VGet(300.0f, 0.0f, static_cast<float>(z));
-	//	DrawLine3D(startPos, endPos, 0xff0000);
-	//}
-	//for (int x = -300; x <= 300; x += 100)
-	//{
-	//	startPos = VGet(static_cast<float>(x), 0.0f, -300.0f);
-	//	endPos = VGet(static_cast<float>(x), 0.0f, 300.0f);
-	//	DrawLine3D(startPos, endPos, 0x0000ff);
-	//}
-
 	const int GRID_NUM = 10;      //片側のマス数
 	const float TILE_SIZE = 100.0f;
 
@@ -361,83 +334,4 @@ void SceneMain::DrawGrid()
 			DrawTriangle3D(v1, v3, v4, color, TRUE);
 		}
 	}
-}
-
-void SceneMain::DrawSkyQuad(VECTOR a, VECTOR b, VECTOR c, VECTOR d, int tex)
-{
-	VERTEX3D v[4];
-
-	v[0].pos = a; v[0].u = 0; v[0].v = 0;
-	v[1].pos = b; v[1].u = 1; v[1].v = 0;
-	v[2].pos = c; v[2].u = 1; v[2].v = 1;
-	v[3].pos = d; v[3].u = 0; v[3].v = 1;
-
-	for (int i = 0; i < 4; i++)
-	{
-		v[i].dif.r = 255;
-		v[i].dif.g = 255;
-		v[i].dif.b = 255;
-		v[i].dif.a = 255;
-
-		v[i].spc.r = 0;
-		v[i].spc.g = 0;
-		v[i].spc.b = 0;
-		v[i].spc.a = 0;
-	}
-
-	//三角形1
-	DrawPolygon3D(&v[0], 3, tex, TRUE);
-
-	//三角形2
-	VERTEX3D v2[3] = { v[0], v[2], v[3] };
-	DrawPolygon3D(v2, 3, tex, TRUE);
-}
-
-void SceneMain::DrawSkybox()
-{
-	float size = 800.0f;
-
-	//カメラの位置を取得
-	VECTOR cam = GetCameraPosition();
-
-	//8頂点で立方体を表現する
-	VECTOR v[8] =
-	{
-		VGet(cam.x - size, cam.y + size, cam.z - size),
-		VGet(cam.x + size, cam.y + size, cam.z - size),
-		VGet(cam.x + size, cam.y - size, cam.z - size),
-		VGet(cam.x - size, cam.y - size, cam.z - size),
-
-		VGet(cam.x - size, cam.y + size, cam.z + size),
-		VGet(cam.x + size, cam.y + size, cam.z + size),
-		VGet(cam.x + size, cam.y - size, cam.z + size),
-		VGet(cam.x - size, cam.y - size, cam.z + size),
-	};
-
-	SetUseLighting(FALSE);
-	SetWriteZBuffer3D(FALSE);
-
-	//各面の描画処理
-	// 前
-	DrawSkyQuad(v[5], v[4], v[7], v[6], skyTexture_[4]);
-
-	// 後
-	DrawSkyQuad(v[0], v[1], v[2], v[3], skyTexture_[5]);
-
-	// 左
-	DrawSkyQuad(v[4], v[0], v[3], v[7], skyTexture_[1]);
-
-	// 右
-	DrawSkyQuad(v[1], v[5], v[6], v[2], skyTexture_[0]);
-
-	// 上
-	DrawSkyQuad(v[4], v[5], v[1], v[0], skyTexture_[2]);
-
-	// 下
-	DrawSkyQuad(v[3], v[2], v[6], v[7], skyTexture_[3]);
-
-	SetWriteZBuffer3D(TRUE);
-	SetUseLighting(TRUE);
-
-	//printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);
 }
