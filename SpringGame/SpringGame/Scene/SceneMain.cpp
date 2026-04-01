@@ -7,6 +7,8 @@
 #include"../ScorePop.h"
 #include"SceneController.h"
 #include "ClearScene.h"
+#include "../EffectManager.h"
+#include"EffekseerForDXLib.h"
 #include<algorithm>
 #include <Dxlib.h>
 
@@ -53,6 +55,7 @@ void SceneMain::Init()
 
 	//カメラ設定
 	SetCameraPositionAndTarget_UpVecY(VGet(0.0f, 300.0f, -700), VGet(0.0f, 0.0f, 0.0f));
+	Effekseer_Sync3DSetting();
 	SetupCamera_Perspective(DX_PI_F / 3.0f);
 	SetCameraNearFar(10.0f, 2000.0f);
 	SetFontSize(40);
@@ -64,6 +67,9 @@ void SceneMain::Init()
 	skyTexture_[3] = LoadGraph("data/backGround_dn.png");
 	skyTexture_[4] = LoadGraph("data/backGround_ft.png");
 	skyTexture_[5] = LoadGraph("data/backGround_bk.png");
+
+	//エフェクトのロード
+	EffectManager::GetInstance().Load("hit", "data/hit.efk");
 
 	//各クラスの初期化処理
 	for (int i = 0; i < kEnemyMax; i++)
@@ -94,6 +100,7 @@ void SceneMain::Init()
 void SceneMain::Update(Input& input)
 {
 	dt_ = (1.0f / 60.0f) * timeScale_;
+	EffectManager::GetInstance().Update();
 	(this->*update_)(input);
 }
 
@@ -137,6 +144,7 @@ void SceneMain::FadeInUpdate(Input& input)
 	}
 	pPlayer_->Update(input,dt_);
 	pCamera_->Update();
+	Effekseer_Sync3DSetting();
 
 	if (frameCount_-- <= 0)
 	{
@@ -167,6 +175,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 	pPlayer_->Update(input, dt_);
 	pCamera_->Update();
+	Effekseer_Sync3DSetting();
 
 	if (pPlayer_->ConsumeJustDodge())
 	{
@@ -277,25 +286,20 @@ void SceneMain::FadeDraw()
 
 void SceneMain::NormalDraw()
 {
-	SetUseLighting(FALSE);
-	SetUseZBuffer3D(TRUE);
-	SetWriteZBuffer3D(FALSE);
-
-	SetDrawMode(DX_DRAWMODE_NEAREST);
 	DrawSkybox();
-	SetDrawMode(DX_DRAWMODE_BILINEAR);
+
+	SetUseZBuffer3D(TRUE);
+	SetWriteZBuffer3D(TRUE);
+
 	DrawGrid();
 
-	//各クラスの描画処理
 	for (auto& enemy : enemies_)
-	{
 		enemy->Draw();
-	}
-	for (auto& p : pScorePops_)
-	{
-		p.Draw();
-	}
+
 	pPlayer_->Draw();
+
+
+
 
 	if (timeScale_ < 1.0f)
 	{
@@ -410,9 +414,7 @@ void SceneMain::DrawSkybox()
 		VGet(cam.x - size, cam.y - size, cam.z + size),
 	};
 
-	//背景なので光影無し
 	SetUseLighting(FALSE);
-	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(FALSE);
 
 	//各面の描画処理
@@ -434,9 +436,7 @@ void SceneMain::DrawSkybox()
 	// 下
 	DrawSkyQuad(v[3], v[2], v[6], v[7], skyTexture_[3]);
 
-	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(TRUE);
-	SetDrawZ(1.0f);
 	SetUseLighting(TRUE);
 
 	//printfDx("cam: %f %f %f\n", cam.x, cam.y, cam.z);

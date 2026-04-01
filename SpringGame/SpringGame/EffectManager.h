@@ -9,6 +9,8 @@ class EffectManager
 public:
 	static EffectManager& GetInstance();
 
+	void Update();
+
 	void Load(const std::string& name, const char* path);
 	int Play(const std::string& name, const Vector3& pos);
 

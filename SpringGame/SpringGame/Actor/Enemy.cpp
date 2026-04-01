@@ -218,7 +218,7 @@ void Enemy::OnHit(GameObject* attacker)
 		pCamera_->Shake(kShakeTimeHit, kShakePowerHit);
 	}
 
-	EffectManager::GetInstance().Play("EnemyHit", pos_);
+	EffectManager::GetInstance().Play("hit",pos_ + Vector3(0.0f, 80.0f, 0.0f));
 
 	//死亡アニメーション開始
 	animation_.ChangeState(AnimationState::Death);
@@ -232,9 +232,8 @@ void Enemy::OnCollision(GameObject* other)
 
 	if (other->GetCollider()->GetColliderType() == ColliderType::Attack)
 	{
-		OnHit(other);
-
 		other->GetCollider()->SetEnable(false);
+		OnHit(other);
 	}
 }
 

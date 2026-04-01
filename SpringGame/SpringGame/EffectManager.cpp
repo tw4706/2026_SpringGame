@@ -8,6 +8,21 @@ EffectManager& EffectManager::GetInstance()
 	return instance;
 }
 
+void EffectManager::Update()
+{
+	for (auto it = handles_.begin(); it != handles_.end();)
+	{
+		if (IsEffekseer3DEffectPlaying(*it) == FALSE)
+		{
+			it = handles_.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
 void EffectManager::Load(const std::string& name, const char* path)
 {
 	int handle = LoadEffekseerEffect(path);
