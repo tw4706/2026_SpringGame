@@ -79,9 +79,10 @@ void ClearScene::FadeDraw()
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
-	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
+	DrawBoxAA(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
+
 void ClearScene::NormalDraw()
 {
 	DrawString(500, 250, "CLEAR!", GetColor(255, 255, 255));

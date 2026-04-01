@@ -4,6 +4,7 @@
 #include "../Physics/Vector3.h"
 #include "../Physics/Camera.h"
 #include "../Actor/Player.h"
+#include "../EffectManager.h"
 #include<Dxlib.h>
 #include<cassert>
 #include<cmath>
@@ -205,7 +206,7 @@ void Enemy::OnHit(GameObject* attacker)
 	collider_.SetEnable(false);
 
 	//点数加算
-	ScoreManager::AddScore(kEnemyScore);
+	ScoreManager::AddScore();
 
 	if (pScene_)
 	{
@@ -216,6 +217,8 @@ void Enemy::OnHit(GameObject* attacker)
 	{
 		pCamera_->Shake(kShakeTimeHit, kShakePowerHit);
 	}
+
+	EffectManager::GetInstance().Play("EnemyHit", pos_);
 
 	//死亡アニメーション開始
 	animation_.ChangeState(AnimationState::Death);

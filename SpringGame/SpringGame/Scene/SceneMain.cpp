@@ -69,9 +69,9 @@ void SceneMain::Init()
 	for (int i = 0; i < kEnemyMax; i++)
 	{
 		auto enemy = std::make_shared<Enemy>();
-		enemy->Init();
 		enemy->SetPlayer(pPlayer_.get());
 		enemy->SetScene(this);
+		enemy->Init();
 
 		//敵をランダムな位置に配置する
 		float range = 1000.0f;
@@ -131,6 +131,10 @@ void SceneMain::FadeInUpdate(Input& input)
 {
 	mode_ = FadeMode::In;
 
+	for (auto& enemy : enemies_)
+	{
+		enemy->Update(dt_);
+	}
 	pPlayer_->Update(input,dt_);
 	pCamera_->Update();
 
@@ -267,7 +271,7 @@ void SceneMain::FadeDraw()
 
 	//画面全体を黒にする
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
-	DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
+	DrawBoxAA(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -305,13 +309,13 @@ void SceneMain::NormalDraw()
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 #endif
 	char timeText[64];
-	sprintf_s(timeText, "TIME LEFT : %d", (int)(kClearFadeTime - playTime_));
+	sprintf_s(timeText, "TIME : %d", (int)(kClearFadeTime - playTime_));
 
 	DrawCenterTextWithOutline(timeText, 40, GetColor(255, 255, 255));
 
 	//点数表示
 	char scoreText[64];
-	sprintf_s(scoreText, "SCORE : %d", ScoreManager::GetScore());
+	sprintf_s(scoreText, "SCORE : %d", ScoreManager::GetDispScore());
 
 	DrawCenterTextWithOutline(scoreText, 90, GetColor(255, 80, 80));
 }

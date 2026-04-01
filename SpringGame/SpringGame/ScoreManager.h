@@ -2,11 +2,13 @@
 class ScoreManager
 {
 public:
-	static void AddScore(int score);
+	static void AddScore();
 
 	static void Update();
 
-	static int GetScore();
+	static int GetDispScore() { return dispScore_; }
+
+	static int GetScore() { return score_; }
 
 	static void Reset();
 
