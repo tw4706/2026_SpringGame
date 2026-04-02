@@ -1,6 +1,10 @@
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Actor\Enemy.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Enemy.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Actor\Player.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Player.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Animation.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Animation.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Bg.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Bg.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\EffectManager.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\EffectManager.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Game.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Game.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Scene\ClearScene.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\ClearScene.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Model.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Model.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\Collider.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Collider.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\CollisionManager.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\CollisionManager.obj
@@ -10,7 +14,10 @@ C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\main.cpp;C:\Git_Towa\2026_Spri
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\Matrix4x4.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Matrix4x4.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\Camera.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Camera.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\Vector3.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Vector3.obj
-C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\SceneMain.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\SceneMain.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Scene\Scene.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\Scene.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Scene\SceneController.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\SceneController.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Scene\SceneMain.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\SceneMain.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\Physics\SphereCollider.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\SphereCollider.obj
 C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\ScoreManager.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\ScoreManager.obj
-C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\ScorePop.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\ScorePop.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\PopUI.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\PopUI.obj
+C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\UIManager.cpp;C:\Git_Towa\2026_SpringGame\SpringGame\SpringGame\x64\Release\UIManager.obj

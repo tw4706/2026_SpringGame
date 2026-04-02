@@ -8,15 +8,15 @@ void UIManager::DrawCenterText(const char* text, int y, int color)
 	int width = GetDrawStringWidth(text, strlen(text));
 	int x = (1280 - width) / 2;
 
-	for (int dy = -2; dy <= 2; dy++)
-	{
-		for (int dx = -2; dx <= 2; dx++)
-		{
-			if (dx == 0 && dy == 0) continue;
-			DrawStringToHandle(x + dx,y + dy,
-				text,GetColor(0, 0, 0),Game::kFontHandle);
-		}
-	}
+	//for (int dy = -2; dy <= 2; dy++)
+	//{
+	//	for (int dx = -2; dx <= 2; dx++)
+	//	{
+	//		if (dx == 0 && dy == 0) continue;
+	//		DrawStringToHandle(x + dx,y + dy,
+	//			text,GetColor(0, 0, 0),Game::kFontHandle);
+	//	}
+	//}
 
 	DrawStringToHandle(x, y, text, color, Game::kFontHandle);
 }
