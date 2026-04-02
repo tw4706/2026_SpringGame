@@ -19,7 +19,7 @@ Vector3::Vector3(const VECTOR& v):
 //ベクトルの足し算
 Vector3 Vector3::operator+(const Vector3& other) const
 {
-	return Vector3(other.x_ + x_, other.y_ + y_, other.z_ + z_);
+	return Vector3(x_ + other.x_, y_ + other.y_, z_ + other.z_);
 }
 
 //ベクトルの引き算

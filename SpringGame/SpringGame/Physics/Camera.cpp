@@ -10,7 +10,6 @@ namespace
 
 Camera::Camera() :
 	GameObject(pos_, vel_),
-	angle_(0.0f),
 	shakeTime_(0.0f),
 	shakePower_(0.0f),
 	fovTarget_(0.0f),

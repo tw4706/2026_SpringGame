@@ -15,7 +15,7 @@
 namespace
 {
 	//敵の最大で出現する数
-	constexpr float kEnemyMax = 3;
+	constexpr int kEnemyMax = 3;
 
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
@@ -29,7 +29,6 @@ SceneMain::SceneMain(SceneController& contorller) :
 	frameCount_(0),
 	playTime_(0.0f),
 	bonusTime_(0.0f),
-	skyTexture_{},
 	timeScale_(1.0f),
 	slowTimer_(0.0f),
 	dt_(0.0f),
@@ -55,13 +54,6 @@ void SceneMain::Init()
 	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
 	SetFontSize(40);
 
-	//スカイボックス用のテクスチャのロード
-	skyTexture_[0] = LoadGraph("data/backGround_rt.png");
-	skyTexture_[1] = LoadGraph("data/backGround_lf.png");
-	skyTexture_[2] = LoadGraph("data/backGround_up.png");
-	skyTexture_[3] = LoadGraph("data/backGround_dn.png");
-	skyTexture_[4] = LoadGraph("data/backGround_ft.png");
-	skyTexture_[5] = LoadGraph("data/backGround_bk.png");
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
@@ -88,6 +80,8 @@ void SceneMain::Init()
 	pPlayer_->Init();
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
+
+	bg_.Init();
 
 	frameCount_ = kFadeInterval;
 	dt_ = (1.0f / 60.0f) * timeScale_;
@@ -293,6 +287,7 @@ void SceneMain::FadeDraw()
 
 void SceneMain::NormalDraw()
 {
+	bg_.Draw(pCamera_->GetPos());
 
 	DrawGrid();
 

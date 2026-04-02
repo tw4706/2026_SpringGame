@@ -23,9 +23,10 @@ public:
 	//シェイク更新
 	Vector3 UpdateShake();
 
+	Vector3 GetPos()const { return pos_; }
+
 	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 private:
-	float angle_;
 	float shakeTime_;
 	float shakePower_;
 	float fovTarget_;

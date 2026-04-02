@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include"../Physics/CollisionManager.h"
 #include"../UIManager.h"
+#include"../Bg.h"
 
 class Enemy;
 class Player;
@@ -34,20 +35,18 @@ private:
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 	
 	void DrawGrid();
-	void DrawSkyQuad(VECTOR a, VECTOR b, VECTOR c, VECTOR d, int tex);
-	void DrawSkybox();
 
 private:
 	int frameCount_;
 	float playTime_;//制限時間
 	float bonusTime_;
-	int skyTexture_[6];
 	float dt_;
 	float timeScale_;//時間のスケール(スロー演出などで使用)
 	float slowTimer_;
 	float timeBonusDisplay_ = 0.0f;
 	float timeBonusTimer_ = 0.0f;
 
+	Bg bg_;
 	std::vector<std::shared_ptr<Enemy>> enemies_;
 	std::vector<PopUI>pPopUIs_;
 	std::shared_ptr<Player>pPlayer_;

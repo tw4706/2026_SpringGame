@@ -140,6 +140,7 @@
     <ClCompile Include="Actor\Enemy.cpp" />
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Bg.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Actor\Enemy.h" />
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bg.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Model.h" />
