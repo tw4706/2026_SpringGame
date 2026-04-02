@@ -1,4 +1,5 @@
 #include "PopUI.h"
+#include"Game.h"
 
 namespace
 {
@@ -18,9 +19,9 @@ PopUI::PopUI(const Vector3& pos, int value,ScorePopType type):
 {
 }
 
-void PopUI::Update()
+void PopUI::Update(float dt)
 {
-    timer_ += 1.0f / 60.0f;
+    timer_ += dt;
 
     //上に移動
     pos_.y_ += kUpSpeed;
@@ -40,12 +41,13 @@ void PopUI::Draw()
     //スコアのタイプによって表示する内容を変更する
     if (type_ == ScorePopType::Score)
     {
-        DrawFormatString((int)screen.x, (int)screen.y,
-            GetColor(255, 255, 0), "+%d", value_);
+        DrawFormatStringToHandle((int)screen.x,(int)screen.y,
+            GetColor(255, 255, 0),Game::kFontHandle,"+%d",value_);
     }
     else if (type_ == ScorePopType::Time)
     {
-        DrawFormatString((int)screen.x, (int)screen.y,
-            GetColor(0, 255, 0), "+%.1fs", value_ / 1.0f);
+        DrawFormatStringToHandle(
+            (int)screen.x,(int)screen.y,
+            GetColor(0, 255, 0),Game::kFontHandle,"+%.1fs",value_ / 1.0f);
     }
 }

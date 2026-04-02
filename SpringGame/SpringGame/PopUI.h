@@ -12,7 +12,7 @@ class PopUI
 public:
     PopUI(const Vector3& pos, int value, ScorePopType type);
 
-    void Update();
+    void Update(float dt);
     void Draw();
 
     bool IsDead() const { return isDead_; }

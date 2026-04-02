@@ -23,6 +23,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return -1;			// エラーが起きたら直ちに終了
 	}
 
+	AddFontResourceEx("data/TanueiKakuPop.otf", FR_PRIVATE, NULL);
+	Game::kFontHandle = CreateFontToHandle("TanueiKakuPop", 40, -1);
+
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//------------------------------//

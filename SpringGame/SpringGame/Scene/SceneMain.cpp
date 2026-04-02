@@ -167,7 +167,7 @@ void SceneMain::NormalUpdate(Input& input)
 
 	for (auto& p : pPopUIs_)
 	{
-		p.Update();
+		p.Update(dt_);
 	}
 	pPlayer_->Update(input, dt_);
 	pCamera_->Update();
@@ -181,6 +181,9 @@ void SceneMain::NormalUpdate(Input& input)
 
 		//ジャスト回避成功時時間を増やす
 		bonusTime_ += 2.0f;
+
+		timeBonusDisplay_ = 2.0f;
+		timeBonusTimer_ = 1.0f;
 	}
 	//スロー時間の更新
 	if (slowTimer_ > 0.0f)
@@ -191,6 +194,10 @@ void SceneMain::NormalUpdate(Input& input)
 		{
 			timeScale_ = 1.0f;
 		}
+	}
+	if (timeBonusTimer_ > 0.0f)
+	{
+		timeBonusTimer_ -= dt_;
 	}
 
 	//当たり判定の処理
@@ -315,16 +322,10 @@ void SceneMain::NormalDraw()
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 #endif
-	char timeText[64];
-	sprintf_s(timeText, "TIME : %d", (int)(kClearFadeTime - playTime_+ bonusTime_));
+	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
+	int score = ScoreManager::GetDispScore();
 
-	DrawCenterTextWithOutline(timeText, 40, GetColor(255, 255, 255));
-
-	//点数表示
-	char scoreText[64];
-	sprintf_s(scoreText, "SCORE : %d", ScoreManager::GetDispScore());
-
-	DrawCenterTextWithOutline(scoreText, 90, GetColor(255, 80, 80));
+	uiManager_.Draw(time,score,timeBonusDisplay_,timeBonusTimer_);
 }
 
 void SceneMain::DrawGrid()

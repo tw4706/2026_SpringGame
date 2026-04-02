@@ -141,6 +141,7 @@
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="Physics\SphereCollider.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="PopUI.cpp" />
+    <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Enemy.h" />
@@ -180,6 +182,7 @@
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="PopUI.h" />
+    <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />
