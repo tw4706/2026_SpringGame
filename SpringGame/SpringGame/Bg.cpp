@@ -22,104 +22,108 @@ void Bg::Init()
 
 void Bg::Draw(const Vector3& cameraPos)
 {
-    VECTOR c = VGet(cameraPos.x_, cameraPos.y_, cameraPos.z_);
-    const float s = 3000.0f;
+	SetUseZBuffer3D(TRUE);
+	SetWriteZBuffer3D(FALSE);
+	SetUseLighting(FALSE);
 
-    SetUseZBuffer3D(FALSE);
-    SetWriteZBuffer3D(FALSE);
+	const float size = 2000.0f;
 
-    VERTEX3D v[6];
+	VECTOR c = cameraPos.ToDxlibVector();
 
-    auto SetV = [&](int i,
-        float x, float y, float z,
-        float u, float vuv)
-        {
-            v[i].pos = VGet(x, y, z);
-            v[i].norm = VGet(0.0f, 0.0f, 1.0f);
-            v[i].dif = GetColorU8(255, 255, 255, 255);
-            v[i].spc = GetColorU8(255, 255, 255, 255);
-            v[i].u = u;
-            v[i].v = vuv;
-        };
+	// =========================
+	// 共通：各面の4頂点生成関数風に書く
+	// =========================
 
-    // =========================
-    // 前（ft）
-    // =========================
-    SetV(0, c.x - s, c.y - s, c.z - s, 0, 1);
-    SetV(1, c.x + s, c.y - s, c.z - s, 1, 1);
-    SetV(2, c.x - s, c.y + s, c.z - s, 0, 0);
+	auto drawFace = [&](VECTOR v0, VECTOR v1, VECTOR v2, VECTOR v3, int tex)
+		{
+			VERTEX3D v[4];
 
-    SetV(3, c.x + s, c.y - s, c.z - s, 1, 1);
-    SetV(4, c.x + s, c.y + s, c.z - s, 1, 0);
-    SetV(5, c.x - s, c.y + s, c.z - s, 0, 0);
+			v[0].pos = v0;
+			v[1].pos = v1;
+			v[2].pos = v2;
+			v[3].pos = v3;
 
-    DrawPolygon3D(v, 2, skyTex_[4], TRUE);
+			//完全リセット
+			for (int i = 0; i < 4; i++)
+			{
+				v[i].dif = GetColorU8(255, 255, 255, 255); //色そのまま
+				v[i].spc = GetColorU8(0, 0, 0, 0);        //反射消す
+			}
 
-    // =========================
-    // 後（bk）
-    // =========================
-    SetV(0, c.x + s, c.y - s, c.z + s, 0, 1);
-    SetV(1, c.x - s, c.y - s, c.z + s, 1, 1);
-    SetV(2, c.x + s, c.y + s, c.z + s, 0, 0);
+			// UV固定
+			v[0].u = 0; v[0].v = 1;
+			v[1].u = 1; v[1].v = 1;
+			v[2].u = 0; v[2].v = 0;
+			v[3].u = 1; v[3].v = 0;
 
-    SetV(3, c.x - s, c.y - s, c.z + s, 1, 1);
-    SetV(4, c.x - s, c.y + s, c.z + s, 1, 0);
-    SetV(5, c.x + s, c.y + s, c.z + s, 0, 0);
+			DrawPrimitive3D(v, 4, DX_PRIMTYPE_TRIANGLESTRIP, tex, FALSE);
+		};
 
-    DrawPolygon3D(v, 2, skyTex_[5], TRUE);
+	// =========================
+	// 前面（FT）
+	// =========================
+	drawFace(
+		VGet(c.x - size, c.y - size, c.z + size),
+		VGet(c.x + size, c.y - size, c.z + size),
+		VGet(c.x - size, c.y + size, c.z + size),
+		VGet(c.x + size, c.y + size, c.z + size),
+		skyTex_[4]
+	);
 
-    // =========================
-    // 左（lf）
-    // =========================
-    SetV(0, c.x + s, c.y - s, c.z - s, 0, 1);
-    SetV(1, c.x + s, c.y - s, c.z + s, 1, 1);
-    SetV(2, c.x + s, c.y + s, c.z - s, 0, 0);
+	// =========================
+	// 背面（BK）
+	// =========================
+	drawFace(
+		VGet(c.x + size, c.y - size, c.z - size),
+		VGet(c.x - size, c.y - size, c.z - size),
+		VGet(c.x + size, c.y + size, c.z - size),
+		VGet(c.x - size, c.y + size, c.z - size),
+		skyTex_[5]
+	);
 
-    SetV(3, c.x + s, c.y - s, c.z + s, 1, 1);
-    SetV(4, c.x + s, c.y + s, c.z + s, 1, 0);
-    SetV(5, c.x + s, c.y + s, c.z - s, 0, 0);
+	// =========================
+	// 左面（LF）
+	// =========================
+	drawFace(
+		VGet(c.x - size, c.y - size, c.z - size),
+		VGet(c.x - size, c.y - size, c.z + size),
+		VGet(c.x - size, c.y + size, c.z - size),
+		VGet(c.x - size, c.y + size, c.z + size),
+		skyTex_[1]
+	);
 
-    DrawPolygon3D(v, 2, skyTex_[1], TRUE);
+	// =========================
+	// 右面（RT）
+	// =========================
+	drawFace(
+		VGet(c.x + size, c.y - size, c.z + size),
+		VGet(c.x + size, c.y - size, c.z - size),
+		VGet(c.x + size, c.y + size, c.z + size),
+		VGet(c.x + size, c.y + size, c.z - size),
+		skyTex_[0]
+	);
 
-    // =========================
-    // 右（rt）
-    // =========================
-    SetV(0, c.x - s, c.y - s, c.z + s, 0, 1);
-    SetV(1, c.x - s, c.y - s, c.z - s, 1, 1);
-    SetV(2, c.x - s, c.y + s, c.z + s, 0, 0);
+	// =========================
+	// 上面（UP）
+	// =========================
+	drawFace(
+		VGet(c.x - size, c.y + size, c.z + size),
+		VGet(c.x + size, c.y + size, c.z + size),
+		VGet(c.x - size, c.y + size, c.z - size),
+		VGet(c.x + size, c.y + size, c.z - size),
+		skyTex_[2]
+	);
 
-    SetV(3, c.x - s, c.y - s, c.z - s, 1, 1);
-    SetV(4, c.x - s, c.y + s, c.z - s, 1, 0);
-    SetV(5, c.x - s, c.y + s, c.z + s, 0, 0);
-
-    DrawPolygon3D(v, 2, skyTex_[0], TRUE);
-
-    // =========================
-    // 上（up）
-    // =========================
-    SetV(0, c.x - s, c.y + s, c.z - s, 0, 1);
-    SetV(1, c.x + s, c.y + s, c.z - s, 1, 1);
-    SetV(2, c.x - s, c.y + s, c.z + s, 0, 0);
-
-    SetV(3, c.x + s, c.y + s, c.z - s, 1, 1);
-    SetV(4, c.x + s, c.y + s, c.z + s, 1, 0);
-    SetV(5, c.x - s, c.y + s, c.z + s, 0, 0);
-
-    DrawPolygon3D(v, 2, skyTex_[2], TRUE);
-
-    // =========================
-    // 下（dn）
-    // =========================
-    SetV(0, c.x - s, c.y - s, c.z + s, 0, 1);
-    SetV(1, c.x + s, c.y - s, c.z + s, 1, 1);
-    SetV(2, c.x - s, c.y - s, c.z - s, 0, 0);
-
-    SetV(3, c.x + s, c.y - s, c.z + s, 1, 1);
-    SetV(4, c.x + s, c.y - s, c.z - s, 1, 0);
-    SetV(5, c.x - s, c.y - s, c.z - s, 0, 0);
-
-    DrawPolygon3D(v, 2, skyTex_[3], TRUE);
-
-    SetUseZBuffer3D(TRUE);
-    SetWriteZBuffer3D(TRUE);
+	// =========================
+	// 下（DN）
+	// =========================
+	drawFace(
+		VGet(c.x - size, c.y - size, c.z - size),
+		VGet(c.x + size, c.y - size, c.z - size),
+		VGet(c.x - size, c.y - size, c.z + size),
+		VGet(c.x + size, c.y - size, c.z + size),
+		skyTex_[3]
+	);
+	SetUseZBuffer3D(TRUE);
+	SetUseLighting(TRUE);
 }

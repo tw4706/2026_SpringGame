@@ -288,7 +288,6 @@ void SceneMain::FadeDraw()
 void SceneMain::NormalDraw()
 {
 	bg_.Draw(pCamera_->GetPos());
-
 	DrawGrid();
 
 	//“G‚Ì•`‰æ
