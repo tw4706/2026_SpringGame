@@ -176,8 +176,8 @@ void Enemy::Update(float dt)
 	collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
 	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 #ifdef _DEBUG
-	DrawFormatString(0, 32, GetColor(255, 255, 255),
-		"Enemy: %.2f %.2f %.2f", pos_.x_, pos_.y_, pos_.z_);
+	//DrawFormatString(0, 32, GetColor(255, 255, 255),
+	//	"Enemy: %.2f %.2f %.2f", pos_.x_, pos_.y_, pos_.z_);
 #endif
 }
 

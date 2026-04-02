@@ -7,7 +7,7 @@ class Enemy;
 class Player;
 class Input;
 class Camera;
-class ScorePop;
+class PopUI;
 class SceneMain :public Scene
 {
 public:
@@ -39,13 +39,14 @@ private:
 private:
 	int frameCount_;
 	float playTime_;//制限時間
+	float bonusTime_;
 	int skyTexture_[6];
 	float dt_;
 	float timeScale_;//時間のスケール(スロー演出などで使用)
 	float slowTimer_;
 
 	std::vector<std::shared_ptr<Enemy>> enemies_;
-	std::vector<ScorePop>pScorePops_;
+	std::vector<PopUI>pPopUIs_;
 	std::shared_ptr<Player>pPlayer_;
 	std::shared_ptr<Camera>pCamera_;
 	CollisionManager collisionManager_;

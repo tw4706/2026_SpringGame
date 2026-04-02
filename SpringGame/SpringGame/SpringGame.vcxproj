@@ -156,7 +156,7 @@
     <ClCompile Include="Scene\SceneMain.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
-    <ClCompile Include="ScorePop.cpp" />
+    <ClCompile Include="PopUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Enemy.h" />
@@ -179,7 +179,7 @@
     <ClInclude Include="Scene\SceneMain.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="ScoreManager.h" />
-    <ClInclude Include="ScorePop.h" />
+    <ClInclude Include="PopUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />

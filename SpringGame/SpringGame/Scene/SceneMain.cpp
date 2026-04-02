@@ -4,7 +4,7 @@
 #include"../Input.h"
 #include"../Physics/Camera.h"
 #include"../ScoreManager.h"
-#include"../ScorePop.h"
+#include"../PopUI.h"
 #include"SceneController.h"
 #include "ClearScene.h"
 #include "../EffectManager.h"
@@ -28,6 +28,7 @@ SceneMain::SceneMain(SceneController& contorller) :
 	Scene(contorller),
 	frameCount_(0),
 	playTime_(0.0f),
+	bonusTime_(0.0f),
 	skyTexture_{},
 	timeScale_(1.0f),
 	slowTimer_(0.0f),
@@ -64,6 +65,7 @@ void SceneMain::Init()
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
+	EffectManager::GetInstance().Load("dodge", "data/justDodge.efk");
 
 	//各クラスの初期化処理
 	for (int i = 0; i < kEnemyMax; i++)
@@ -105,7 +107,7 @@ void SceneMain::Draw()
 
 void SceneMain::AddScorePop(const Vector3& pos, int value)
 {
-	pScorePops_.emplace_back(pos, value);
+	pPopUIs_.emplace_back(pos, value, ScorePopType::Score);
 }
 
 void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, int screenW)
@@ -163,7 +165,7 @@ void SceneMain::NormalUpdate(Input& input)
 		enemy->Update(dt_);
 	}
 
-	for (auto& p : pScorePops_)
+	for (auto& p : pPopUIs_)
 	{
 		p.Update();
 	}
@@ -176,6 +178,9 @@ void SceneMain::NormalUpdate(Input& input)
 		timeScale_ = 0.4f;   //スロー倍率
 		slowTimer_ = 0.2f;   //スロー時間
 		pCamera_->StartZoom(DX_PI_F / 6.0f);
+
+		//ジャスト回避成功時時間を増やす
+		bonusTime_ += 2.0f;
 	}
 	//スロー時間の更新
 	if (slowTimer_ > 0.0f)
@@ -212,10 +217,10 @@ void SceneMain::NormalUpdate(Input& input)
 		enemies_.end());
 
 	//消す
-	pScorePops_.erase(
-		std::remove_if(pScorePops_.begin(), pScorePops_.end(),
-			[](const ScorePop& p) { return p.IsDead(); }),
-		pScorePops_.end());
+	pPopUIs_.erase(
+		std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
+			[](const PopUI& p) { return p.IsDead(); }),
+		pPopUIs_.end());
 
 	//常時何体かわいているようにする
 	while (enemies_.size() < kEnemyMax)
@@ -284,8 +289,17 @@ void SceneMain::NormalDraw()
 
 	DrawGrid();
 
+	//敵の描画
 	for (auto& enemy : enemies_)
+	{
 		enemy->Draw();
+	}
+
+	//スコアの描画
+	for (auto& p : pPopUIs_)
+	{
+		p.Draw();
+	}
 
 	pPlayer_->Draw();
 
@@ -302,7 +316,7 @@ void SceneMain::NormalDraw()
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 #endif
 	char timeText[64];
-	sprintf_s(timeText, "TIME : %d", (int)(kClearFadeTime - playTime_));
+	sprintf_s(timeText, "TIME : %d", (int)(kClearFadeTime - playTime_+ bonusTime_));
 
 	DrawCenterTextWithOutline(timeText, 40, GetColor(255, 255, 255));
 

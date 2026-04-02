@@ -3,6 +3,7 @@
 #include"../Physics/Matrix4x4.h"
 #include"../Physics/Vector3.h"
 #include "../Actor/Enemy.h"
+#include"../EffectManager.h"
 #include"DxLib.h"
 #include<cassert>
 #include<algorithm>
@@ -452,6 +453,7 @@ void Player::OnCollision(GameObject* other)
 		{
 			if (!isJustDodge_)
 			{
+				EffectManager::GetInstance().Play("dodge", pos_);
 				isJustDodge_ = true;
 				isJustDodgeTriggered_ = true;
 			}
