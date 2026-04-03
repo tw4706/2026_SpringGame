@@ -22,6 +22,8 @@ public:
 
 	SphereCollider* GetCollider() { return &collider_; }
 
+	Vector3 GetPos()const { return pos_; }
+
 	void OnCollision(GameObject* other);
 
 	void SetPlayer(Player* player) { pPlayer_ = player; }
