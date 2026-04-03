@@ -45,6 +45,8 @@ private:
 	float slowTimer_;
 	float timeBonusDisplay_ = 0.0f;
 	float timeBonusTimer_ = 0.0f;
+	bool isClearing_ = false;	//ƒNƒŠƒA’†‚©‚Ç‚¤‚©
+	bool fadeFinished_ = false;
 
 	Bg bg_;
 	std::vector<std::shared_ptr<Enemy>> enemies_;

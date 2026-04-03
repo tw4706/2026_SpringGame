@@ -3,6 +3,7 @@
 #include"../ScoreManager.h"
 #include"SceneMain.h"
 #include"../Input.h"
+#include"../Game.h"
 #include<algorithm>
 #include<Dxlib.h>
 
@@ -11,13 +12,19 @@ namespace
 	constexpr int kFadeInterval = 60;
 }
 
-ClearScene::ClearScene(SceneController& controller):
+ClearScene::ClearScene(SceneController& controller) :
 	Scene(controller),
 	update_(&ClearScene::FadeInUpdate),
 	draw_(&ClearScene::FadeDraw),
-	frameCount_(0)
+	frameCount_(0),
+	resultScore_(0),
+	displayScore_(0)
 {
 	frameCount_ = kFadeInterval;
+	resultScore_ = ScoreManager::GetScore();
+	displayScore_ = 0;
+
+	SetFontSize(40);
 }
 
 ClearScene::~ClearScene()
@@ -35,7 +42,6 @@ void ClearScene::Draw()
 
 void ClearScene::FadeInUpdate(Input& input)
 {
-	mode_ = FadeMode::In;
 	if (frameCount_-- <= 0)
 	{
 		update_ = &ClearScene::NormalUpdate;
@@ -45,48 +51,78 @@ void ClearScene::FadeInUpdate(Input& input)
 
 void ClearScene::NormalUpdate(Input& input)
 {
+	frameCount_++;
+	blinkTimer_ += 0.1f;
+
+	if (frameCount_ >= 60)
+	{
+		if (displayScore_ < resultScore_)
+		{
+			int diff = resultScore_ - displayScore_;
+			displayScore_ += (std::max)(1, diff / 10);
+
+			if (displayScore_ > resultScore_)
+			{
+				displayScore_ = resultScore_;
+			}
+		}
+	}
+
 	if (input.IsTriggered("retry"))
 	{
 		ScoreManager::Reset();
-		controller_.ChangeScene(std::make_shared<SceneMain>(controller_));
+		controller_.ResetScene(std::make_shared<SceneMain>(controller_));
 	}
 }
 
 void ClearScene::FadeOutUpdate(Input& input)
 {
-	mode_ = FadeMode::Out;
 	if (frameCount_++ <= 0)
 	{
 		update_ = &ClearScene::FadeInUpdate;
-		draw_ = &ClearScene::FadeDraw;
 	}
 }
 
 void ClearScene::FadeDraw()
 {
+	// 通常描画（UIなど）
 	NormalDraw();
-	float rate = 0.0f;
 
-	if (mode_ == FadeMode::In)
-	{
-		rate = (float)frameCount_ / kFadeInterval;
-	}
-	else
-	{
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
-	}
-
+	float rate = (float)frameCount_ / kFadeInterval;
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
+	// 黒 → 透明
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
-	DrawBoxAA(0, 0, 1280, 720, GetColor(0, 0, 0), TRUE);
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void ClearScene::NormalDraw()
 {
-	DrawString(500, 250, "CLEAR!", GetColor(255, 255, 255));
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	DrawFormatString(500, 300, GetColor(255, 255, 0),
-		"SCORE: %d", ScoreManager::GetScore());
+	// スコア表示
+	char scoreText[64];
+	sprintf_s(scoreText, "SCORE: %d", displayScore_);
+
+	int scoreW = GetDrawStringWidth(scoreText, strlen(scoreText));
+	int scoreX = (Game::kScreenWidth - scoreW) / 2;
+
+	DrawStringToHandle(scoreX, Game::kScreenHeight / 2-100,
+		scoreText, GetColor(255, 255, 0), Game::kFontHandle);
+
+	//リトライ表示
+	const char* retryText = "Press Retry";
+	int retryW = GetDrawStringWidth(retryText, strlen(retryText));
+	int retryX = (Game::kScreenWidth - retryW) / 2;
+
+	float alphaRate = (sinf(blinkTimer_) + 1.0f) * 0.5f;
+	int alpha = (int)(255 * alphaRate);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	DrawStringToHandle(retryX, Game::kScreenHeight / 2, 
+		retryText, GetColor(255, 255, 255), Game::kFontHandle);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

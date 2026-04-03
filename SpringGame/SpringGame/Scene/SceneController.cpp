@@ -14,6 +14,7 @@ void SceneController::ResetScene(std::shared_ptr<Scene> scene)
 	//ƒV[ƒ“‚ðˆê‚Â‚É‚·‚é‚½‚ß‚Éˆê’UÁ‚·
 	scenes_.clear();
 	scenes_.push_back(scene);
+	scene->Init();
 }
 
 void SceneController::ChangeScene(std::shared_ptr<Scene> scene)

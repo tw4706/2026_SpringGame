@@ -26,5 +26,7 @@ private:
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 private:
 	int frameCount_;
+	float blinkTimer_ = 0.0f;
+	int resultScore_ = 0;
+	int displayScore_ = 0;
 };
-

@@ -126,8 +126,6 @@ void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, in
 
 void SceneMain::FadeInUpdate(Input& input)
 {
-	mode_ = FadeMode::In;
-
 	for (auto& enemy : enemies_)
 	{
 		enemy->Update(dt_);
@@ -242,19 +240,28 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	//60秒経ったらクリアシーンへ
-	if (playTime_ >= kClearFadeTime)
+	if (playTime_ >= kClearFadeTime&&!isClearing_)
 	{
-		controller_.ChangeScene(std::make_shared<ClearScene>(controller_));
+		isClearing_ = true;
+
+		update_ = &SceneMain::FadeOutUpdate;
+		draw_ = &SceneMain::FadeDraw;
+
+		frameCount_ = 0;
+		return;
 	}
 }
 
 void SceneMain::FadeOutUpdate(Input& input)
 {
-	mode_ = FadeMode::Out;
-	if (frameCount_++ >= kFadeInterval)
+	frameCount_++;
+
+	// フェード完了後に1フレーム待つ
+	if (frameCount_ >= kFadeInterval)
 	{
-		//シーン遷移
-		controller_.ChangeScene(std::make_shared<SceneMain>(controller_));
+		frameCount_ = 0;
+		draw_ = &SceneMain::NormalDraw;
+		controller_.PushScene(std::make_shared<ClearScene>(controller_));
 	}
 }
 
@@ -265,17 +272,7 @@ void SceneMain::FadeDraw()
 
 	//フェードの描画
 	float rate = 0.0f;
-
-	if (mode_ == FadeMode::In)
-	{
-		//黒から透明
-		rate = (float)frameCount_ / kFadeInterval;
-	}
-	else
-	{
-		//透明から黒
-		rate = 1.0f - (float)frameCount_ / kFadeInterval;
-	}
+	rate = (float)frameCount_ / kFadeInterval;
 
 	rate = std::clamp(rate, 0.0f, 1.0f);
 

@@ -1,11 +1,5 @@
 #pragma once
 
-enum class FadeMode
-{
-	In,
-	Out
-};
-
 class SceneController;
 class Input;
 class Scene
@@ -30,7 +24,5 @@ public:
 	/// シーンの描画(シーンの持ち物も描画する)
 	/// </summary>
 	virtual void Draw() = 0;
-protected:
-	FadeMode mode_;
 };
 
