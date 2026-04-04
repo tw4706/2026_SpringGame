@@ -243,12 +243,16 @@ void SceneMain::NormalUpdate(Input& input)
 	//60秒経ったらクリアシーンへ
 	if (playTime_ >= kClearFadeTime&&!isClearing_)
 	{
-		isClearing_ = true;
+		//プレイヤーの死亡アニメーション終了でクリアシーンへ
+		if (pPlayer_->IsDeathAnimEnd())
+		{
+			isClearing_ = true;
 
-		update_ = &SceneMain::FadeOutUpdate;
-		draw_ = &SceneMain::FadeDraw;
+			update_ = &SceneMain::FadeOutUpdate;
+			draw_ = &SceneMain::FadeDraw;
 
-		frameCount_ = 0;
+			frameCount_ = 0;
+		}
 		return;
 	}
 

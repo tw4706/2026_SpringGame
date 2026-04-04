@@ -18,6 +18,7 @@ public :
 
 	//“–‚½‚è”»’è‚ÌŽæ“¾
 	Collider* GetCollider()const { return pCollider_; }
+	const Vector3& GetPos() const { return pos_; }
 
 protected:
 	Vector3 pos_;

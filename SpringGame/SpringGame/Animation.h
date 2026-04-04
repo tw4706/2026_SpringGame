@@ -11,6 +11,7 @@ enum class AnimationState
     Spawn,
     Idle,
     Run,
+    Hit,
     Attack,
     Death,
     Dodge

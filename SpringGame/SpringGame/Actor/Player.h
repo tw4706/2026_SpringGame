@@ -23,7 +23,9 @@ public:
 		Idle,	//待機
 		Run,	//移動
 		Attack,	//攻撃
-		Dodge	//回避
+		Dodge,	//回避
+		Hit,	//ダメージ
+		Death	//死亡
 	};
 
 	Player();
@@ -52,9 +54,11 @@ public:
 	void UpdateAction(Input&input,float dt);
 	//状態遷移の処理
 	void UpdateState();
-	//攻撃中の処理
+	//攻撃処理
 	void UpdateAttack();
-	//回避中の処理
+	//ノックバック処理
+	void UpdateKnockBack(float dt);
+	//回避処理
 	void UpdateDodge(float dt);
 	//アニメーションの更新
 	void UpdateAnimation(float dt);
@@ -92,18 +96,23 @@ public:
 	bool IsJustDodgeTriggered()const { return isJustDodgeTriggered_; }
 	bool IsDead() const { return hp_ <= 0; }
 
+	bool IsDeathAnimEnd()const { return state_ == PlayerState::Death && animation_.IsEnd(); }
+
 private:
 	float cameraAngle_;						//カメラ用の角度
 	float moveAngle_;						//プレイヤーの移動用の角度
 	bool isHit_;							//衝突判定用フラグ
 	float attackTimer_;						//攻撃時間
 	float dodgeTimer_;						//回避時間
+	float hitTimer_;						//被ダメージ時間
 	float invincibleTimer_;					//無敵時間
 	float afterImageTimer_;					//残像の生成時間
 	bool isJustDodge_;						//ジャスト回避のフラグ
 	bool isJustDodgeTriggered_;				//ジャスト回避の判定がされたかどうか
 	int justDodgeFrame_;					//ジャスト回避の猶予フレーム数
 	int hp_;
+	Vector3 knockbackVel_;
+	float knockbackTimer_;
 
 	SphereCollider collider_;				//当たり判定用変数
 	SphereCollider attackCollider_;			//攻撃の当たり判定用変数

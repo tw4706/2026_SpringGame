@@ -8,6 +8,7 @@ namespace
 	const char* kPlayerIdle = "CharacterArmature|Idle";
 	const char* kPlayerRun = "CharacterArmature|Run";
 	const char* kPlayerAttack = "CharacterArmature|Punch";
+	const char* kPlayerHit = "CharacterArmature|HitReact";
 	const char* kPlayerDeath = "CharacterArmature|Death";
 
 	//“G
@@ -214,6 +215,9 @@ void Animation::ChangeState(AnimationState state)
 			break;
 		case AnimationState::Attack:
 			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerAttack);
+			break;
+		case AnimationState::Hit:
+			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerHit);
 			break;
 		case AnimationState::Death:
 			animIndex = MV1GetAnimIndex(modelHandle_, kPlayerDeath);
