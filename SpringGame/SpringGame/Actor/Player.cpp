@@ -4,6 +4,7 @@
 #include"../Physics/Vector3.h"
 #include "../Actor/Enemy.h"
 #include"../EffectManager.h"
+#include"../Physics/Camera.h"
 #include"DxLib.h"
 #include<cassert>
 #include<algorithm>
@@ -12,6 +13,8 @@ namespace
 {
 	//初期位置
 	const Vector3 kFirstPos = { 0.0f,0.0f,0.0f };
+
+	constexpr int kMaxHP = 3;
 
 	//プレイヤーの移動速度
 	constexpr float kSpeed = 8.0f;
@@ -33,7 +36,7 @@ namespace
 
 	constexpr float kDodgeTime = 0.25f;
 	constexpr float kDodgeSpeed = 18.0f;
-	constexpr int kJustDodgeFrame = 1;
+	constexpr int kJustDodgeFrame = 3;
 }
 
 Player::Player() :
@@ -48,6 +51,7 @@ Player::Player() :
 	isJustDodge_(false),
 	isJustDodgeTriggered_(false),
 	justDodgeFrame_(0),
+	hp_(kMaxHP),
 	collider_(0.0f),
 	attackCollider_(0.0f),
 	isHit_(false)
@@ -237,7 +241,6 @@ void Player::StartDodge()
 {
 	state_ = PlayerState::Dodge;
 	dodgeTimer_ = kDodgeTime;
-	invincibleTimer_ = kDodgeTime;
 
 	//ジャスト回避の判定開始
 	justDodgeFrame_ = kJustDodgeFrame;
@@ -456,12 +459,13 @@ void Player::OnCollision(GameObject* other)
 				EffectManager::GetInstance().Play("dodge", pos_);
 				isJustDodge_ = true;
 				isJustDodgeTriggered_ = true;
+
+				invincibleTimer_ = 0.5f;
 			}
+			return;
 		}
 
-		if (IsInvincible()) return;
-
-		isHit_ = true;
+		OnHit(other);
 	}
 }
 
@@ -479,5 +483,20 @@ void Player::OnHit(GameObject* attacker)
 {
 	if (IsInvincible()) return;
 
+	hp_--;
+
 	isHit_ = true;
+
+	if (pCamera_)
+	{
+		pCamera_->Shake(0.2f, 10.0f);
+	}
+	
+	//無敵時間
+	invincibleTimer_ = 0.5f;
+
+	if (hp_ <= 0)
+	{
+		hp_ = 0;
+	}
 }

@@ -78,6 +78,7 @@ void SceneMain::Init()
 	}
 
 	pPlayer_->Init();
+	pPlayer_->SetCamera(pCamera_.get());
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
 
@@ -250,6 +251,18 @@ void SceneMain::NormalUpdate(Input& input)
 		frameCount_ = 0;
 		return;
 	}
+
+	//プレイヤーが死亡したらクリアシーンに遷移
+	if (pPlayer_->IsDead() && !isClearing_)
+	{
+		isClearing_ = true;
+
+		update_ = &SceneMain::FadeOutUpdate;
+		draw_ = &SceneMain::FadeDraw;
+
+		frameCount_ = 0;
+		return;
+	}
 }
 
 void SceneMain::FadeOutUpdate(Input& input)
@@ -309,9 +322,11 @@ void SceneMain::NormalDraw()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-#ifdef DEBUG_
+#ifdef _DEBUG
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
+
+	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
 	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
 	int score = ScoreManager::GetDispScore();

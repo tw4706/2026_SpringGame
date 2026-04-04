@@ -13,6 +13,7 @@ struct AfterImage
 };
 
 class Input;
+class Camera;
 class Player :public GameObject
 {
 public:
@@ -70,11 +71,16 @@ public:
 	float GetCameraAngle()const { return cameraAngle_; }
 	//カメラの注視点の取得
 	Vector3 GetCameraTarget()const;
+	//HPの取得
+	int GetHP() const { return hp_; }
 
 	//当たり判定の取得
 	SphereCollider* GetCollider() { return &collider_; }
 	//攻撃判定取得
 	SphereCollider* GetAttackCollider() { return &attackCollider_; }
+
+	//カメラのセット
+	void SetCamera(Camera* camera) { pCamera_ = camera; }
 
 	//衝突処理
 	void OnCollision(GameObject* other);
@@ -84,6 +90,7 @@ public:
 	bool ConsumeJustDodge();
 	bool IsJustDodge()const { return isJustDodge_; }
 	bool IsJustDodgeTriggered()const { return isJustDodgeTriggered_; }
+	bool IsDead() const { return hp_ <= 0; }
 
 private:
 	float cameraAngle_;						//カメラ用の角度
@@ -96,6 +103,7 @@ private:
 	bool isJustDodge_;						//ジャスト回避のフラグ
 	bool isJustDodgeTriggered_;				//ジャスト回避の判定がされたかどうか
 	int justDodgeFrame_;					//ジャスト回避の猶予フレーム数
+	int hp_;
 
 	SphereCollider collider_;				//当たり判定用変数
 	SphereCollider attackCollider_;			//攻撃の当たり判定用変数
@@ -103,6 +111,7 @@ private:
 	Model model_;							//モデル
 	Model ghostModel_;						//残像用のモデル
 	PlayerState state_;						//プレイヤーの状態
+	Camera* pCamera_ = nullptr;
 	std::vector<AfterImage>afterImages_;	//残像の情報
 };
 
