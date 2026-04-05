@@ -2,6 +2,7 @@
 #include "../Actor/Player.h"
 #include"../Physics/Matrix4x4.h"
 #include<Dxlib.h>
+#include<algorithm>
 
 namespace
 {
@@ -14,6 +15,8 @@ Camera::Camera() :
 	shakePower_(0.0f),
 	fovTarget_(0.0f),
 	fov_(0.0f),
+	yaw_(0.0f),
+	pitch_(0.0f),
 	cameraTarget_(0.0f, 0.0f, 0.0f)
 {
 }
@@ -30,8 +33,9 @@ void Camera::Init()
 
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
-	float playerAngle = pPlayer_->GetCameraAngle();
-	Matrix4x4 rotMat = Matrix4x4::RotateY(playerAngle);
+	Matrix4x4 rotY = Matrix4x4::RotateY(yaw_);
+	Matrix4x4 rotX = Matrix4x4::RotateX(pitch_);
+	Matrix4x4 rotMat = rotX * rotY;
 	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
 
 	pos_ = cameraTarget_ + offset;
@@ -52,9 +56,6 @@ void Camera::UpdateCamera()
 	//カメラの注視点
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
-	//カメラはプレイヤーと同じ方向を見る
-	float playerAngle = pPlayer_->GetCameraAngle();
-
 	//ズームの補間
 	fov_ += (fovTarget_ - fov_) * 0.05f;
 
@@ -63,7 +64,9 @@ void Camera::UpdateCamera()
 	SetupCamera_Perspective(fov_);
 
 	//回転
-	Matrix4x4 rotMat = Matrix4x4::RotateY(playerAngle);
+	Matrix4x4 rotY = Matrix4x4::RotateY(yaw_);
+	Matrix4x4 rotX = Matrix4x4::RotateX(pitch_);
+	Matrix4x4 rotMat = rotX * rotY;
 	Vector3 offset = rotMat.TransformForVector(kTargetToCamera);
 
 	//カメラの位置
@@ -75,8 +78,17 @@ void Camera::UpdateCamera()
 	//カメラのシェイク適用
 	pos_ += UpdateShake();
 
-	//カメラの設定
-	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(), cameraTarget_.ToDxlibVector());
+	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(),cameraTarget_.ToDxlibVector());
+}
+
+void Camera::AddRotation(float yaw, float pitch)
+{
+	yaw_ += yaw;
+	pitch_ += pitch;
+
+	// 真上真下まで行かないよう制限
+	const float limit = DX_PI_F / 3.0f; // 60度
+	pitch_ = std::clamp(pitch_, -limit, limit);
 }
 
 void Camera::Shake(float time, float power)

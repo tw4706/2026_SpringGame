@@ -14,12 +14,15 @@ namespace
 	//初期位置
 	const Vector3 kFirstPos = { 0.0f,0.0f,0.0f };
 
+	//最大体力
 	constexpr int kMaxHP = 3;
 
 	//プレイヤーの移動速度
 	constexpr float kSpeed = 16.0f;
 
+	//カメラの回転速度
 	constexpr float kCameraSpeed = 0.05f;
+	constexpr float kCameraPitch = 0.3f;
 
 	//当たり判定のサイズ
 	constexpr float kColSize = 50.0f;
@@ -42,7 +45,6 @@ namespace
 Player::Player() :
 	GameObject(pos_, vel_),
 	state_(PlayerState::Idle),
-	cameraAngle_(0.0f),
 	moveAngle_(0.0f),
 	attackTimer_(0.0f),
 	invincibleTimer_(0.0f),
@@ -208,7 +210,13 @@ void Player::Move(Input& input, float dt)
 	if (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f)
 	{
 		//カメラの角度を基準にして移動方向を回転させる
-		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraAngle_);
+		float cameraYaw = 0.0f;
+		if (pCamera_)
+		{
+			cameraYaw = pCamera_->GetYaw();
+		}
+
+		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
 		Vector3 playerDir = rotMat.TransformForVector(inputDir);
 
 		//正規化 
@@ -440,7 +448,13 @@ void Player::UpdateAnalogStick(Input& input)
 	//左スティックでプレイヤー操作
 	if (fabs(stickL.x_) > 0.2f || fabs(stickL.z_) > 0.2f)
 	{
-		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraAngle_);
+		float cameraYaw = 0.0f;
+		if (pCamera_)
+		{
+			cameraYaw = pCamera_->GetYaw();
+		}
+
+		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
 
 		Vector3 playerDir = rotMat.TransformForVector(stickL);
 
@@ -462,10 +476,11 @@ void Player::UpdateAnalogStick(Input& input)
 		moveAngle_ += diff * 0.2f;
 	}
 
-	//右スティックでカメラ操作
-	if (fabs(stickR.x_) > 0.1f)
+	if (pCamera_)
 	{
-		cameraAngle_ += stickR.x_ * kCameraSpeed;
+		pCamera_->AddRotation(
+			stickR.x_ * kCameraSpeed,
+			stickR.z_ * kCameraSpeed);
 	}
 }
 
@@ -530,13 +545,20 @@ void Player::OnHit(GameObject* attacker)
 
 	isHit_ = true;
 
-	Vector3 dir = pos_ - attacker->GetPos();
-	dir.y_ = 0.0f;
-	dir.Normalize();
+	//ノックバック方向（敵から離れる）
+	Vector3 knockDir = pos_ - attacker->GetPos();
+	knockDir.y_ = 0.0f;
+	knockDir.Normalize();
 
-	moveAngle_ = atan2f(-dir.x_, dir.z_);
-	knockbackVel_ = dir * 5.0f;
+	knockbackVel_ = knockDir * 8.0f;
 	knockbackTimer_ = 0.2f;
+
+	//向きは敵を見る
+	Vector3 lookDir = attacker->GetPos() - pos_;
+	lookDir.y_ = 0.0f;
+	lookDir.Normalize();
+
+	moveAngle_ = atan2f(-lookDir.x_, lookDir.z_);
 
 	if (hp_ <= 0)
 	{

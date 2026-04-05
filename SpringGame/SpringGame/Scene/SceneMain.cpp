@@ -52,8 +52,6 @@ void SceneMain::Init()
 	//Zバッファの設定
 	SetUseZBuffer3D(true);		//Zバッファを使います
 	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
-	SetFontSize(40);
-
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
@@ -254,12 +252,15 @@ void SceneMain::NormalUpdate(Input& input)
 	//プレイヤーが死亡したらクリアシーンに遷移
 	if (pPlayer_->IsDead() && !isClearing_)
 	{
-		isClearing_ = true;
+		if (pPlayer_->IsDeathAnimEnd())
+		{
+			isClearing_ = true;
 
-		update_ = &SceneMain::FadeOutUpdate;
-		draw_ = &SceneMain::FadeDraw;
+			update_ = &SceneMain::FadeOutUpdate;
+			draw_ = &SceneMain::FadeDraw;
 
-		frameCount_ = 0;
+			frameCount_ = 0;
+		}
 		return;
 	}
 }
@@ -323,11 +324,13 @@ void SceneMain::NormalDraw()
 	}
 
 #ifdef _DEBUG
+	SetFontSize(16);
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
 
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
+	SetFontSize(40);
 	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
 	int score = ScoreManager::GetDispScore();
 

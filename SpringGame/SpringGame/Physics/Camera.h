@@ -15,6 +15,8 @@ public:
 
 	void UpdateCamera();
 
+	void AddRotation(float yaw, float pitch);
+
 	//シェイク開始
 	void Shake(float time, float power);
 
@@ -24,6 +26,7 @@ public:
 	Vector3 UpdateShake();
 
 	Vector3 GetPos()const { return pos_; }
+	float GetYaw() const { return yaw_; }
 
 	void SetPlayer(std::shared_ptr<Player> player) { pPlayer_ = player; }
 private:
@@ -31,6 +34,8 @@ private:
 	float shakePower_;
 	float fovTarget_;
 	float fov_;
+	float yaw_;
+	float pitch_;
 
 	//カメラの注視点
 	Vector3 cameraTarget_;

@@ -71,8 +71,6 @@ public:
 
 	//プレイヤーの位置を取得
 	Vector3 GetPos()const{ return pos_; }
-	//カメラ用の角度を取得
-	float GetCameraAngle()const { return cameraAngle_; }
 	//カメラの注視点の取得
 	Vector3 GetCameraTarget()const;
 	//HPの取得
@@ -99,7 +97,6 @@ public:
 	bool IsDeathAnimEnd()const { return state_ == PlayerState::Death && animation_.IsEnd(); }
 
 private:
-	float cameraAngle_;						//カメラ用の角度
 	float moveAngle_;						//プレイヤーの移動用の角度
 	bool isHit_;							//衝突判定用フラグ
 	float attackTimer_;						//攻撃時間
