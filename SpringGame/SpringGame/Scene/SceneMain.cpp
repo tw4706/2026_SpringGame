@@ -216,7 +216,7 @@ void SceneMain::NormalUpdate(Input& input)
 			}),
 		enemies_.end());
 
-	//消す
+	//UIの削除処理
 	pPopUIs_.erase(
 		std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
 			[](const PopUI& p) { return p.IsDead(); }),
@@ -240,19 +240,14 @@ void SceneMain::NormalUpdate(Input& input)
 		enemies_.push_back(enemy);
 	}
 
-	//60秒経ったらクリアシーンへ
-	if (playTime_ >= kClearFadeTime&&!isClearing_)
+	//60秒経ったらクリアシーンへ遷移
+	if (playTime_ >= kClearFadeTime && !isClearing_)
 	{
-		//プレイヤーの死亡アニメーション終了でクリアシーンへ
-		if (pPlayer_->IsDeathAnimEnd())
-		{
-			isClearing_ = true;
+		isClearing_ = true;
 
-			update_ = &SceneMain::FadeOutUpdate;
-			draw_ = &SceneMain::FadeDraw;
-
-			frameCount_ = 0;
-		}
+		update_ = &SceneMain::FadeOutUpdate;
+		draw_ = &SceneMain::FadeDraw;
+		frameCount_ = 0;
 		return;
 	}
 
@@ -273,7 +268,7 @@ void SceneMain::FadeOutUpdate(Input& input)
 {
 	frameCount_++;
 
-	// フェード完了後に1フレーム待つ
+	//フェード完了後に1フレーム待つ
 	if (frameCount_ >= kFadeInterval)
 	{
 		frameCount_ = 0;
@@ -316,9 +311,10 @@ void SceneMain::NormalDraw()
 		p.Draw();
 	}
 
+	//プレイヤーの描画
 	pPlayer_->Draw();
 
-
+	//ジャスト回避時に画面の色を変更
 	if (timeScale_ < 1.0f)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
@@ -335,7 +331,7 @@ void SceneMain::NormalDraw()
 	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
 	int score = ScoreManager::GetDispScore();
 
-	uiManager_.Draw(time,score,timeBonusDisplay_,timeBonusTimer_);
+	uiManager_.Draw(time, score, timeBonusDisplay_, timeBonusTimer_);
 }
 
 void SceneMain::DrawGrid()

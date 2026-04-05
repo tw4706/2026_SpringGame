@@ -17,7 +17,7 @@ namespace
 	constexpr int kMaxHP = 3;
 
 	//プレイヤーの移動速度
-	constexpr float kSpeed = 8.0f;
+	constexpr float kSpeed = 16.0f;
 
 	constexpr float kCameraSpeed = 0.05f;
 
@@ -231,7 +231,7 @@ void Player::Move(Input& input, float dt)
 	}
 
 	//アナログスティックの更新 
-	//UpdateAnalogStick(input);
+	UpdateAnalogStick(input);
 
 	//位置の反映
 	pos_ += vel_ * dt * 60.0f;
