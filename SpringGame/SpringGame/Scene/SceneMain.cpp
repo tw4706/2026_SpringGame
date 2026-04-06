@@ -31,6 +31,10 @@ namespace
 	constexpr int kFrameW = 32;
 	constexpr int kFrameH = 32;
 	constexpr float kHpScale = 2.0f;
+
+	//片側のマス数
+	constexpr int kGridNum = 10;
+	constexpr float kTileSize = 100.0f;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
@@ -364,8 +368,9 @@ void SceneMain::NormalDraw()
 
 	SetUseBackCulling(false);
 	bg_.Draw(pCamera_->GetPos());
-	SetUseBackCulling(true);
+	SetUseBackCulling(false);
 	DrawGrid();
+	SetUseBackCulling(true);
 
 	//敵の描画
 	for (auto& enemy : enemies_)
@@ -443,18 +448,14 @@ void SceneMain::NormalDraw()
 
 void SceneMain::DrawGrid()
 {
-	//片側のマス数
-	const int GRID_NUM = 10;
-	const float TILE_SIZE = 100.0f;
-
-	for (int z = -GRID_NUM; z < GRID_NUM; z++)
+	for (int z = -kGridNum; z < kGridNum; z++)
 	{
-		for (int x = -GRID_NUM; x < GRID_NUM; x++)
+		for (int x = -kGridNum; x < kGridNum; x++)
 		{
-			VECTOR v1 = VGet(x * TILE_SIZE, 0.0f, z * TILE_SIZE);
-			VECTOR v2 = VGet((x + 1) * TILE_SIZE, 0.0f, z * TILE_SIZE);
-			VECTOR v3 = VGet((x + 1) * TILE_SIZE, 0.0f, (z + 1) * TILE_SIZE);
-			VECTOR v4 = VGet(x * TILE_SIZE, 0.0f, (z + 1) * TILE_SIZE);
+			VECTOR v1 = VGet(x * kTileSize, 0.0f, z * kTileSize);
+			VECTOR v2 = VGet((x + 1) * kTileSize, 0.0f, z * kTileSize);
+			VECTOR v3 = VGet((x + 1) * kTileSize, 0.0f, (z + 1) * kTileSize);
+			VECTOR v4 = VGet(x * kTileSize, 0.0f, (z + 1) * kTileSize);
 
 			int color = GetColor(80, 160, 80);
 

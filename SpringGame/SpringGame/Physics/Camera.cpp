@@ -71,6 +71,7 @@ void Camera::UpdateCamera()
 
 	//カメラの位置
 	Vector3 cameraPos = cameraTarget_ + offset;
+	cameraPos.y_ = (std::max)(cameraPos.y_, 50.0f);
 
 	//カメラの補間
 	pos_ += (cameraPos - pos_) * 0.1f;
@@ -87,7 +88,7 @@ void Camera::AddRotation(float yaw, float pitch)
 	pitch_ += pitch;
 
 	//真上真下まで行かないよう制限
-	const float limit = DX_PI_F / 3.0f; //20度
+	const float limit = DX_PI_F / 3.0f; //60度
 	pitch_ = std::clamp(pitch_, -limit, limit);
 }
 
