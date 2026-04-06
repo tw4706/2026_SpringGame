@@ -17,12 +17,19 @@ namespace
 {
 	//敵の最大で出現する数
 	constexpr int kEnemyMax = 3;
+	constexpr int kMaxHP = 3;
+
+	constexpr float kHpAnimInterval = 0.05f;
+	constexpr int kHpAnimMaxFrame = 13;
 
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
 
 	//制限時間
 	constexpr float kClearFadeTime = 60.0f;
+
+	const int FRAME_W = 32;
+	const int FRAME_H = 32;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
@@ -57,6 +64,8 @@ void SceneMain::Init()
 
 	//HPバーの画像のロード
 	hpHandle_ = LoadGraph("data/HP.png");
+	prevHp_ = kMaxHP;
+	displayHp_ = kMaxHP;
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
@@ -169,6 +178,44 @@ void SceneMain::NormalUpdate(Input& input)
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
+	int currentHp = pPlayer_->GetHP();
+
+	// ダメージ受けた瞬間
+	if (currentHp < prevHp_)
+	{
+		isHpAnimating_ = true;
+		hpAnimFrame_ = 0;
+		hpAnimTimer_ = 0.0f;
+
+		damageIndex_ = prevHp_ - 1;
+	}
+
+	prevHp_ = currentHp;
+
+	// アニメ更新
+	if (isHpAnimating_)
+	{
+		hpAnimTimer_ += dt_;
+
+		if (hpAnimTimer_ >= kHpAnimInterval)
+		{
+			hpAnimTimer_ = 0.0f;
+			hpAnimFrame_++;
+
+			if (hpAnimFrame_ >= kHpAnimMaxFrame)
+			{
+				hpAnimFrame_ = kHpAnimMaxFrame - 1; //最後で止める
+				hpKeepFrame_ = hpAnimFrame_;
+				isHpAnimating_ = false;
+				displayHp_ = currentHp;
+			}
+			else
+			{
+				hpKeepFrame_ = hpAnimFrame_;
+			}
+		}
+	}
+
 	if (pPlayer_->ConsumeJustDodge())
 	{
 		timeScale_ = 0.4f;   //スロー倍率
@@ -221,7 +268,7 @@ void SceneMain::NormalUpdate(Input& input)
 
 	//UIの削除処理
 	pPopUIs_.erase(std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
-			[](const PopUI& p) { return p.IsDead(); }),pPopUIs_.end());
+		[](const PopUI& p) { return p.IsDead(); }), pPopUIs_.end());
 
 	//常時何体か湧いているようにする
 	while (enemies_.size() < kEnemyMax)
@@ -330,35 +377,51 @@ void SceneMain::NormalDraw()
 	// HPバー描画
 	// =====================
 	int hp = pPlayer_->GetHP();
-	int maxHp = pPlayer_->GetMaxHP();
-	float rate = (float)hp / maxHp;
 
 	//画像サイズ取得
 	int imgW, imgH;
 	GetGraphSize(hpHandle_, &imgW, &imgH);
 
-	//表示幅
-	int drawW = (int)(imgW * rate);
-
-	//表示位置
 	int x = 50;
 	int y = 200;
 
-	// 1マスのサイズ
-	const int CHIP_SIZE = 16;
+	//表示フレーム
+	int frame = isHpAnimating_ ? hpAnimFrame_ : hpKeepFrame_;
 
-	//HP分だけループ
-	for (int i = 0; i < hp; i++)
+	//最大3ハート
+	const int MAX_HP = 3;
+
+	for (int i = 0; i < MAX_HP; i++)
 	{
-		DrawRectGraph(
-			x + i * CHIP_SIZE, //横に並べる
-			y,
-			i * CHIP_SIZE,
-			0,
-			CHIP_SIZE,
-			CHIP_SIZE,
-			hpHandle_,
-			TRUE);
+		int drawX = x + i * (FRAME_W + 10);
+
+		if (isHpAnimating_ && i == damageIndex_)
+		{
+			DrawRectGraph(
+				drawX, y,
+				hpAnimFrame_ * FRAME_W, 160,
+				FRAME_W, FRAME_H,
+				hpHandle_,
+				TRUE);
+		}
+		else if (i < hp)
+		{
+			DrawRectGraph(
+				drawX, y,
+				0, 160,
+				FRAME_W, FRAME_H,
+				hpHandle_,
+				TRUE);
+		}
+		else
+		{
+			DrawRectGraph(
+				drawX, y,
+				(kHpAnimMaxFrame - 1) * FRAME_W, 160,
+				FRAME_W, FRAME_H,
+				hpHandle_,
+				TRUE);
+		}
 	}
 
 #ifdef _DEBUG

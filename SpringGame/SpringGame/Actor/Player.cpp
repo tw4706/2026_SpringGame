@@ -287,7 +287,7 @@ void Player::HandleInput(Input& input)
 		return;
 	}
 
-	if (input.IsTriggered("attack") && state_ != PlayerState::Attack)
+	if (input.IsTriggered("attack"))
 	{
 		StartAttack();
 		return;
@@ -308,6 +308,10 @@ void Player::UpdateAction(Input& input, float dt)
 		break;
 
 	case PlayerState::Attack:
+		if (knockbackTimer_ <= 0.0f)
+		{
+			Move(input, dt);
+		}
 		UpdateAttack();
 		break;
 

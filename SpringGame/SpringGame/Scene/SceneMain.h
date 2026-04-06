@@ -48,6 +48,13 @@ private:
 	float timeBonusTimer_ = 0.0f;
 	bool isClearing_ = false;	//ƒNƒŠƒA’†‚©‚Ç‚¤‚©
 	bool fadeFinished_ = false;
+	int prevHp_ = 0;
+	int displayHp_=0;
+	int hpAnimFrame_ = 0;
+	int hpKeepFrame_ = 0;
+	float hpAnimTimer_ = 0.0f;
+	bool isHpAnimating_ = false;
+	int damageIndex_ = -1;
 
 	Bg bg_;
 	std::vector<std::shared_ptr<Enemy>> enemies_;
