@@ -20,7 +20,7 @@ namespace
 	constexpr int kMaxHP = 3;
 
 	constexpr float kHpAnimInterval = 0.05f;
-	constexpr int kHpAnimMaxFrame = 13;
+	constexpr int kHpAnimMaxFrame = 11;
 
 	//フェードの間隔
 	constexpr int kFadeInterval = 60;
@@ -28,8 +28,9 @@ namespace
 	//制限時間
 	constexpr float kClearFadeTime = 60.0f;
 
-	const int FRAME_W = 32;
-	const int FRAME_H = 32;
+	constexpr int kFrameW = 32;
+	constexpr int kFrameH = 32;
+	constexpr float kHpScale = 2.0f;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
@@ -56,7 +57,7 @@ SceneMain::~SceneMain()
 void SceneMain::Init()
 {
 	//カリングの設定（裏面のポリゴンは見えないようにする）
-	SetUseBackCulling(false);
+	SetUseBackCulling(true);
 
 	//Zバッファの設定
 	SetUseZBuffer3D(true);		//Zバッファを使います
@@ -89,11 +90,15 @@ void SceneMain::Init()
 		enemies_.push_back(enemy);
 	}
 
+	//プレイヤーの初期化
 	pPlayer_->Init();
 	pPlayer_->SetCamera(pCamera_.get());
+
+	//カメラの初期化
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
-
+	
+	//背景の初期化
 	bg_.Init();
 
 	frameCount_ = kFadeInterval;
@@ -158,7 +163,7 @@ void SceneMain::NormalUpdate(Input& input)
 {
 	frameCount_++;
 
-	//制限時間の更新
+	//時間の更新
 	playTime_ += dt_;
 
 	//スコアの更新処理
@@ -170,10 +175,12 @@ void SceneMain::NormalUpdate(Input& input)
 		enemy->Update(dt_);
 	}
 
+	//ポップするスコアの更新処理
 	for (auto& p : pPopUIs_)
 	{
 		p.Update(dt_);
 	}
+
 	pPlayer_->Update(input, dt_);
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
@@ -216,6 +223,7 @@ void SceneMain::NormalUpdate(Input& input)
 		}
 	}
 
+	//ジャスト回避処理
 	if (pPlayer_->ConsumeJustDodge())
 	{
 		timeScale_ = 0.4f;   //スロー倍率
@@ -228,13 +236,16 @@ void SceneMain::NormalUpdate(Input& input)
 		timeBonusDisplay_ = 2.0f;
 		timeBonusTimer_ = 1.0f;
 	}
+
 	//スロー時間の更新
 	if (slowTimer_ > 0.0f)
 	{
+		//スロー中は時間にタイムスケールをかけて遅くする
 		slowTimer_ -= dt_;
 
 		if (slowTimer_ <= 0.0f)
 		{
+			//スロー終了
 			timeScale_ = 1.0f;
 		}
 	}
@@ -245,7 +256,6 @@ void SceneMain::NormalUpdate(Input& input)
 
 	//当たり判定の処理
 	collisionManager_.Clear();
-
 	//当たり判定の登録
 	collisionManager_.AddCollider(pPlayer_->GetCollider());
 	collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
@@ -254,7 +264,7 @@ void SceneMain::NormalUpdate(Input& input)
 		collisionManager_.AddCollider(enemy->GetCollider());
 	}
 
-	//衝突判定
+	//判定
 	collisionManager_.CheckAllCollision();
 
 	//敵の削除処理
@@ -347,7 +357,14 @@ void SceneMain::FadeDraw()
 
 void SceneMain::NormalDraw()
 {
+	//3D描画を初期化
+	SetUseZBuffer3D(TRUE);
+	SetWriteZBuffer3D(TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	SetUseBackCulling(false);
 	bg_.Draw(pCamera_->GetPos());
+	SetUseBackCulling(true);
 	DrawGrid();
 
 	//敵の描画
@@ -376,61 +393,46 @@ void SceneMain::NormalDraw()
 	// =====================
 	// HPバー描画
 	// =====================
+	
+	//現在のプレイヤーのHP取得
 	int hp = pPlayer_->GetHP();
 
-	//画像サイズ取得
-	int imgW, imgH;
-	GetGraphSize(hpHandle_, &imgW, &imgH);
-
 	int x = 50;
-	int y = 200;
+	int y = 50;
 
-	//表示フレーム
-	int frame = isHpAnimating_ ? hpAnimFrame_ : hpKeepFrame_;
+	//拡大後サイズ
+	int drawW = static_cast<int>(kFrameW * kHpScale);
+	int drawH = static_cast<int>(kFrameH * kHpScale);
 
-	//最大3ハート
+	//最大3このハートを描画する
 	const int MAX_HP = 3;
 
 	for (int i = 0; i < MAX_HP; i++)
 	{
-		int drawX = x + i * (FRAME_W + 10);
+		int drawX = x + i * (drawW + 10);
 
-		if (isHpAnimating_ && i == damageIndex_)
-		{
-			DrawRectGraph(
-				drawX, y,
-				hpAnimFrame_ * FRAME_W, 160,
-				FRAME_W, FRAME_H,
-				hpHandle_,
-				TRUE);
-		}
-		else if (i < hp)
-		{
-			DrawRectGraph(
-				drawX, y,
-				0, 160,
-				FRAME_W, FRAME_H,
-				hpHandle_,
-				TRUE);
-		}
-		else
-		{
-			DrawRectGraph(
-				drawX, y,
-				(kHpAnimMaxFrame - 1) * FRAME_W, 160,
-				FRAME_W, FRAME_H,
-				hpHandle_,
-				TRUE);
-		}
+		//中心座標を指定する
+		int centerX = drawX + drawW / 2;
+		int centerY = y + drawH / 2;
+
+		int srcX = 0;
+
+		if (isHpAnimating_ && i == damageIndex_)srcX = hpAnimFrame_ * kFrameW;
+		else if (i < hp)srcX = 0;
+		else srcX = (kHpAnimMaxFrame - 1) * kFrameW;
+
+		DrawRectRotaGraph(centerX,centerY,
+			srcX,192,
+			kFrameW, kFrameH,
+			kHpScale,0.0,
+			hpHandle_,TRUE,FALSE);
 	}
 
 #ifdef _DEBUG
 	SetFontSize(16);
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "Frame:%d", frameCount_);
-
-	SetFontSize(32);
-	DrawFormatString(128, 128, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
+	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
 	SetFontSize(40);
 	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
@@ -456,9 +458,9 @@ void SceneMain::DrawGrid()
 
 			int color = GetColor(80, 160, 80);
 
-			//三角形2枚で四角形を表現する
-			DrawTriangle3D(v1, v2, v3, color, TRUE);
-			DrawTriangle3D(v1, v3, v4, color, TRUE);
+			//三角形のポリゴンを組み合わせて床を描画
+			DrawTriangle3D(v1, v3, v2, color, TRUE);
+			DrawTriangle3D(v1, v4, v3, color, TRUE);
 		}
 	}
 }

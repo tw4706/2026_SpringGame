@@ -50,7 +50,7 @@ void Bg::Draw(const Vector3& cameraPos)
 				v[i].spc = GetColorU8(0, 0, 0, 0);        //îΩéÀè¡Ç∑
 			}
 
-			// UVå≈íË
+			//UVå≈íË
 			v[0].u = 0; v[0].v = 1;
 			v[1].u = 1; v[1].v = 1;
 			v[2].u = 0; v[2].v = 0;
@@ -89,7 +89,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x - size, c.y - size, c.z + size),
 		VGet(c.x - size, c.y + size, c.z - size),
 		VGet(c.x - size, c.y + size, c.z + size),
-		skyTex_[1]
+		skyTex_[0]
 	);
 
 	// =========================
@@ -100,17 +100,17 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x + size, c.y - size, c.z - size),
 		VGet(c.x + size, c.y + size, c.z + size),
 		VGet(c.x + size, c.y + size, c.z - size),
-		skyTex_[0]
+		skyTex_[1]
 	);
 
 	// =========================
 	// è„ñ ÅiUPÅj
 	// =========================
 	drawFace(
-		VGet(c.x - size, c.y + size, c.z + size),
-		VGet(c.x + size, c.y + size, c.z + size),
 		VGet(c.x - size, c.y + size, c.z - size),
+		VGet(c.x - size, c.y + size, c.z + size),
 		VGet(c.x + size, c.y + size, c.z - size),
+		VGet(c.x + size, c.y + size, c.z + size),
 		skyTex_[2]
 	);
 
