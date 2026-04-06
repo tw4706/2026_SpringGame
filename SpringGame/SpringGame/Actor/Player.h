@@ -75,6 +75,7 @@ public:
 	Vector3 GetCameraTarget()const;
 	//HP‚ÌŽæ“¾
 	int GetHP() const { return hp_; }
+	int GetMaxHP()const;
 
 	//“–‚½‚è”»’è‚ÌŽæ“¾
 	SphereCollider* GetCollider() { return &collider_; }

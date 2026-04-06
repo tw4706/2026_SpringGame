@@ -38,6 +38,7 @@ private:
 
 private:
 	int frameCount_;
+	int hpHandle_;
 	float playTime_;//§ŒÀŠÔ
 	float bonusTime_;
 	float dt_;

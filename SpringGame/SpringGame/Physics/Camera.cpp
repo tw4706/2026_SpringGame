@@ -86,11 +86,12 @@ void Camera::AddRotation(float yaw, float pitch)
 	yaw_ += yaw;
 	pitch_ += pitch;
 
-	// 真上真下まで行かないよう制限
-	const float limit = DX_PI_F / 3.0f; // 60度
+	//真上真下まで行かないよう制限
+	const float limit = DX_PI_F / 9.0f; //20度
 	pitch_ = std::clamp(pitch_, -limit, limit);
 }
 
+//シェイク
 void Camera::Shake(float time, float power)
 {
 	shakeTime_ = time;

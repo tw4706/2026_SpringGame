@@ -18,14 +18,14 @@ namespace
 	constexpr int kMaxHP = 3;
 
 	//プレイヤーの移動速度
-	constexpr float kSpeed = 16.0f;
+	constexpr float kSpeed = 12.0f;
 
 	//カメラの回転速度
 	constexpr float kCameraSpeed = 0.05f;
 	constexpr float kCameraPitch = 0.3f;
 
 	//当たり判定のサイズ
-	constexpr float kColSize = 50.0f;
+	constexpr float kColSize = 60.0f;
 	constexpr float kAttackColSize = 80.0f;
 
 	//当たり判定位置の調整
@@ -407,7 +407,7 @@ void Player::UpdateDodge(float dt)
 	if (afterImageTimer_ <= 0.0f)
 	{
 		afterImages_.push_back({ MV1DuplicateModel(ghostModel_.GetHandle()), pos_, moveAngle_, 0.3f });
-		afterImageTimer_ = 0.02f; //速さ
+		afterImageTimer_ = 0.02f;//速さ
 	}
 }
 
@@ -503,6 +503,11 @@ void Player::UpdateMatrix()
 Vector3 Player::GetCameraTarget() const
 {
 	return pos_;
+}
+
+int Player::GetMaxHP() const
+{
+	return kMaxHP;
 }
 
 void Player::OnCollision(GameObject* other)

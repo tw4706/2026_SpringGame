@@ -70,7 +70,7 @@ void Enemy::Init()
 
 	collider_.SetEnable(false);
 	collider_.SetColliderType(ColliderType::Charactor);
-	collider_.SetPos(pos_ + Vector3(0.0f, 100.0f, 0.0f));
+	collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
 }
 
 void Enemy::Update(float dt)

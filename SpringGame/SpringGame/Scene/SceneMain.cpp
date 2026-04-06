@@ -7,6 +7,7 @@
 #include"../PopUI.h"
 #include"SceneController.h"
 #include "ClearScene.h"
+#include "../Game.h"
 #include "../EffectManager.h"
 #include"EffekseerForDXLib.h"
 #include<algorithm>
@@ -27,6 +28,7 @@ namespace
 SceneMain::SceneMain(SceneController& contorller) :
 	Scene(contorller),
 	frameCount_(0),
+	hpHandle_(-1),
 	playTime_(0.0f),
 	bonusTime_(0.0f),
 	timeScale_(1.0f),
@@ -52,6 +54,9 @@ void SceneMain::Init()
 	//Zバッファの設定
 	SetUseZBuffer3D(true);		//Zバッファを使います
 	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
+
+	//HPバーの画像のロード
+	hpHandle_ = LoadGraph("data/HP.png");
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
@@ -215,12 +220,10 @@ void SceneMain::NormalUpdate(Input& input)
 		enemies_.end());
 
 	//UIの削除処理
-	pPopUIs_.erase(
-		std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
-			[](const PopUI& p) { return p.IsDead(); }),
-		pPopUIs_.end());
+	pPopUIs_.erase(std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
+			[](const PopUI& p) { return p.IsDead(); }),pPopUIs_.end());
 
-	//常時何体かわいているようにする
+	//常時何体か湧いているようにする
 	while (enemies_.size() < kEnemyMax)
 	{
 		auto enemy = std::make_shared<Enemy>();
@@ -323,12 +326,48 @@ void SceneMain::NormalDraw()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
+	// =====================
+	// HPバー描画
+	// =====================
+	int hp = pPlayer_->GetHP();
+	int maxHp = pPlayer_->GetMaxHP();
+	float rate = (float)hp / maxHp;
+
+	//画像サイズ取得
+	int imgW, imgH;
+	GetGraphSize(hpHandle_, &imgW, &imgH);
+
+	//表示幅
+	int drawW = (int)(imgW * rate);
+
+	//表示位置
+	int x = 50;
+	int y = 200;
+
+	// 1マスのサイズ
+	const int CHIP_SIZE = 16;
+
+	//HP分だけループ
+	for (int i = 0; i < hp; i++)
+	{
+		DrawRectGraph(
+			x + i * CHIP_SIZE, //横に並べる
+			y,
+			i * CHIP_SIZE,
+			0,
+			CHIP_SIZE,
+			CHIP_SIZE,
+			hpHandle_,
+			TRUE);
+	}
+
 #ifdef _DEBUG
 	SetFontSize(16);
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
-	DrawFormatString(0, 16, GetColor(255, 255, 255), "FRAME:%d", frameCount_);
+	DrawFormatString(0, 16, GetColor(255, 255, 255), "Frame:%d", frameCount_);
 
-	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
+	SetFontSize(32);
+	DrawFormatString(128, 128, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
 	SetFontSize(40);
 	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
@@ -339,7 +378,8 @@ void SceneMain::NormalDraw()
 
 void SceneMain::DrawGrid()
 {
-	const int GRID_NUM = 10;      //片側のマス数
+	//片側のマス数
+	const int GRID_NUM = 10;
 	const float TILE_SIZE = 100.0f;
 
 	for (int z = -GRID_NUM; z < GRID_NUM; z++)
