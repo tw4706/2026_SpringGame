@@ -79,6 +79,10 @@ void Camera::UpdateCamera()
 	//カメラのシェイク適用
 	pos_ += UpdateShake();
 
+	//光の当たる方向をカメラの向きに合わせて暗いところがないようにする
+	Vector3 lightDir = (cameraTarget_ - pos_).Normalize();
+	SetLightDirection(lightDir.ToDxlibVector());
+
 	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(),cameraTarget_.ToDxlibVector());
 }
 

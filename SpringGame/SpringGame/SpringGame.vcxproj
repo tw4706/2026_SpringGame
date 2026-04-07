@@ -159,6 +159,7 @@
     <ClCompile Include="Physics\SphereCollider.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="PopUI.cpp" />
+    <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="PopUI.h" />
+    <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>

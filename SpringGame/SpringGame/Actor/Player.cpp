@@ -59,7 +59,8 @@ Player::Player() :
 	attackCollider_(0.0f),
 	isHit_(false),
 	knockbackVel_(0.0f, 0.0f, 0.0f),
-	knockbackTimer_(0.0f)
+	knockbackTimer_(0.0f),
+	isTouchingWall_(false)
 {
 	//初期位置
 	pos_ = kFirstPos;
@@ -124,10 +125,29 @@ void Player::Update(Input& input, float dt)
 	UpdateCollision();
 
 	//移動の制限 
+	//制限されている見えない壁に触れた瞬間にエフェクトを生成する
+	Vector3 beforeClamp = pos_;
+
 	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
 	if (pos_.x_ < -kWalkLimit) pos_.x_ = -kWalkLimit;
 	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
 	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
+
+	bool hitWall =fabs(beforeClamp.x_ - pos_.x_) > 0.01f ||fabs(beforeClamp.z_ - pos_.z_) > 0.01f;
+
+	if (hitWall && !isTouchingWall_)
+	{
+		Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
+
+		Vector3 effectPos =
+			pos_ +
+			forward * 70.0f +
+			Vector3(0.0f, 80.0f, 0.0f);
+
+		EffectManager::GetInstance().Play("barrier", effectPos);
+	}
+
+	isTouchingWall_ = hitWall;
 
 	//行列の更新 
 	UpdateMatrix();

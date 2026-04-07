@@ -75,6 +75,7 @@ void SceneMain::Init()
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
 	EffectManager::GetInstance().Load("dodge", "data/justDodge.efk");
+	EffectManager::GetInstance().Load("barrier", "data/barrier.efk");
 
 	//各クラスの初期化処理
 	for (int i = 0; i < kEnemyMax; i++)

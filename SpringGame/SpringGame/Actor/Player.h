@@ -111,6 +111,7 @@ private:
 	int hp_;
 	Vector3 knockbackVel_;
 	float knockbackTimer_;
+	bool isTouchingWall_;
 
 	SphereCollider collider_;				//“–‚½‚è”»’è—p•Ï”
 	SphereCollider attackCollider_;			//UŒ‚‚Ì“–‚½‚è”»’è—p•Ï”
