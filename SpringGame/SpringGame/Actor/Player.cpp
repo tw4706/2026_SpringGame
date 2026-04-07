@@ -139,10 +139,7 @@ void Player::Update(Input& input, float dt)
 	{
 		Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 
-		Vector3 effectPos =
-			pos_ +
-			forward * 70.0f +
-			Vector3(0.0f, 80.0f, 0.0f);
+		Vector3 effectPos =pos_ +forward * 70.0f +Vector3(0.0f, 80.0f, 0.0f);
 
 		EffectManager::GetInstance().Play("barrier", effectPos);
 	}

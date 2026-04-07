@@ -32,9 +32,6 @@ namespace
 
 	constexpr float kShakeTimeHit = 0.2f;
 	constexpr float kShakePowerHit = 15.0f;
-
-	//“G‚ð“|‚µ‚½‚Æ‚«‚Ìƒ|ƒCƒ“ƒg
-	constexpr int kEnemyScore = 100;
 }
 
 Enemy::Enemy() :
@@ -202,11 +199,11 @@ void Enemy::OnHit(GameObject* attacker)
 	collider_.SetEnable(false);
 
 	//“_”‰ÁŽZ
-	ScoreManager::AddScore();
+	int addScore = ScoreManager::AddScore();
 
 	if (pScene_)
 	{
-		pScene_->AddScorePop(pos_ + Vector3(0, 200.0f, 0), kEnemyScore);
+		pScene_->AddScorePop(pos_ + Vector3(0, 200.0f, 0), addScore);
 	}
 
 	if (pCamera_)

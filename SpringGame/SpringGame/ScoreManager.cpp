@@ -9,18 +9,38 @@ namespace
 	constexpr int kMinScore = 1;
 
 	constexpr int kScorePoint = 100;
+
+	constexpr float kScoreBoostTime = 5.0f;
 }
 
 int ScoreManager::score_ = 0;
 int ScoreManager::dispScore_ = 0;
+float ScoreManager::scoreBoostTimer_ = 0.0f;
 
-void ScoreManager::AddScore()
+int ScoreManager::AddScore()
 {
-	score_ += kScorePoint;
+	int scorePoint = kScorePoint;
+	if (scoreBoostTimer_ >= 0.0f)
+	{
+		scorePoint *= 2;
+	}
+	score_ += scorePoint;
+	return scorePoint;
 }
 
-void ScoreManager::Update()
+void ScoreManager::Update(float dt)
 {
+	//スコアブーストするタイマーの更新
+	if (scoreBoostTimer_ > 0.0f)
+	{
+		scoreBoostTimer_ -= dt;
+
+		if (scoreBoostTimer_ < 0.0f)
+		{
+			scoreBoostTimer_ = 0.0f;
+		}
+	}
+
 	int diff = score_ - dispScore_;
 
 	if (diff > 0)
@@ -33,6 +53,26 @@ void ScoreManager::Update()
 			dispScore_ = score_;
 		}
 	}
+}
+
+void ScoreManager::AddScoreBoost()
+{
+	scoreBoostTimer_ = kScoreBoostTime;
+}
+
+float ScoreManager::GetBoostRatio()
+{
+	if (scoreBoostTimer_ <= 0.0f)
+	{
+		return 0.0f;
+	}
+
+	float ratio = scoreBoostTimer_ / kScoreBoostTime;
+
+	if (ratio > 1.0f) ratio = 1.0f;
+	if (ratio < 0.0f) ratio = 0.0f;
+
+	return ratio;
 }
 
 void ScoreManager::Reset()

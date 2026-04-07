@@ -172,7 +172,7 @@ void SceneMain::NormalUpdate(Input& input)
 	playTime_ += dt_;
 
 	//スコアの更新処理
-	ScoreManager::Update();
+	ScoreManager::Update(dt_);
 
 	//各クラスの更新処理
 	for (auto& enemy : enemies_)
@@ -237,6 +237,7 @@ void SceneMain::NormalUpdate(Input& input)
 
 		//ジャスト回避成功時時間を増やす
 		bonusTime_ += 2.0f;
+		ScoreManager::AddScoreBoost();
 
 		timeBonusDisplay_ = 2.0f;
 		timeBonusTimer_ = 1.0f;
@@ -445,6 +446,31 @@ void SceneMain::NormalDraw()
 	int score = ScoreManager::GetDispScore();
 
 	uiManager_.Draw(time, score, timeBonusDisplay_, timeBonusTimer_);
+
+	float boostRatio = ScoreManager::GetBoostRatio();
+
+	if (boostRatio > 0.0f)
+	{
+		int barX = 50;
+		int barY = 110;
+		int barW = 220;
+		int barH = 18;
+
+		int currentW = (std::max)(4, static_cast<int>(barW * boostRatio));
+
+		// 外枠
+		DrawBox(barX, barY, barX + barW, barY + barH,
+			GetColor(255, 255, 255), FALSE);
+
+		// 中身
+		DrawBox(barX + 2, barY + 2,
+			barX + currentW - 2, barY + barH - 2,
+			GetColor(255, 220, 0), TRUE);
+
+		// x2表示
+		DrawFormatString(barX + barW + 10, barY - 4,
+			GetColor(255, 220, 0), "x2");
+	}
 }
 
 void SceneMain::DrawGrid()
