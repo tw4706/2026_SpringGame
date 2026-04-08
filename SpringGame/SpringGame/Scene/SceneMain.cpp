@@ -70,6 +70,8 @@ void SceneMain::Init()
 
 	//HPバーの画像のロード
 	hpHandle_ = LoadGraph("data/HP.png");
+
+	//シャドウマップの生成
 	shadowMapHandle_ = MakeShadowMap(4096, 4096);
 	SetShadowMapLightDirection(shadowMapHandle_, VGet(-0.5f, -1.0f, 0.5f));
 	SetShadowMapDrawArea(
@@ -113,6 +115,8 @@ void SceneMain::Init()
 
 	//背景の初期化
 	bg_.Init();
+
+	//床のモデル読み込み
 	floorHandle_ = MV1LoadModel("data/floor.mv1");
 	MV1SetPosition(floorHandle_, VGet(0, -50, 0));
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
