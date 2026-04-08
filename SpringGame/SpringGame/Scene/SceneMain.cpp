@@ -41,6 +41,7 @@ SceneMain::SceneMain(SceneController& contorller) :
 	Scene(contorller),
 	frameCount_(0),
 	hpHandle_(-1),
+	floorHandle_(-1),
 	playTime_(0.0f),
 	bonusTime_(0.0f),
 	timeScale_(1.0f),
@@ -69,6 +70,13 @@ void SceneMain::Init()
 
 	//HPバーの画像のロード
 	hpHandle_ = LoadGraph("data/HP.png");
+	shadowMapHandle_ = MakeShadowMap(4096, 4096);
+	SetShadowMapLightDirection(shadowMapHandle_, VGet(-0.5f, -1.0f, 0.5f));
+	SetShadowMapDrawArea(
+		shadowMapHandle_,
+		VGet(-1500, -100, -1500),
+		VGet(1500, 800, 1500));
+
 	prevHp_ = kMaxHP;
 	displayHp_ = kMaxHP;
 
@@ -102,9 +110,12 @@ void SceneMain::Init()
 	//カメラの初期化
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
-	
+
 	//背景の初期化
 	bg_.Init();
+	floorHandle_ = MV1LoadModel("data/floor.mv1");
+	MV1SetPosition(floorHandle_, VGet(0, -50, 0));
+	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
 	frameCount_ = kFadeInterval;
 	dt_ = (1.0f / 60.0f) * timeScale_;
@@ -231,7 +242,7 @@ void SceneMain::NormalUpdate(Input& input)
 	//ジャスト回避処理
 	if (pPlayer_->ConsumeJustDodge())
 	{
-		timeScale_ = 0.4f;   //スロー倍率
+		timeScale_ = 0.4f;   //スローの倍率
 		slowTimer_ = 0.2f;   //スロー時間
 		pCamera_->StartZoom(DX_PI_F / 6.0f);
 
@@ -363,15 +374,32 @@ void SceneMain::FadeDraw()
 
 void SceneMain::NormalDraw()
 {
+	//シャドウマップ描画
+	ShadowMap_DrawSetup(shadowMapHandle_);
+
+	//プレイヤーと敵を影用に描画
+	pPlayer_->Draw();
+
+	for (auto& enemy : enemies_)
+	{
+		enemy->Draw();
+	}
+
+	//シャドウマップ描画終了
+	ShadowMap_DrawEnd();
+
 	//3D描画を初期化
 	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetUseBackCulling(false);
+
 	bg_.Draw(pCamera_->GetPos());
-	SetUseBackCulling(false);
-	DrawGrid();
+	SetUseShadowMap(0, shadowMapHandle_);
+	MV1DrawModel(floorHandle_);
+	SetUseShadowMap(0, -1);
+
 	SetUseBackCulling(true);
 
 	//敵の描画
@@ -458,37 +486,17 @@ void SceneMain::NormalDraw()
 
 		int currentW = (std::max)(4, static_cast<int>(barW * boostRatio));
 
-		// 外枠
+		//外枠
 		DrawBox(barX, barY, barX + barW, barY + barH,
 			GetColor(255, 255, 255), FALSE);
 
-		// 中身
+		//中身
 		DrawBox(barX + 2, barY + 2,
 			barX + currentW - 2, barY + barH - 2,
 			GetColor(255, 220, 0), TRUE);
 
-		// x2表示
+		//x2表示
 		DrawFormatString(barX + barW + 10, barY - 4,
 			GetColor(255, 220, 0), "x2");
-	}
-}
-
-void SceneMain::DrawGrid()
-{
-	for (int z = -kGridNum; z < kGridNum; z++)
-	{
-		for (int x = -kGridNum; x < kGridNum; x++)
-		{
-			VECTOR v1 = VGet(x * kTileSize, 0.0f, z * kTileSize);
-			VECTOR v2 = VGet((x + 1) * kTileSize, 0.0f, z * kTileSize);
-			VECTOR v3 = VGet((x + 1) * kTileSize, 0.0f, (z + 1) * kTileSize);
-			VECTOR v4 = VGet(x * kTileSize, 0.0f, (z + 1) * kTileSize);
-
-			int color = GetColor(80, 160, 80);
-
-			//三角形のポリゴンを組み合わせて床を描画
-			DrawTriangle3D(v1, v3, v2, color, TRUE);
-			DrawTriangle3D(v1, v4, v3, color, TRUE);
-		}
 	}
 }

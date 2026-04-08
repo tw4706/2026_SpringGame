@@ -81,6 +81,12 @@ void Camera::UpdateCamera()
 
 	//Œõ‚Ì“–‚½‚é•ûŒü‚ğƒJƒƒ‰‚ÌŒü‚«‚É‡‚í‚¹‚ÄˆÃ‚¢‚Æ‚±‚ë‚ª‚È‚¢‚æ‚¤‚É‚·‚é
 	Vector3 lightDir = (cameraTarget_ - pos_).Normalize();
+
+	//­‚µã‚©‚çÆ‚ç‚·
+	lightDir.y_ = -1.8f;
+
+	//³‹K‰»
+	lightDir = lightDir.Normalize();
 	SetLightDirection(lightDir.ToDxlibVector());
 
 	SetCameraPositionAndTarget_UpVecY(pos_.ToDxlibVector(),cameraTarget_.ToDxlibVector());

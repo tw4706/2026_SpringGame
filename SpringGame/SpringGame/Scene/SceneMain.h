@@ -33,12 +33,12 @@ private:
 	void NormalDraw();
 	using DrawFunc_t = void (SceneMain::*)();
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
-	
-	void DrawGrid();
 
 private:
 	int frameCount_;
 	int hpHandle_;
+	int floorHandle_;
+	int shadowMapHandle_ = -1;
 	float playTime_;//制限時間
 	float bonusTime_;
 	float dt_;

@@ -20,7 +20,7 @@ float ScoreManager::scoreBoostTimer_ = 0.0f;
 int ScoreManager::AddScore()
 {
 	int scorePoint = kScorePoint;
-	if (scoreBoostTimer_ >= 0.0f)
+	if (scoreBoostTimer_ > 0.0f)
 	{
 		scorePoint *= 2;
 	}
@@ -79,4 +79,5 @@ void ScoreManager::Reset()
 {
 	score_ = 0;
 	dispScore_ = 0;
+	scoreBoostTimer_ = 0.0f;
 }

@@ -25,15 +25,15 @@ void UIManager::Draw(int time, int score, float bonus, float bonusTimer)
 {
 	char buf[64];
 
-	// TIME
+	//タイム表示
 	sprintf_s(buf, "TIME : %d", time);
 	DrawCenterText(buf, 40, GetColor(255, 255, 255));
 
-	// SCORE
+	//スコア表示
 	sprintf_s(buf, "SCORE : %d", score);
 	DrawCenterText(buf, 90, GetColor(255, 80, 80));
 
-	// BONUS
+	//ジャスト回避成功時のボーナス時間の表示
 	if (bonusTimer > 0.0f)
 	{
 		sprintf_s(buf, "+%.1fs", bonus);
