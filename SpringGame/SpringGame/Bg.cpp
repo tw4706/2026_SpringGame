@@ -67,8 +67,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x + size, c.y - size, c.z + size),
 		VGet(c.x - size, c.y + size, c.z + size),
 		VGet(c.x + size, c.y + size, c.z + size),
-		skyTex_[4]
-	);
+		skyTex_[4]);
 
 	// =========================
 	// îwñ 
@@ -78,8 +77,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x - size, c.y - size, c.z - size),
 		VGet(c.x + size, c.y + size, c.z - size),
 		VGet(c.x - size, c.y + size, c.z - size),
-		skyTex_[5]
-	);
+		skyTex_[5]);
 
 	// =========================
 	// ç∂ñ 
@@ -89,8 +87,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x - size, c.y - size, c.z + size),
 		VGet(c.x - size, c.y + size, c.z - size),
 		VGet(c.x - size, c.y + size, c.z + size),
-		skyTex_[0]
-	);
+		skyTex_[0]);
 
 	// =========================
 	// âEñ 
@@ -100,8 +97,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x + size, c.y - size, c.z - size),
 		VGet(c.x + size, c.y + size, c.z + size),
 		VGet(c.x + size, c.y + size, c.z - size),
-		skyTex_[1]
-	);
+		skyTex_[1]);
 
 	// =========================
 	// è„ñ 
@@ -111,8 +107,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x - size, c.y + size, c.z + size),
 		VGet(c.x + size, c.y + size, c.z - size),
 		VGet(c.x + size, c.y + size, c.z + size),
-		skyTex_[2]
-	);
+		skyTex_[2]);
 
 	// =========================
 	// â∫
@@ -122,8 +117,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		VGet(c.x + size, c.y - size, c.z - size),
 		VGet(c.x - size, c.y - size, c.z + size),
 		VGet(c.x + size, c.y - size, c.z + size),
-		skyTex_[3]
-	);
+		skyTex_[3]);
 	SetUseZBuffer3D(TRUE);
 	SetUseLighting(TRUE);
 }

@@ -30,8 +30,28 @@ namespace
 	//敵の速度
 	constexpr float kSpeed = 4.0f;
 
-	constexpr float kShakeTimeHit = 0.2f;
-	constexpr float kShakePowerHit = 15.0f;
+	//カメラを揺らす時間
+	constexpr float kCameraShakeTime = 0.2f;
+
+	//カメラを揺らす力
+	constexpr float kCameraShakePower = 15.0f;
+
+	//当たり判定の位置調整
+	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };
+
+	//移動速度の減速
+	constexpr float kVelDeceration = 0.9f;
+
+	//エフェクトの位置調整
+	const Vector3 kEffectOffset = { 0.0f,80.0f,0.0f };
+
+	//ポップするスコアの位置調整用
+	const Vector3 kScorePopOffset = { 0.0f,200.0f,0.0f };
+
+	//プレイヤーの向きのベクトルの正規化用
+	constexpr float kDirectionEpsilon = 0.001f;
+
+	constexpr float kFrameRate = 60.0f;
 }
 
 Enemy::Enemy() :
@@ -70,7 +90,7 @@ void Enemy::Init()
 	//当たり判定の初期化
 	collider_.SetEnable(false);
 	collider_.SetColliderType(ColliderType::Charactor);
-	collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
+	collider_.SetPos(pos_ + kColOffset);
 }
 
 void Enemy::Update(float dt)
@@ -92,7 +112,7 @@ void Enemy::Update(float dt)
 		}
 
 		//当たり判定も更新
-		collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
+		collider_.SetPos(pos_ + kColOffset);
 
 		MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 		return;
@@ -123,7 +143,7 @@ void Enemy::Update(float dt)
 
 	//正規化
 	Vector3 dir = { 0,0,0 };
-	if (distance > 0.001f)
+	if (distance > kDirectionEpsilon)
 	{
 		dir = toPlayer.Normalize();
 	}
@@ -147,10 +167,10 @@ void Enemy::Update(float dt)
 	}
 	else
 	{
-		vel_ *= 0.9f;
+		vel_ *= kVelDeceration;
 	}
 
-	pos_ += vel_ * dt * 60.0f;
+	pos_ += vel_ * dt * kFrameRate;
 
 	//敵の向きを追従している際にプレイヤー方向に合わせる
 	if (vel_.Length() > 0.001f)
@@ -173,7 +193,7 @@ void Enemy::Update(float dt)
 		isHit_ = false;
 	}
 
-	collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));
+	collider_.SetPos(pos_ + kColOffset);
 	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 }
 
@@ -206,15 +226,15 @@ void Enemy::OnHit(GameObject* attacker)
 
 	if (pScene_)
 	{
-		pScene_->AddScorePop(pos_ + Vector3(0, 200.0f, 0), addScore);
+		pScene_->AddScorePop(pos_ + kScorePopOffset, addScore);
 	}
 
 	if (pCamera_)
 	{
-		pCamera_->Shake(kShakeTimeHit, kShakePowerHit);
+		pCamera_->Shake(kCameraShakeTime, kCameraShakePower);
 	}
 
-	EffectManager::GetInstance().Play("hit",pos_ + Vector3(0.0f, 80.0f, 0.0f));
+	EffectManager::GetInstance().Play("hit",pos_ + kEffectOffset);
 
 	//死亡アニメーション開始
 	animation_.ChangeState(AnimationState::Death);
