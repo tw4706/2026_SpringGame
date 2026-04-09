@@ -13,9 +13,9 @@ public:
 
 	void Draw();
 
-	void SetPosition(const VECTOR& pos);
+	void SetPosition(const Vector3& pos);
 
-	void SetScale(const VECTOR& scale);
+	void SetScale(const Vector3& scale);
 
 	void SetRotationY(float angle);
 

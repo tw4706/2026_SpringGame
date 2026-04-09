@@ -14,8 +14,8 @@ namespace
 
 ClearScene::ClearScene(SceneController& controller) :
 	Scene(controller),
-	update_(&ClearScene::FadeInUpdate),
-	draw_(&ClearScene::FadeDraw),
+	update_(&ClearScene::NormalUpdate),
+	draw_(&ClearScene::NormalDraw),
 	frameCount_(0),
 	resultScore_(0),
 	displayScore_(0)

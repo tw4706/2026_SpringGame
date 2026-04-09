@@ -56,21 +56,28 @@ void Animation::Update(float deltaTime)
 		totalTime_ = MV1GetAttachAnimTotalTime(modelHandle_, currentAttach_);
 	}
 
+	//アニメーションの更新
 	if (currentAttach_ != -1)
 	{
+		//アニメーションの時間を進行
 		currentTime_ += deltaTime * speed_;
 
+		//アニメーションのループ
 		if (totalTime_ > 0.0f)
 		{
+			//ループするなら
 			if (isLoop_)
 			{
+				//アニメーションの時間がトータルタイムを超えたらfmodで余りを求めてループさせる
 				if (currentTime_ > totalTime_)
 				{
 					currentTime_ = fmod(currentTime_, totalTime_);
 				}
 			}
+			//ループしないなら
 			else
 			{
+				//アニメーションの時間がトータルタイムを超えたらトータルタイムで止める
 				if (currentTime_ > totalTime_)
 				{
 					currentTime_ = totalTime_;
@@ -79,8 +86,10 @@ void Animation::Update(float deltaTime)
 			}
 		}
 
+		//アニメーションの時間をセット
 		MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
 
+		//旧アニメーションも同様に時間を進行させる(ブレンド中は新旧両方のアニメーションが再生されるため)
 		if (prevAttach_ != -1)
 		{
 			float prevTime = MV1GetAttachAnimTime(modelHandle_, prevAttach_);
@@ -109,17 +118,21 @@ void Animation::Update(float deltaTime)
 			MV1SetAttachAnimTime(modelHandle_, prevAttach_, prevTime);
 		}
 	}
+	//アニメーションのブレンド
 	if (isBlending_)
 	{
+		//ブレンドタイムを進行
 		blendTime_ += deltaTime;
 
 		float t = 1.0f;
 
+		//ブレンドタイムがDurationを超えないように0.0f~1.0fで正規化する
 		if (blendDuration_ > 0.0f)
 		{
 			t = blendTime_ / blendDuration_;
 		}
 
+		//tが1.0fを超えないようにする
 		if (t > 1.0f) t = 1.0f;
 
 		//新アニメ

@@ -251,7 +251,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	//ジャスト回避処理
-	if (pPlayer_->ConsumeJustDodge())
+	if (pPlayer_->IsJustDodge())
 	{
 		timeScale_ = 0.4f;						//スローの倍率
 		slowTimer_ = 0.2f;						//スロー時間
@@ -438,10 +438,7 @@ void SceneMain::NormalDraw()
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	// =====================
-	//HPバー描画
-	// =====================
-
+	//HPUI描画
 	//現在のプレイヤーのHP取得
 	int hp = pPlayer_->GetHP();
 

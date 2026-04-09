@@ -90,7 +90,7 @@ public:
 	//無敵状態かどうか
 	bool IsInvincible()const { return invincibleTimer_ > 0.0f; }
 	//ジャスト回避の状態かどうか
-	bool ConsumeJustDodge();
+	bool IsJustDodge();
 	bool IsJustDodge()const { return isJustDodge_; }
 	bool IsJustDodgeTriggered()const { return isJustDodgeTriggered_; }
 	bool IsDead() const { return hp_ <= 0; }
@@ -108,10 +108,10 @@ private:
 	bool isJustDodge_;						//ジャスト回避のフラグ
 	bool isJustDodgeTriggered_;				//ジャスト回避の判定がされたかどうか
 	int justDodgeFrame_;					//ジャスト回避の猶予フレーム数
-	int hp_;
-	Vector3 knockbackVel_;
-	float knockbackTimer_;
-	bool isTouchingWall_;
+	int hp_;								//HP
+	Vector3 knockbackVel_;					//ノックバック速度
+	float knockbackTimer_;					//ノックバックタイマー
+	bool isTouchingWall_;					//壁に触れているかのフラグ
 
 	SphereCollider collider_;				//当たり判定用変数
 	SphereCollider attackCollider_;			//攻撃の当たり判定用変数

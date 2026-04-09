@@ -37,8 +37,13 @@ namespace
 	//移動制限するための定数
 	const float kWalkLimit = 950.0f;
 
+	//回避時間
 	constexpr float kDodgeTime = 0.25f;
+
+	//回避速度
 	constexpr float kDodgeSpeed = 18.0f;
+
+	//ジャスト回避の猶予フレーム数
 	constexpr int kJustDodgeFrame = 3;
 }
 
@@ -95,7 +100,7 @@ void Player::Init()
 	//当たり判定の設定
 	collider_.SetEnable(true);
 	attackCollider_.SetEnable(false);
-
+	//当たり判定の種類の設定
 	collider_.SetColliderType(ColliderType::Charactor);
 	attackCollider_.SetColliderType(ColliderType::Attack);
 }
@@ -126,14 +131,14 @@ void Player::Update(Input& input, float dt)
 
 	//移動の制限 
 	//制限されている見えない壁に触れた瞬間にエフェクトを生成する
-	Vector3 beforeClamp = pos_;
+	Vector3 beforePos = pos_;
 
 	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
 	if (pos_.x_ < -kWalkLimit) pos_.x_ = -kWalkLimit;
 	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
 	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
 
-	bool hitWall =fabs(beforeClamp.x_ - pos_.x_) > 0.01f ||fabs(beforeClamp.z_ - pos_.z_) > 0.01f;
+	bool hitWall =fabs(beforePos.x_ - pos_.x_) > 0.01f ||fabs(beforePos.z_ - pos_.z_) > 0.01f;
 
 	if (hitWall && !isTouchingWall_)
 	{
@@ -149,6 +154,7 @@ void Player::Update(Input& input, float dt)
 	//行列の更新 
 	UpdateMatrix();
 
+	//回避した時の残像の削除処理
 	for (auto it = afterImages_.begin(); it != afterImages_.end(); )
 	{
 		it->life -= dt;
@@ -173,6 +179,8 @@ void Player::Update(Input& input, float dt)
 
 void Player::Draw()
 {
+	//モデルの描画
+	model_.Draw();
 
 	for (auto& img : afterImages_)
 	{
@@ -185,8 +193,6 @@ void Player::Draw()
 		MV1DrawModel(img.modelHandle);
 	}
 
-	//モデルの描画
-	model_.Draw();
 
 #ifdef _DEBUG
 	//当たり判定の描画
@@ -564,7 +570,7 @@ void Player::OnCollision(GameObject* other)
 	}
 }
 
-bool Player::ConsumeJustDodge()
+bool Player::IsJustDodge()
 {
 	if (isJustDodgeTriggered_)
 	{
@@ -582,7 +588,7 @@ void Player::OnHit(GameObject* attacker)
 
 	isHit_ = true;
 
-	//ノックバック方向（敵から離れる）
+	//ノックバック方向（敵から離れるように飛ばす）
 	Vector3 knockDir = pos_ - attacker->GetPos();
 	knockDir.y_ = 0.0f;
 	knockDir.Normalize();
@@ -590,7 +596,7 @@ void Player::OnHit(GameObject* attacker)
 	knockbackVel_ = knockDir * 8.0f;
 	knockbackTimer_ = 0.2f;
 
-	//向きは敵を見る
+	//向きは敵の方向を見る
 	Vector3 lookDir = attacker->GetPos() - pos_;
 	lookDir.y_ = 0.0f;
 	lookDir.Normalize();

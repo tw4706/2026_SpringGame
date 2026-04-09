@@ -59,13 +59,15 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
 	model_ .Load("data/Enemy.mv1");
-	//copyModel_MV1DuplicateModel(model_.GetHandle());
-	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
-	MV1SetScale(model_.GetHandle(), kModelScale);
+	//モデルのポジションとサイズの設定
+	model_.SetPosition(pos_);
+	model_.SetScale(kModelScale);
 
+	//アニメーションの初期化
 	animation_.Init(model_.GetHandle(), AnimType::Enemy);
 	animation_.ChangeState(AnimationState::Spawn);
 
+	//当たり判定の初期化
 	collider_.SetEnable(false);
 	collider_.SetColliderType(ColliderType::Charactor);
 	collider_.SetPos(pos_ + Vector3(0.0f, 80.0f, 0.0f));

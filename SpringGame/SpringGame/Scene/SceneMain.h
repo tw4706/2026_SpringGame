@@ -28,7 +28,7 @@ private:
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input& input);
 	using UpdateFunc_t = void (SceneMain::*)(Input&);
-	UpdateFunc_t update_;//update系を受け取るメンバ関数ポインタ
+	UpdateFunc_t update_;//Update系を受け取るメンバ関数ポインタ
 	void FadeDraw();
 	void NormalDraw();
 	using DrawFunc_t = void (SceneMain::*)();
@@ -50,12 +50,12 @@ private:
 	bool fadeFinished_ = false;		//フェードが終了したかどうか
 	int prevHp_ = 0;				//前フレームのHP
 	int displayHp_ = 0;				//表示しているHP
-	int hpAnimFrame_ = 0;			//HPアニメーションのフレーム
-	int hpKeepFrame_ = 0;			//HP保持フレーム
-	float hpAnimTimer_ = 0.0f;		//HPアニメーションのタイマー
-	bool isHpAnimating_ = false;	//HPアニメーション中かどうか
+	int hpAnimFrame_ = 0;			//HPUIアニメーションのフレーム
+	int hpKeepFrame_ = 0;			//HPUI保持フレーム
+	float hpAnimTimer_ = 0.0f;		//HPUIアニメーションのタイマー
+	bool isHpAnimating_ = false;	//HPUIがアニメーション中かどうか
 	int damageIndex_ = -1;			//ダメージインデックス
-	int gameStartTimer_ = 0.0f;	//ゲーム開始前のタイマー
+	int gameStartTimer_ = 0.0f;		//ゲーム開始前のタイマー
 
 	Bg bg_;
 	std::vector<std::shared_ptr<Enemy>> enemies_;

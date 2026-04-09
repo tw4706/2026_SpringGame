@@ -25,14 +25,14 @@ void Model::Draw()
     MV1DrawModel(handle_);
 }
 
-void Model::SetPosition(const VECTOR& pos)
+void Model::SetPosition(const Vector3& pos)
 {
-    MV1SetPosition(handle_, pos);
+    MV1SetPosition(handle_, pos.ToDxlibVector());
 }
 
-void Model::SetScale(const VECTOR& scale)
+void Model::SetScale(const Vector3& scale)
 {
-    MV1SetScale(handle_, scale);
+    MV1SetScale(handle_, scale.ToDxlibVector());
 }
 
 void Model::SetRotationY(float angle)
