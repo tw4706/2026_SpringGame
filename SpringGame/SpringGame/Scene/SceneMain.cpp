@@ -35,6 +35,9 @@ namespace
 	//片側のマス数
 	constexpr int kGridNum = 10;
 	constexpr float kTileSize = 100.0f;
+
+	constexpr int kReadyFrame = 60;
+	constexpr int kStartFrame = 30;
 }
 
 SceneMain::SceneMain(SceneController& contorller) :
@@ -123,6 +126,7 @@ void SceneMain::Init()
 
 	frameCount_ = kFadeInterval;
 	dt_ = (1.0f / 60.0f) * timeScale_;
+	isGameStarted_ = false;
 }
 
 void SceneMain::Update(Input& input)
@@ -168,7 +172,10 @@ void SceneMain::FadeInUpdate(Input& input)
 	{
 		enemy->Update(dt_);
 	}
-	pPlayer_->Update(input, dt_);
+
+	//空のインプットを渡す（プレイヤーは操作できないが、アニメーションなどは更新するため）
+	Input emptyInput;
+	pPlayer_->Update(emptyInput, dt_);
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
@@ -182,22 +189,29 @@ void SceneMain::FadeInUpdate(Input& input)
 void SceneMain::NormalUpdate(Input& input)
 {
 	frameCount_++;
-	gameStartTimer_++;
 
-	if (gameStartTimer_ < 60)
+	if (!isGameStarted_)
 	{
-		return;
+		gameStartTimer_++;
+
+		if (gameStartTimer_ > kReadyFrame + kStartFrame)
+		{
+			isGameStarted_ = true;
+		}
 	}
-	//時間の更新
-	playTime_ += dt_;
 
-	//スコアの更新処理
-	ScoreManager::Update(dt_);
+	if (isGameStarted_)
+	{//時間の更新
+		playTime_ += dt_;
 
-	//各クラスの更新処理
-	for (auto& enemy : enemies_)
-	{
-		enemy->Update(dt_);
+		//スコアの更新処理
+		ScoreManager::Update(dt_);
+
+		//各クラスの更新処理
+		for (auto& enemy : enemies_)
+		{
+			enemy->Update(dt_);
+		}
 	}
 
 	//ポップするスコアの更新処理
@@ -207,7 +221,16 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	//プレイヤーとカメラの更新
-	pPlayer_->Update(input, dt_);
+	if (isGameStarted_)
+	{
+		pPlayer_->Update(input, dt_);
+	}
+	else
+	{
+		//空のインプットを渡す（プレイヤーは操作できないが、アニメーションなどは更新するため）
+		Input emptyInput;
+		pPlayer_->Update(emptyInput, dt_);
+	}
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
@@ -508,5 +531,17 @@ void SceneMain::NormalDraw()
 		//x2表示
 		DrawFormatString(barX + barW + 10, barY - 4,
 			GetColor(255, 220, 0), "x2");
+	}
+
+	if (!isGameStarted_)
+	{
+		if (gameStartTimer_ < kReadyFrame)
+		{
+			DrawCenterTextWithOutline("READY", 300, GetColor(255, 255, 0), 1280);
+		}
+		else
+		{
+			DrawCenterTextWithOutline("START", 300, GetColor(0, 255, 255), 1280);
+		}
 	}
 }

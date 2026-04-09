@@ -19,14 +19,14 @@ void SphereCollider::OnCollision(Collider* other)
     //自分自身は無視
     if (GetOwner() == other->GetOwner()) return;
 
-    //Attack → Body
+    //攻撃 → キャラクター
     if (GetColliderType() == ColliderType::Attack &&
         other->GetColliderType() == ColliderType::Charactor)
     {
         other->GetOwner()->OnHit(GetOwner()); //攻撃者も渡す
     }
 
-    //Body → Attack
+    //キャラクター → 攻撃
     if (GetColliderType() == ColliderType::Charactor &&
         other->GetColliderType() == ColliderType::Attack)
     {

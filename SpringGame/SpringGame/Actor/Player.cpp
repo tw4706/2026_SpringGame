@@ -44,7 +44,7 @@ namespace
 	constexpr float kDodgeSpeed = 18.0f;
 
 	//ジャスト回避の猶予フレーム数
-	constexpr int kJustDodgeFrame = 3;
+	constexpr int kJustDodgeFrame = 10;
 }
 
 Player::Player() :

@@ -55,7 +55,8 @@ private:
 	float hpAnimTimer_ = 0.0f;		//HPUIアニメーションのタイマー
 	bool isHpAnimating_ = false;	//HPUIがアニメーション中かどうか
 	int damageIndex_ = -1;			//ダメージインデックス
-	int gameStartTimer_ = 0.0f;		//ゲーム開始前のタイマー
+	int gameStartTimer_ = 0.0f;		//ゲーム開始合図のタイマー
+	bool isGameStarted_ = false;	//ゲーム開始したかどうか
 
 	Bg bg_;
 	std::vector<std::shared_ptr<Enemy>> enemies_;
