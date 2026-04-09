@@ -35,26 +35,26 @@ private:
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 
 private:
-	int frameCount_;
-	int hpHandle_;
-	int floorHandle_;
-	int shadowMapHandle_ = -1;
-	float playTime_;//制限時間
-	float bonusTime_;
-	float dt_;
-	float timeScale_;//時間のスケール(スロー演出などで使用)
-	float slowTimer_;
-	float timeBonusDisplay_ = 0.0f;
-	float timeBonusTimer_ = 0.0f;
-	bool isClearing_ = false;	//クリア中かどうか
-	bool fadeFinished_ = false;
-	int prevHp_ = 0;
-	int displayHp_=0;
-	int hpAnimFrame_ = 0;
-	int hpKeepFrame_ = 0;
-	float hpAnimTimer_ = 0.0f;
-	bool isHpAnimating_ = false;
-	int damageIndex_ = -1;
+	int frameCount_;				//フレームカウント
+	int hpHandle_;					//HPUIのハンドル
+	int floorHandle_;				//床のモデル
+	int shadowMapHandle_ = -1;		//シャドウマップハンドル
+	float playTime_;				//制限時間
+	float bonusTime_;				//ボーナスタイム
+	float dt_;						//経過時間
+	float timeScale_;				//時間のスケール(スロー演出などで使用)
+	float slowTimer_;				//スロー時間のタイマー
+	float timeBonusDisplay_ = 0.0f;	//時間ボーナスの表示用タイマー
+	float timeBonusTimer_ = 0.0f;	//時間ボーナスのタイマー
+	bool isClearing_ = false;		//クリア中かどうか
+	bool fadeFinished_ = false;		//フェードが終了したかどうか
+	int prevHp_ = 0;				//前フレームのHP
+	int displayHp_ = 0;				//表示しているHP
+	int hpAnimFrame_ = 0;			//HPアニメーションのフレーム
+	int hpKeepFrame_ = 0;			//HP保持フレーム
+	float hpAnimTimer_ = 0.0f;		//HPアニメーションのタイマー
+	bool isHpAnimating_ = false;	//HPアニメーション中かどうか
+	int damageIndex_ = -1;			//ダメージインデックス
 
 	Bg bg_;
 	std::vector<std::shared_ptr<Enemy>> enemies_;

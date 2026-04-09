@@ -26,7 +26,7 @@ namespace
 
 	//当たり判定のサイズ
 	constexpr float kColSize = 60.0f;
-	constexpr float kAttackColSize = 80.0f;
+	constexpr float kAttackColSize = 100.0f;
 
 	//当たり判定位置の調整
 	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };
@@ -292,11 +292,18 @@ void Player::HandleInput(Input& input)
 {
 	if (knockbackTimer_ > 0.0f) return;
 
-	//被ダメージ中や死亡中は入力を受け付けない
+	//ダメージ受けたときや死亡中は入力を受け付けない
 	if (state_ == PlayerState::Hit || state_ == PlayerState::Death)
 	{
 		return;
 	}
+
+	//攻撃中は新しい攻撃を受け付けない
+	if (state_ == PlayerState::Attack)
+	{
+		return;
+	}
+
 
 	if (input.IsTriggered("dodge") && state_ != PlayerState::Dodge)
 	{
@@ -378,7 +385,7 @@ void Player::UpdateAttack()
 
 	attackCollider_.SetPos(attackPos);
 
-	if (attackTimer_ > 0.25f)
+	if (attackTimer_ > 0.3f)
 	{
 		attackCollider_.SetEnable(true);
 	}
@@ -446,7 +453,11 @@ void Player::UpdateAnimation(float dt)
 	case PlayerState::Death:	animState = AnimationState::Death; break;
 	}
 
-	animation_.ChangeState(animState);
+	if (animation_.GetState() != animState)
+	{
+		animation_.ChangeState(animState);
+	}
+
 	animation_.Update(dt);
 }
 

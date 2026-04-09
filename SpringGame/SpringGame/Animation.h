@@ -31,6 +31,8 @@ public:
 
     void ChangeState(AnimationState state);
 
+    AnimationState GetState()const { return state_; }
+
     //アニメーションの終了を通知する関数
     bool IsEnd()const { return isAnimEnd_; }
 

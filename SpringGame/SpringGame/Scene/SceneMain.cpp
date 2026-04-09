@@ -201,13 +201,14 @@ void SceneMain::NormalUpdate(Input& input)
 		p.Update(dt_);
 	}
 
+	//プレイヤーとカメラの更新
 	pPlayer_->Update(input, dt_);
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
 	int currentHp = pPlayer_->GetHP();
 
-	// ダメージ受けた瞬間
+	//ダメージ受けた瞬間にHPUIのアニメーション開始
 	if (currentHp < prevHp_)
 	{
 		isHpAnimating_ = true;
@@ -219,7 +220,7 @@ void SceneMain::NormalUpdate(Input& input)
 
 	prevHp_ = currentHp;
 
-	// アニメ更新
+	//アニメ更新
 	if (isHpAnimating_)
 	{
 		hpAnimTimer_ += dt_;
@@ -238,6 +239,7 @@ void SceneMain::NormalUpdate(Input& input)
 			}
 			else
 			{
+				//HPが減る前のHPを表示するフレームを一定時間キープする
 				hpKeepFrame_ = hpAnimFrame_;
 			}
 		}
@@ -246,9 +248,9 @@ void SceneMain::NormalUpdate(Input& input)
 	//ジャスト回避処理
 	if (pPlayer_->ConsumeJustDodge())
 	{
-		timeScale_ = 0.4f;   //スローの倍率
-		slowTimer_ = 0.2f;   //スロー時間
-		pCamera_->StartZoom(DX_PI_F / 6.0f);
+		timeScale_ = 0.4f;						//スローの倍率
+		slowTimer_ = 0.2f;						//スロー時間
+		pCamera_->StartZoom(DX_PI_F / 6.0f);	//カメラのズーム開始
 
 		//ジャスト回避成功時時間を増やす
 		bonusTime_ += 2.0f;
@@ -270,6 +272,7 @@ void SceneMain::NormalUpdate(Input& input)
 			timeScale_ = 1.0f;
 		}
 	}
+	//時間ボーナスの更新
 	if (timeBonusTimer_ > 0.0f)
 	{
 		timeBonusTimer_ -= dt_;
@@ -399,6 +402,7 @@ void SceneMain::NormalDraw()
 
 	SetUseBackCulling(false);
 
+	//背景の描画
 	bg_.Draw(pCamera_->GetPos());
 	SetUseShadowMap(0, shadowMapHandle_);
 	MV1DrawModel(floorHandle_);
@@ -430,9 +434,9 @@ void SceneMain::NormalDraw()
 	}
 
 	// =====================
-	// HPバー描画
+	//HPバー描画
 	// =====================
-	
+
 	//現在のプレイヤーのHP取得
 	int hp = pPlayer_->GetHP();
 

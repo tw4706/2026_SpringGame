@@ -160,7 +160,7 @@ void Enemy::Update(float dt)
 	animation_.ChangeState(state_);
 	animation_.Update(dt);
 
-	// タイマー減少
+	//タイマー減少
 	if (hitTimer_ > 0.0f)
 	{
 		hitTimer_ -= dt;

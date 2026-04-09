@@ -122,16 +122,16 @@ void Animation::Update(float deltaTime)
 
 		if (t > 1.0f) t = 1.0f;
 
-		// 新アニメ
+		//新アニメ
 		MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, t);
 
-		// 旧アニメ
+		//旧アニメ
 		if (prevAttach_ != -1)
 		{
 			MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f - t);
 		}
 
-		// 完了
+		//アニメーションのブレンドが完了したら旧アニメをデタッチする
 		if (t >= 1.0f)
 		{
 			if (prevAttach_ != -1)
@@ -153,6 +153,7 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	speed_ = speed;
 	isLoop_ = isLoop;
 
+	//アニメーションをデタッチ
 	if (prevAttach_ != -1)
 	{
 		MV1DetachAnim(modelHandle_, prevAttach_);
@@ -203,6 +204,7 @@ void Animation::ChangeState(AnimationState state)
 
 	int animIndex = -1;
 
+	//状態ごとのアニメーションインデックスの取得
 	if (type_ == AnimType::Player)
 	{
 		switch (state_)
@@ -224,6 +226,7 @@ void Animation::ChangeState(AnimationState state)
 			break;
 		}
 	}
+	//敵も同様
 	else if (type_ == AnimType::Enemy)
 	{
 		switch (state_)
@@ -243,6 +246,7 @@ void Animation::ChangeState(AnimationState state)
 		}
 	}
 
+	//アニメーションの再生
 	if (animIndex != -1)
 	{
 		bool loop = true;
