@@ -49,6 +49,7 @@ private:
 	Camera* pCamera_ = nullptr;
 	SceneMain* pScene_ = nullptr;
 	Model model_;
+	Model copyModel_;
 	Animation animation_;
 	AnimationState state_;
 };

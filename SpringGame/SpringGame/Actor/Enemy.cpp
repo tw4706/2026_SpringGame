@@ -59,6 +59,7 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
 	model_ .Load("data/Enemy.mv1");
+	//copyModel_MV1DuplicateModel(model_.GetHandle());
 	MV1SetPosition(model_.GetHandle(), pos_.ToDxlibVector());
 	MV1SetScale(model_.GetHandle(), kModelScale);
 

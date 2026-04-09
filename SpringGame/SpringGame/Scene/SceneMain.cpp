@@ -182,7 +182,12 @@ void SceneMain::FadeInUpdate(Input& input)
 void SceneMain::NormalUpdate(Input& input)
 {
 	frameCount_++;
+	gameStartTimer_++;
 
+	if (gameStartTimer_ < 60)
+	{
+		return;
+	}
 	//ŽžŠÔ‚ÌXV
 	playTime_ += dt_;
 
@@ -464,11 +469,11 @@ void SceneMain::NormalDraw()
 		else if (i < hp)srcX = 0;
 		else srcX = (kHpAnimMaxFrame - 1) * kFrameW;
 
-		DrawRectRotaGraph(centerX,centerY,
-			srcX,192,
+		DrawRectRotaGraph(centerX, centerY,
+			srcX, 192,
 			kFrameW, kFrameH,
-			kHpScale,0.0,
-			hpHandle_,TRUE,FALSE);
+			kHpScale, 0.0,
+			hpHandle_, TRUE, FALSE);
 	}
 
 #ifdef _DEBUG

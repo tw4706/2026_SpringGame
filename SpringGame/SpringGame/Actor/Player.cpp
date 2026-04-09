@@ -385,7 +385,7 @@ void Player::UpdateAttack()
 
 	attackCollider_.SetPos(attackPos);
 
-	if (attackTimer_ > 0.3f)
+	if (attackTimer_ > 0.25f)
 	{
 		attackCollider_.SetEnable(true);
 	}

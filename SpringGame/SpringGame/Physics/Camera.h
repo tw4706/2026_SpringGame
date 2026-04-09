@@ -20,6 +20,9 @@ public:
 	//シェイク開始
 	void Shake(float time, float power);
 
+	Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
+	float Lerp(float a, float b, float t);
+
 	//ズーム開始
 	void StartZoom(float scale);
 	//シェイク更新
