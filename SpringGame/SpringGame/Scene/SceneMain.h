@@ -39,8 +39,7 @@ private:
 	int hpHandle_;					//HPUIのハンドル
 	int floorHandle_;				//床のモデル
 	int shadowMapHandle_ = -1;		//シャドウマップハンドル
-	float playTime_;				//制限時間
-	float bonusTime_;				//ボーナスタイム
+	float remainTime_;				//残り時間
 	float dt_;						//経過時間
 	float timeScale_;				//時間のスケール(スロー演出などで使用)
 	float slowTimer_;				//スロー時間のタイマー

@@ -18,10 +18,10 @@ namespace
 	constexpr int kMaxHP = 3;
 
 	//プレイヤーの移動速度
-	constexpr float kSpeed = 12.0f;
+	constexpr float kSpeed = 10.0f;
 
 	//カメラの回転速度
-	constexpr float kCameraSpeed = 0.05f;
+	constexpr float kCameraSpeed = 0.03f;
 	constexpr float kCameraPitch = 0.3f;
 
 	//当たり判定のサイズ
@@ -43,8 +43,75 @@ namespace
 	//回避速度
 	constexpr float kDodgeSpeed = 18.0f;
 
-	//ジャスト回避の猶予フレーム数
-	constexpr int kJustDodgeFrame = 10;
+	//ジャスト回避の猶予フレーム数(16F)
+	constexpr int kJustDodgeFrame = 4;
+
+	//攻撃時間
+	constexpr float kAttackTime = 0.3f;
+
+	//攻撃の当たり判定が出ている時間
+	constexpr float kAttackColEnabletime = 0.25f;
+
+	//被ダメージ時間
+	constexpr float kHitTime = 0.3f;
+
+	//ノックバックに加わる力
+	constexpr float kKnockbackPower = 8.0f;
+
+	//ノックバックする時間
+	constexpr float kKnockbackTime = 0.2f;
+
+	//ノックバックで吹っ飛ぶ距離の倍率
+	constexpr float kKnockbackMoveScale = 3.0f;
+
+	//ノックバックした後の減速
+	constexpr float kKnockbackDeceration = 0.9f;
+
+	//移動時の線形補間
+	constexpr float kMoveLerp = 0.15f;
+
+	//停止する際の線形補間
+	constexpr float kStopLerp = 0.2f;
+
+	//攻撃判定の前判定距離の調整
+	constexpr float kAttackDistance = 100.0f;
+
+	//壁の制限エフェクトの距離調整
+	constexpr float kBarrierEffectDistance = 70.0f;
+
+	//エフェクトの位置(高さ)
+	const Vector3 kEffectOffset = { 0.0f,80.0f,0.0f };
+
+	constexpr float kAfterImageLife = 0.3f;
+
+	constexpr float kAfterImageTime = 0.02f;
+
+	constexpr float kRotateLerpKeyboard = 0.2f;
+	constexpr float kRotateLerpAnalogStick = 0.1f;
+
+	//壁制限のしきい値(誤差)
+	constexpr float kWallHitEpsilon = 0.01f;
+
+	//入力のしきい値(誤差)
+	constexpr float kInputEpsilon = 0.01f;
+
+	//移動の入力のしきい値
+	constexpr float kRunEpsilon = 0.1f;
+
+	//アナログスティックのデッドゾーン
+	constexpr float kStickDeadZone = 0.04f;
+
+	//移動のフレーム補正
+	constexpr float kFrameRate = 60.0f;
+
+	//カメラの揺れ時間
+	constexpr float kCameraShakeTime = 0.2f;
+
+	//カメラの揺らす力
+	constexpr float kCameraShakePower = 10.0f;
+
+	//無敵時間
+	constexpr float kInvincibleTime = 0.5f;
 }
 
 Player::Player() :
@@ -138,13 +205,13 @@ void Player::Update(Input& input, float dt)
 	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
 	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
 
-	bool hitWall =fabs(beforePos.x_ - pos_.x_) > 0.01f ||fabs(beforePos.z_ - pos_.z_) > 0.01f;
+	bool hitWall = fabs(beforePos.x_ - pos_.x_) > kWallHitEpsilon || fabs(beforePos.z_ - pos_.z_) > kWallHitEpsilon;
 
 	if (hitWall && !isTouchingWall_)
 	{
 		Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 
-		Vector3 effectPos =pos_ +forward * 70.0f +Vector3(0.0f, 80.0f, 0.0f);
+		Vector3 effectPos = pos_ + forward * kBarrierEffectDistance + kEffectOffset;
 
 		EffectManager::GetInstance().Play("barrier", effectPos);
 	}
@@ -186,7 +253,7 @@ void Player::Draw()
 	{
 		Matrix4x4 mat =
 			Matrix4x4::Scale(kModelScale, kModelScale, kModelScale) *
-			Matrix4x4::RotateY(img.angle + 3.141592f) *
+			Matrix4x4::RotateY(img.angle + DX_PI_F) *
 			Matrix4x4::Translate(img.pos.x_, img.pos.y_, img.pos.z_);
 
 		MV1SetMatrix(img.modelHandle, mat.ToDxLibMatrix());
@@ -230,7 +297,7 @@ void Player::Move(Input& input, float dt)
 	if (input.IsPressed("right")) inputDir.x_ += 1.0f;
 
 	//入力があるときだけ 
-	if (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > 0.01f)
+	if (fabs(inputDir.x_) > 0.01f || fabs(inputDir.z_) > kInputEpsilon)
 	{
 		//カメラの角度を基準にして移動方向を回転させる
 		float cameraYaw = 0.0f;
@@ -254,24 +321,24 @@ void Player::Move(Input& input, float dt)
 		float diff = playerAngle - moveAngle_;
 
 		//キャラクターの角度を補間する
-		while (diff > 3.141592f) diff -= 6.28318f;
-		while (diff < -3.141592f) diff += 6.28318f;
+		while (diff > DX_PI_F) diff -= DX_PI_F * 2;
+		while (diff < -DX_PI_F) diff += DX_PI_F * 2;
 
 		//スムーズに回転させる
-		moveAngle_ += diff * 0.2f;
+		moveAngle_ += diff * kRotateLerpKeyboard;
 	}
 
 	//アナログスティックの更新 
 	UpdateAnalogStick(input);
 
 	//位置の反映
-	pos_ += vel_ * dt * 60.0f;
+	pos_ += vel_ * dt * kFrameRate;
 }
 
 void Player::StartAttack()
 {
 	state_ = PlayerState::Attack;
-	attackTimer_ = 0.3f;
+	attackTimer_ = kAttackTime;
 }
 
 void Player::StartDodge()
@@ -299,17 +366,10 @@ void Player::HandleInput(Input& input)
 	if (knockbackTimer_ > 0.0f) return;
 
 	//ダメージ受けたときや死亡中は入力を受け付けない
-	if (state_ == PlayerState::Hit || state_ == PlayerState::Death)
-	{
-		return;
-	}
+	if (state_ == PlayerState::Hit || state_ == PlayerState::Death)return;
 
 	//攻撃中は新しい攻撃を受け付けない
-	if (state_ == PlayerState::Attack)
-	{
-		return;
-	}
-
+	if (state_ == PlayerState::Attack)return;
 
 	if (input.IsTriggered("dodge") && state_ != PlayerState::Dodge)
 	{
@@ -357,18 +417,20 @@ void Player::UpdateAction(Input& input, float dt)
 
 void Player::UpdateState()
 {
-	if (state_ == PlayerState::Attack && attackTimer_ <= 0.0f)
-		state_ = PlayerState::Idle;
+	if (state_ == PlayerState::Attack && attackTimer_ <= 0.0f)state_ = PlayerState::Idle;
 
-	if (state_ == PlayerState::Dodge && dodgeTimer_ <= 0.0f)
-		state_ = PlayerState::Idle;
+	if (state_ == PlayerState::Dodge && dodgeTimer_ <= 0.0f)state_ = PlayerState::Idle;
 
 	if (state_ == PlayerState::Idle || state_ == PlayerState::Run)
 	{
-		if (fabs(vel_.x_) > 0.1f || fabs(vel_.z_) > 0.1f)
+		if (fabs(vel_.x_) > kRunEpsilon || fabs(vel_.z_) > kRunEpsilon)
+		{
 			state_ = PlayerState::Run;
+		}
 		else
+		{
 			state_ = PlayerState::Idle;
+		}
 	}
 	//ダメージ処理から戻す
 	if (state_ == PlayerState::Hit && hitTimer_ <= 0.0f)
@@ -377,21 +439,18 @@ void Player::UpdateState()
 	}
 
 	//死亡は戻らない
-	if (state_ == PlayerState::Death)
-	{
-		return;
-	}
+	if (state_ == PlayerState::Death)return;
 }
 
 void Player::UpdateAttack()
 {
 	//プレイヤーの前方に攻撃判定を生成する
 	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
-	Vector3 attackPos = pos_ + forward * 100.0f + kColOffset;
+	Vector3 attackPos = pos_ + forward * kAttackDistance + kColOffset;
 
 	attackCollider_.SetPos(attackPos);
 
-	if (attackTimer_ > 0.25f)
+	if (attackTimer_ > kAttackColEnabletime)
 	{
 		attackCollider_.SetEnable(true);
 	}
@@ -410,10 +469,10 @@ void Player::UpdateKnockBack(float dt)
 {
 	if (knockbackTimer_ > 0.0f)
 	{
-		pos_ += knockbackVel_ * dt * 3.0f;
+		pos_ += knockbackVel_ * dt * kKnockbackMoveScale;
 
 		// 減速（自然に止まる）
-		knockbackVel_ *= 0.9f;
+		knockbackVel_ *= kKnockbackDeceration;
 
 		knockbackTimer_ -= dt;
 	}
@@ -424,7 +483,7 @@ void Player::UpdateDodge(float dt)
 	//前方向に高速移動する
 	Vector3 dir = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 
-	pos_ += dir * kDodgeSpeed * dt * 60.0f;
+	pos_ += dir * kDodgeSpeed * dt * kFrameRate;
 
 	//回避中は当たり判定を無効
 	collider_.SetPos(pos_ + kColOffset);
@@ -440,8 +499,8 @@ void Player::UpdateDodge(float dt)
 
 	if (afterImageTimer_ <= 0.0f)
 	{
-		afterImages_.push_back({ MV1DuplicateModel(ghostModel_.GetHandle()), pos_, moveAngle_, 0.3f });
-		afterImageTimer_ = 0.02f;//速さ
+		afterImages_.push_back({ MV1DuplicateModel(ghostModel_.GetHandle()), pos_, moveAngle_, kAfterImageLife });
+		afterImageTimer_ = kAfterImageTime;//速さ
 	}
 }
 
@@ -483,49 +542,47 @@ void Player::UpdateAnalogStick(Input& input)
 	Vector3 stickL = input.GetStickLeft();
 	Vector3 stickR = input.GetStickRight();
 
-	//左スティックでプレイヤー操作
-	if (fabs(stickL.x_) > 0.2f || fabs(stickL.z_) > 0.2f)
+	Vector3 playerDir = { 0.0f, 0.0f, 0.0f };
+
+	if (stickL.LengthSq() > kStickDeadZone)
 	{
-		float cameraYaw = 0.0f;
-		if (pCamera_)
-		{
-			cameraYaw = pCamera_->GetYaw();
-		}
+		float cameraYaw = pCamera_ ? pCamera_->GetYaw() : 0.0f;
 
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
+		playerDir = rotMat.TransformForVector(stickL).Normalize();
 
-		Vector3 playerDir = rotMat.TransformForVector(stickL);
+		//目標速度へ線形補間
+		Vector3 targetVel = playerDir * kSpeed;
+		vel_.x_ = Vector3::Lerp(vel_.x_, targetVel.x_, kMoveLerp);
+		vel_.z_ = Vector3::Lerp(vel_.z_, targetVel.z_, kMoveLerp);
 
-		//移動
-		vel_.x_ = playerDir.x_ * kSpeed;
-		vel_.z_ = playerDir.z_ * kSpeed;
-
-		//プレイヤーの向き
+		// プレイヤーの向きの更新
 		float playerAngle = atan2f(-playerDir.x_, playerDir.z_);
-
 		float diff = playerAngle - moveAngle_;
 
-		//角度の上限と下限を設定する(diffが180度以上の間は角度を
-		// 360引くことで違和感なく回転して見える。マイナスは逆のことをしているだけ)
-		while (diff > 3.141592f) diff -= 6.28318f;
-		while (diff < -3.141592f) diff += 6.28318f;
+		while (diff > DX_PI_F) diff -= DX_PI_F * 2.0f;
+		while (diff < -DX_PI_F) diff += DX_PI_F * 2.0f;
 
-		// 補間
-		moveAngle_ += diff * 0.2f;
+		moveAngle_ += diff * kRotateLerpAnalogStick;
+	}
+	else
+	{
+		//入力がない場合は減速させる
+		vel_.x_ = Vector3::Lerp(vel_.x_, 0.0f, kStopLerp);
+		vel_.z_ = Vector3::Lerp(vel_.z_, 0.0f, kStopLerp);
 	}
 
+	//カメラ回転
 	if (pCamera_)
 	{
-		pCamera_->AddRotation(
-			stickR.x_ * kCameraSpeed,
-			stickR.z_ * kCameraSpeed);
+		pCamera_->AddRotation(stickR.x_ * kCameraSpeed, stickR.z_ * kCameraSpeed);
 	}
 }
 
 void Player::UpdateMatrix()
 {
 	//回転
-	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_ + 3.141592f);
+	Matrix4x4 rotMat = Matrix4x4::RotateY(moveAngle_ + DX_PI_F);
 
 	//移動
 	Matrix4x4 transMat = Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
@@ -561,11 +618,10 @@ void Player::OnCollision(GameObject* other)
 				isJustDodge_ = true;
 				isJustDodgeTriggered_ = true;
 
-				invincibleTimer_ = 0.5f;
+				invincibleTimer_ = kInvincibleTime;
 			}
 			return;
 		}
-
 		OnHit(other);
 	}
 }
@@ -593,8 +649,8 @@ void Player::OnHit(GameObject* attacker)
 	knockDir.y_ = 0.0f;
 	knockDir.Normalize();
 
-	knockbackVel_ = knockDir * 8.0f;
-	knockbackTimer_ = 0.2f;
+	knockbackVel_ = knockDir * kKnockbackPower;
+	knockbackTimer_ = kKnockbackTime;
 
 	//向きは敵の方向を見る
 	Vector3 lookDir = attacker->GetPos() - pos_;
@@ -611,15 +667,15 @@ void Player::OnHit(GameObject* attacker)
 	else
 	{
 		state_ = PlayerState::Hit;
-		hitTimer_ = 0.3f;
+		hitTimer_ = kHitTime;
 	}
 
 	//カメラの揺れ
 	if (pCamera_)
 	{
-		pCamera_->Shake(0.2f, 10.0f);
+		pCamera_->Shake(kCameraShakeTime, kCameraShakePower);
 	}
 
 	//無敵時間
-	invincibleTimer_ = 0.5f;
+	invincibleTimer_ = kInvincibleTime;
 }

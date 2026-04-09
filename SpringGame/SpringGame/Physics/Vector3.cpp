@@ -107,3 +107,13 @@ Vector3 Vector3::Cross(const Vector3& other) const
 		z_ * other.x_ - x_ * other.z_,
 		x_ * other.y_ - y_ * other.x_);
 }
+
+Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float t)
+{
+	return a + (b - a) * t;
+}
+
+float Vector3::Lerp(float a, float b, float t)
+{
+	return a + (b - a) * t;
+}

@@ -45,5 +45,11 @@ public:
 
 	//Dxlib‚ÌVECTOR‚É•ÏŠ·
 	VECTOR ToDxlibVector()const { return VGet(x_, y_, z_); }
+
+	//Lerp(üŒ`•âŠÔ)
+	static Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
+
+	//float”Å
+	static float Lerp(float a, float b, float t);
 };
 

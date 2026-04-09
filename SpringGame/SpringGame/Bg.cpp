@@ -60,7 +60,7 @@ void Bg::Draw(const Vector3& cameraPos)
 		};
 
 	// =========================
-	// 前面（FT）
+	// 前面
 	// =========================
 	drawFace(
 		VGet(c.x - size, c.y - size, c.z + size),
@@ -71,7 +71,7 @@ void Bg::Draw(const Vector3& cameraPos)
 	);
 
 	// =========================
-	// 背面（BK）
+	// 背面
 	// =========================
 	drawFace(
 		VGet(c.x + size, c.y - size, c.z - size),
@@ -82,7 +82,7 @@ void Bg::Draw(const Vector3& cameraPos)
 	);
 
 	// =========================
-	// 左面（LF）
+	// 左面
 	// =========================
 	drawFace(
 		VGet(c.x - size, c.y - size, c.z - size),
@@ -93,7 +93,7 @@ void Bg::Draw(const Vector3& cameraPos)
 	);
 
 	// =========================
-	// 右面（RT）
+	// 右面
 	// =========================
 	drawFace(
 		VGet(c.x + size, c.y - size, c.z + size),
@@ -104,7 +104,7 @@ void Bg::Draw(const Vector3& cameraPos)
 	);
 
 	// =========================
-	// 上面（UP）
+	// 上面
 	// =========================
 	drawFace(
 		VGet(c.x - size, c.y + size, c.z - size),
@@ -115,7 +115,7 @@ void Bg::Draw(const Vector3& cameraPos)
 	);
 
 	// =========================
-	// 下（DN）
+	// 下
 	// =========================
 	drawFace(
 		VGet(c.x - size, c.y - size, c.z - size),

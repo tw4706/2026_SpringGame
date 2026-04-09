@@ -57,10 +57,10 @@ void Camera::UpdateCamera()
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	//ズームの補間
-	fov_ = Lerp(fov_, fovTarget_, 0.05f);
+	fov_ = Vector3::Lerp(fov_, fovTarget_, 0.05f);
 
 	//ズーム後少しずつ元に戻す
-	fovTarget_ = Lerp(fovTarget_, DX_PI_F / 3.0f, 0.1f);
+	fovTarget_ = Vector3::Lerp(fovTarget_, DX_PI_F / 3.0f, 0.1f);
 	SetupCamera_Perspective(fov_);
 
 	//回転
@@ -74,7 +74,7 @@ void Camera::UpdateCamera()
 	cameraPos.y_ = (std::max)(cameraPos.y_, 50.0f);
 
 	//カメラの補間
-	pos_ = Lerp(pos_, cameraPos, 0.1f);
+	pos_ = Vector3::Lerp(pos_, cameraPos, 0.1f);
 
 	//カメラのシェイク適用
 	pos_ += UpdateShake();
@@ -107,16 +107,6 @@ void Camera::Shake(float time, float power)
 {
 	shakeTime_ = time;
 	shakePower_ = power;
-}
-
-Vector3 Camera::Lerp(const Vector3& a, const Vector3& b, float t)
-{
-	return a + (b - a) * t;
-}
-
-float Camera::Lerp(float a, float b, float t)
-{
-	return a + (b - a) * t;
 }
 
 void Camera::StartZoom(float fov)

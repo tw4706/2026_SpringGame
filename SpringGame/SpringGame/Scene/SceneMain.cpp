@@ -45,8 +45,7 @@ SceneMain::SceneMain(SceneController& contorller) :
 	frameCount_(0),
 	hpHandle_(-1),
 	floorHandle_(-1),
-	playTime_(0.0f),
-	bonusTime_(0.0f),
+	remainTime_(0.0f),
 	timeScale_(1.0f),
 	slowTimer_(0.0f),
 	dt_(0.0f),
@@ -127,6 +126,7 @@ void SceneMain::Init()
 	frameCount_ = kFadeInterval;
 	dt_ = (1.0f / 60.0f) * timeScale_;
 	isGameStarted_ = false;
+	remainTime_ = kClearFadeTime;
 }
 
 void SceneMain::Update(Input& input)
@@ -201,8 +201,9 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	if (isGameStarted_)
-	{//時間の更新
-		playTime_ += dt_;
+	{
+		//時間の更新
+		remainTime_ -= dt_;
 
 		//スコアの更新処理
 		ScoreManager::Update(dt_);
@@ -280,8 +281,8 @@ void SceneMain::NormalUpdate(Input& input)
 		slowTimer_ = 0.2f;						//スロー時間
 		pCamera_->StartZoom(DX_PI_F / 6.0f);	//カメラのズーム開始
 
-		//ジャスト回避成功時時間を増やす
-		bonusTime_ += 2.0f;
+		//ジャスト回避成功時に制限時間を増やす
+		remainTime_ += 2.0f;
 		ScoreManager::AddScoreBoost();
 
 		timeBonusDisplay_ = 2.0f;
@@ -350,14 +351,12 @@ void SceneMain::NormalUpdate(Input& input)
 		enemies_.push_back(enemy);
 	}
 
-	//60秒経ったらクリアシーンへ遷移
-	if (playTime_ >= kClearFadeTime && !isClearing_)
+	//制限時間が0になったらクリアシーンへ遷移
+	if (remainTime_<=0.0f && !isClearing_)
 	{
 		isClearing_ = true;
 
-		update_ = &SceneMain::FadeOutUpdate;
-		draw_ = &SceneMain::FadeDraw;
-		frameCount_ = 0;
+		controller_.PushScene(std::make_shared<ClearScene>(controller_));
 		return;
 	}
 
@@ -368,10 +367,7 @@ void SceneMain::NormalUpdate(Input& input)
 		{
 			isClearing_ = true;
 
-			update_ = &SceneMain::FadeOutUpdate;
-			draw_ = &SceneMain::FadeDraw;
-
-			frameCount_ = 0;
+			controller_.PushScene(std::make_shared<ClearScene>(controller_));
 		}
 		return;
 	}
@@ -503,7 +499,7 @@ void SceneMain::NormalDraw()
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
 	SetFontSize(40);
-	int time = (int)(kClearFadeTime - playTime_ + bonusTime_);
+	int time = (std::max)(0,(int)(remainTime_));
 	int score = ScoreManager::GetDispScore();
 
 	uiManager_.Draw(time, score, timeBonusDisplay_, timeBonusTimer_);

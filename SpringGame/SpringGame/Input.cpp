@@ -79,18 +79,36 @@ bool Input::IsTriggered(const char* name) const
 void Input::UpdateAnalogStick()
 {
 	//左アナログスティック情報の取得
-	int bufX, bufY;
-	GetJoypadAnalogInput(&bufX, &bufY, DX_INPUT_PAD1);
+	int leftX, leftY;
+	GetJoypadAnalogInput(&leftX, &leftY, DX_INPUT_PAD1);
 
 	//スティックの上限・下限を設定する
-	stickLeft_.x_ = bufX / 1000.0f;
-	stickLeft_.z_ = -bufY / 1000.0f;
+	Vector3 stickLeft(leftX / 1000.0f, 0.0f, -leftY / 1000.0f);
+
+	//デッドゾーン
+	if (stickLeft.LengthSq() < 0.04f)
+	{
+		stickLeft = { 0,0,0 };
+	}
+
+	//正規化
+	if (stickLeft.LengthSq() > 1.0f)
+	{
+		stickLeft = stickLeft.Normalize();
+	}
+
+	//線形補間(Lerp)
+	stickLeft_.x_ = Vector3::Lerp(stickLeft_.x_, stickLeft.x_, 0.2f);
+	stickLeft_.z_ = Vector3::Lerp(stickLeft_.z_, stickLeft.z_, 0.2f);
 
 	//右アナログスティック情報の取得
-	int rx, ry;
-	GetJoypadAnalogInputRight(&rx, &ry, DX_INPUT_PAD1);
+	int rightX, rightY;
+	GetJoypadAnalogInputRight(&rightX, &rightY, DX_INPUT_PAD1);
 
 	//左の時と同様に上限・下限を設定する
-	stickRight_.x_ = -rx / 1000.0f;
-	stickRight_.z_ = ry / 1000.0f;
+	Vector3 targetRight(-rightX / 1000.0f, 0.0f, rightY / 1000.0f);
+
+	//線形補間(Lerp)
+	stickRight_.x_ = Vector3::Lerp(stickRight_.x_, targetRight.x_, 0.15f);
+	stickRight_.z_ = Vector3::Lerp(stickRight_.z_, targetRight.z_, 0.15f);
 }
