@@ -123,6 +123,7 @@ Vector3 Camera::UpdateShake()
 
 	shakeTime_ -= 1.0f / 60.0f;
 
+	//r=(rand/RAND_MAX-0.5f)*2.0f;‚ÌŒvZ‚Í-1.0f‚©‚ç1.0f‚Ì”ÍˆÍ‚Åƒ‰ƒ“ƒ_ƒ€‚È’l‚ğ¶¬
 	float rx = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
 	float ry = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;
 	float rz = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;

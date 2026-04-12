@@ -12,7 +12,9 @@ void Model::Load(const std::string& path)
     //初回だけロード
     if (sModelMap_.count(path) == 0)
     {
+        //モデルのロード
         int h = MV1LoadModel(path.c_str());
+        //ハンドルの保存
         sModelMap_[path] = h;
     }
 
