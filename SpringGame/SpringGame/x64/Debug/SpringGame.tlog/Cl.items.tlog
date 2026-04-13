@@ -1,6 +1,7 @@
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Actor\Enemy.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Enemy.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Actor\Player.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Player.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Animation.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Animation.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Application.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Application.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Bg.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Bg.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\EffectManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\EffectManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Game.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Game.obj
@@ -21,4 +22,5 @@ C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\SphereC
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\ScoreManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\ScoreManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\PopUI.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\PopUI.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\TitleScene.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\TitleScene.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\SoundManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SoundManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\UIManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\UIManager.obj

@@ -283,7 +283,7 @@ void SceneMain::NormalUpdate(Input& input)
 
 		//ジャスト回避成功時に制限時間を増やす
 		remainTime_ += 2.0f;
-		ScoreManager::AddScoreBoost();
+		ScoreManager::AddScoreBoostTime();
 
 		timeBonusDisplay_ = 2.0f;
 		timeBonusTimer_ = 1.0f;
@@ -352,7 +352,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	//制限時間が0になったらクリアシーンへ遷移
-	if (remainTime_<=0.0f && !isClearing_)
+	if (remainTime_ <= 0.0f && !isClearing_)
 	{
 		isClearing_ = true;
 
@@ -499,7 +499,7 @@ void SceneMain::NormalDraw()
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
 	SetFontSize(40);
-	int time = (std::max)(0,(int)(remainTime_));
+	int time = (std::max)(0, (int)(remainTime_));
 	int score = ScoreManager::GetDispScore();
 
 	uiManager_.Draw(time, score, timeBonusDisplay_, timeBonusTimer_);
@@ -533,11 +533,11 @@ void SceneMain::NormalDraw()
 	{
 		if (gameStartTimer_ < kReadyFrame)
 		{
-			DrawCenterTextWithOutline("READY", 300, GetColor(255, 255, 0), 1280);
+			DrawFormatStringToHandle(Game::kScreenWidth / 2, Game::kScreenHeight / 2, GetColor(255, 255, 0),Game::kFontHandle, "READY");
 		}
 		else
 		{
-			DrawCenterTextWithOutline("START", 300, GetColor(0, 255, 255), 1280);
+			DrawFormatStringToHandle(Game::kScreenWidth / 2, Game::kScreenHeight / 2, GetColor(0, 255, 255), Game::kFontHandle, "Go!");
 		}
 	}
 }

@@ -4,6 +4,7 @@
 #include "SceneMain.h"
 #include"../Input.h"
 #include"../Game.h"
+#include"../Application.h"
 #include<Dxlib.h>
 #include<memory>
 #include<algorithm>
@@ -56,6 +57,8 @@ void TitleScene::NormalUpdate(Input& input)
 
 	if (input.IsTriggered("retry"))
 	{
+		//SEçƒê∂
+		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
 		update_ = &TitleScene::FadeOutUpdate;
 		draw_ = &TitleScene::FadeDraw;
 		frameCount_ = 0;

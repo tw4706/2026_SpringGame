@@ -5,6 +5,7 @@
 #include "../Actor/Enemy.h"
 #include"../EffectManager.h"
 #include"../Physics/Camera.h"
+#include"../Application.h"
 #include"DxLib.h"
 #include<cassert>
 #include<algorithm>
@@ -87,7 +88,7 @@ namespace
 	constexpr float kAfterImageTime = 0.02f;
 
 	constexpr float kRotateLerpKeyboard = 0.2f;
-	constexpr float kRotateLerpAnalogStick = 0.1f;
+	constexpr float kRotateLerpAnalogStick = 0.3f;
 
 	//壁制限のしきい値(誤差)
 	constexpr float kWallHitEpsilon = 0.01f;
@@ -349,6 +350,9 @@ void Player::StartDodge()
 	//ジャスト回避の判定開始
 	justDodgeFrame_ = kJustDodgeFrame;
 	isJustDodge_ = false;
+
+	//SEの再生
+	Application::GetInstance().GetSoundManager().PlaySe(SE::Dodge);
 }
 
 void Player::UpdateTimers(float deltaTime)
@@ -450,6 +454,9 @@ void Player::UpdateAttack()
 
 	attackCollider_.SetPos(attackPos);
 
+	//SEの再生
+	Application::GetInstance().GetSoundManager().PlaySe(SE::Attack);
+
 	if (attackTimer_ > kAttackColEnabletime)
 	{
 		attackCollider_.SetEnable(true);
@@ -501,6 +508,7 @@ void Player::UpdateDodge(float dt)
 	{
 		afterImages_.push_back({ MV1DuplicateModel(ghostModel_.GetHandle()), pos_, moveAngle_, kAfterImageLife });
 		afterImageTimer_ = kAfterImageTime;//速さ
+		Application::GetInstance().GetSoundManager().PlaySe(SE::JustDodge);
 	}
 }
 
@@ -642,6 +650,9 @@ void Player::OnHit(GameObject* attacker)
 
 	hp_--;
 
+	//SEの再生
+	Application::GetInstance().GetSoundManager().PlaySe(SE::Hit);
+
 	isHit_ = true;
 
 	//ノックバック方向（敵から離れるように飛ばす）
@@ -661,6 +672,8 @@ void Player::OnHit(GameObject* attacker)
 
 	if (hp_ <= 0)
 	{
+		//SE再生
+		Application::GetInstance().GetSoundManager().PlaySe(SE::PlayerDeath);
 		hp_ = 0;
 		state_ = PlayerState::Death;
 	}

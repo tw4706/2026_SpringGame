@@ -5,6 +5,7 @@
 #include "../Physics/Camera.h"
 #include "../Actor/Player.h"
 #include "../EffectManager.h"
+#include"../Application.h"
 #include<Dxlib.h>
 #include<cassert>
 #include<cmath>
@@ -234,6 +235,7 @@ void Enemy::OnHit(GameObject* attacker)
 		pCamera_->Shake(kCameraShakeTime, kCameraShakePower);
 	}
 
+	//エフェクトの再生
 	EffectManager::GetInstance().Play("hit",pos_ + kEffectOffset);
 
 	//死亡アニメーション開始

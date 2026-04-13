@@ -36,50 +36,46 @@ public:
 	void Update(Input&input, float dt);
 	void Draw()override;
 
-	//被ダメージ時の処理
+	/// <summary>
+	/// 被ダメージ処理
+	/// </summary>
+	/// <param name="attacker">攻撃してきたゲームオブジェクト</param>
 	void OnHit(GameObject* attacker)override;
 
-	//移動処理
-	void Move(Input& input, float dt);
-	//攻撃処理
-	void StartAttack();
-	//回避処理
-	void StartDodge();
-
-	//各種タイマーの更新処理
-	void UpdateTimers(float deltaTime);
-	//入力受付(攻撃や回避の開始など)
-	void HandleInput(Input&input);
-	//状態に応じた処理の分岐を行う
-	void UpdateAction(Input&input,float dt);
-	//状態遷移の処理
-	void UpdateState();
-	//攻撃処理
-	void UpdateAttack();
-	//ノックバック処理
-	void UpdateKnockBack(float dt);
-	//回避処理
-	void UpdateDodge(float dt);
-	//アニメーションの更新
-	void UpdateAnimation(float dt);
-	//当たり判定の更新
-	void UpdateCollision();
-	//アナログスティックの更新処理
-	void UpdateAnalogStick(Input& input);
-	//行列の更新処理
-	void UpdateMatrix();
-
-	//プレイヤーの位置を取得
+	/// <summary>
+	/// プレイヤーの座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
 	Vector3 GetPos()const{ return pos_; }
-	//カメラの注視点の取得
+
+	/// <summary>
+	/// カメラの中止店の取得
+	/// </summary>
+	/// <returns>カメラの注視点位置</returns>
 	Vector3 GetCameraTarget()const;
-	//HPの取得
+
+	/// <summary>
+	/// HPの取得
+	/// </summary>
+	/// <returns>HP</returns>
 	int GetHP() const { return hp_; }
+
+	/// <summary>
+	/// MaxHPの取得
+	/// </summary>
+	/// <returns>MaxHP</returns>
 	int GetMaxHP()const;
 
-	//当たり判定の取得
+	/// <summary>
+	/// 当たり判定の取得
+	/// </summary>
+	/// <returns>当たり判定の参照</returns>
 	SphereCollider* GetCollider() { return &collider_; }
-	//攻撃判定取得
+
+	/// <summary>
+	/// 攻撃の当たり判定の取得
+	/// </summary>
+	/// <returns>攻撃判定のコライダーの参照</returns>
 	SphereCollider* GetAttackCollider() { return &attackCollider_; }
 
 	//カメラのセット
@@ -96,7 +92,90 @@ public:
 	bool IsDead() const { return hp_ <= 0; }
 
 	bool IsDeathAnimEnd()const { return state_ == PlayerState::Death && animation_.IsEnd(); }
+private:
 
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	/// <param name="input">入力</param>
+	/// <param name="dt">経過時間</param>
+	void Move(Input& input, float dt);
+
+	/// <summary>
+	/// 攻撃開始処理
+	/// </summary>
+	void StartAttack();
+
+	/// <summary>
+	/// 回避開始処理
+	/// </summary>
+	void StartDodge();
+
+	/// <summary>
+	/// 各タイマーの更新処理
+	/// </summary>
+	/// <param name="deltaTime">経過時間</param>
+	void UpdateTimers(float deltaTime);
+
+
+	/// <summary>
+	/// 入力受付(攻撃や回避の開始など)
+	/// </summary>
+	/// <param name="input"></param>
+	void HandleInput(Input& input);
+
+
+	/// <summary>
+	/// 状態に応じた処理の分岐
+	/// </summary>
+	/// <param name="input">入力</param>
+	/// <param name="dt">経過時間</param>
+	void UpdateAction(Input& input, float dt);
+
+	/// <summary>
+	/// 状態遷移処理
+	/// </summary>
+	void UpdateState();
+
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void UpdateAttack();
+
+	/// <summary>
+	/// ノックバック処理
+	/// </summary>
+	/// <param name="dt">経過時間</param>
+	void UpdateKnockBack(float dt);
+
+
+	/// <summary>
+	/// 回避処理
+	/// </summary>
+	/// <param name="dt">経過時間</param>
+	void UpdateDodge(float dt);
+
+	/// <summary>
+	/// アニメーションの更新
+	/// </summary>
+	/// <param name="dt">経過時間</param>
+	void UpdateAnimation(float dt);
+
+	/// <summary>
+	/// 当たり判定の更新
+	/// </summary>
+	void UpdateCollision();
+
+	/// <summary>
+	/// アナログスティックの更新処理
+	/// </summary>
+	/// <param name="input">入力</param>
+	void UpdateAnalogStick(Input& input);
+
+	/// <summary>
+	/// 行列の更新処理
+	/// </summary>
+	void UpdateMatrix();
 private:
 	float moveAngle_;						//プレイヤーの移動用の角度
 	bool isHit_;							//衝突判定用フラグ
@@ -119,7 +198,7 @@ private:
 	Model model_;							//モデル
 	Model ghostModel_;						//残像用のモデル
 	PlayerState state_;						//プレイヤーの状態
-	Camera* pCamera_ = nullptr;
+	Camera* pCamera_ = nullptr;				//カメラ
 	std::vector<AfterImage>afterImages_;	//残像の情報
 };
 

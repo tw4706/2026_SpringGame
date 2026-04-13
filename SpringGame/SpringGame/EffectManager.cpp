@@ -1,6 +1,7 @@
 #include "EffectManager.h"
 #include"EffekseerForDXLib.h"
 #include<cassert>
+#include "Application.h"
 
 EffectManager& EffectManager::GetInstance()
 {

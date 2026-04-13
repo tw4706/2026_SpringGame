@@ -29,11 +29,22 @@ public:
 	//モデルのアニメーションの再生
 	void Play(int animIndex, float speed, bool isLoop);
 
+    /// <summary>
+    /// アニメーションの状態遷移
+    /// </summary>
+    /// <param name="state">状態名</param>
     void ChangeState(AnimationState state);
 
+    /// <summary>
+    /// アニメーション状態の取得
+    /// </summary>
+    /// <returns>アニメーション状態</returns>
     AnimationState GetState()const { return state_; }
 
-    //アニメーションの終了を通知する関数
+    /// <summary>
+    /// アニメーションの終了を通知する関数
+    /// </summary>
+    /// <returns>アニメーションが終了したかどうか</returns>
     bool IsEnd()const { return isAnimEnd_; }
 
 

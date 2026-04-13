@@ -8,5 +8,6 @@ namespace Game
 	constexpr int kScreenHeight = 720;
 	constexpr int kColorBitNum = 32;
 
+	//フォントのハンドル
 	extern int kFontHandle;
 }

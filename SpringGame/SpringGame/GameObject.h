@@ -12,12 +12,31 @@ public :
 	virtual void Update()abstract;
 	virtual void Draw()abstract;
 
-	//衝突判定
+	///衝突判定
+	/// <summary>
+	/// 衝突判定
+	/// </summary>
+	/// <param name="other">衝突した相手のオブジェクト</param>
 	virtual void OnCollision(GameObject* other) {}
+
+	/// <summary>
+	/// ヒット時の処理
+	/// </summary>
+	/// <param name="attacker">攻撃してきたオブジェクト</param>
 	virtual void OnHit(GameObject* attacker) {};
 
 	//当たり判定の取得
+
+	/// <summary>
+	/// 当たり判定の取得
+	/// </summary>
+	/// <returns>当たり判定のポインタ</returns>
 	Collider* GetCollider()const { return pCollider_; }
+
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標の参照</returns>
 	const Vector3& GetPos() const { return pos_; }
 
 protected:

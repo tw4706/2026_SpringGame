@@ -57,7 +57,7 @@ void Camera::UpdateCamera()
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
 	//ズームの補間
-	fov_ = Vector3::Lerp(fov_, fovTarget_, 0.05f);
+	fov_ = Vector3::Lerp(fov_, fovTarget_, 0.07f);
 
 	//ズーム後少しずつ元に戻す
 	fovTarget_ = Vector3::Lerp(fovTarget_, DX_PI_F / 3.0f, 0.1f);

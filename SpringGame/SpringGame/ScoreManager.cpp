@@ -55,7 +55,7 @@ void ScoreManager::Update(float dt)
 	}
 }
 
-void ScoreManager::AddScoreBoost()
+void ScoreManager::AddScoreBoostTime()
 {
 	scoreBoostTimer_ = kScoreBoostTime;
 }
