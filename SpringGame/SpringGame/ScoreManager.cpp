@@ -60,7 +60,7 @@ void ScoreManager::AddScoreBoostTime()
 	scoreBoostTimer_ = kScoreBoostTime;
 }
 
-float ScoreManager::GetBoostRatio()
+float ScoreManager::GetBoostGauge()
 {
 	if (scoreBoostTimer_ <= 0.0f)
 	{

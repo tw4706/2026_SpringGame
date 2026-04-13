@@ -47,22 +47,12 @@ void SoundManager::Init()
 void SoundManager::PlaySe(SE se)
 {
 	int handle = seHandles_[se];
-	if (currentSeHandle_ == handle)return;
-
-	//再生中のSEがある場合は停止
-	if (currentSeHandle_ != -1)
-	{
-		StopSoundMem(currentSeHandle_);
-	}
-
-	//再生中のSEハンドルを更新
-	currentSeHandle_ = handle;
 
 	//SEの音量
-	ChangeVolumeSoundMem(255, currentSeHandle_);
+	ChangeVolumeSoundMem(255, handle);
 
 	//SEの再生
-	PlaySoundMem(handle, DX_PLAYTYPE_BACK);
+	PlaySoundMem(handle, DX_PLAYTYPE_BACK,TRUE);
 }
 void SoundManager::PlayBgm(BGM bgm)
 {

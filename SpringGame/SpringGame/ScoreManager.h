@@ -36,7 +36,7 @@ public:
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	static float GetBoostRatio();
+	static float GetBoostGauge();
 
 	/// <summary>
 	/// スコアやタイマーのリセット

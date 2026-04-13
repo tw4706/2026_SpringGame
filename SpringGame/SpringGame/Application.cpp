@@ -75,7 +75,8 @@ bool Application::Init()
 		SetWriteZBuffer3D(TRUE);
 	}
 	AddFontResourceEx("data/TanueiKakuPop.otf", FR_PRIVATE, NULL);
-	Game::kFontHandle = CreateFontToHandle("TanueiKakuPop", 40, -1);
+	Game::kFontUIHandle = CreateFontToHandle("TanueiKakuPop", 40, -1);
+	Game::kTitleFontHandle = CreateFontToHandle("TanueiKakuPop", 64, -1);
 
 	//サウンドマネージャーの初期化
 	soundManager_.Init();

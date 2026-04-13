@@ -3,5 +3,6 @@
 
 namespace Game
 {
-	int kFontHandle = -1;
+	int kFontUIHandle = -1;
+	int kTitleFontHandle = -1;
 }

@@ -340,6 +340,9 @@ void Player::StartAttack()
 {
 	state_ = PlayerState::Attack;
 	attackTimer_ = kAttackTime;
+
+	//SEÄ¶
+	Application::GetInstance().GetSoundManager().PlaySe(SE::Attack);
 }
 
 void Player::StartDodge()
@@ -454,9 +457,6 @@ void Player::UpdateAttack()
 
 	attackCollider_.SetPos(attackPos);
 
-	//SE‚ÌÄ¶
-	Application::GetInstance().GetSoundManager().PlaySe(SE::Attack);
-
 	if (attackTimer_ > kAttackColEnabletime)
 	{
 		attackCollider_.SetEnable(true);
@@ -508,7 +508,6 @@ void Player::UpdateDodge(float dt)
 	{
 		afterImages_.push_back({ MV1DuplicateModel(ghostModel_.GetHandle()), pos_, moveAngle_, kAfterImageLife });
 		afterImageTimer_ = kAfterImageTime;//‘¬‚³
-		Application::GetInstance().GetSoundManager().PlaySe(SE::JustDodge);
 	}
 }
 
@@ -615,6 +614,7 @@ int Player::GetMaxHP() const
 
 void Player::OnCollision(GameObject* other)
 {
+
 	if (dynamic_cast<Enemy*>(other))
 	{
 		//ƒWƒƒƒXƒg‰ñ”ğ”»’è
@@ -627,6 +627,9 @@ void Player::OnCollision(GameObject* other)
 				isJustDodgeTriggered_ = true;
 
 				invincibleTimer_ = kInvincibleTime;
+
+				//SEÄ¶
+				Application::GetInstance().GetSoundManager().PlaySe(SE::JustDodge);
 			}
 			return;
 		}

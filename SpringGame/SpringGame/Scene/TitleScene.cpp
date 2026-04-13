@@ -104,18 +104,18 @@ void TitleScene::NormalDraw()
 
 	bg_.Draw(center);
 
-	const char* text = "Title Scene";
-	SetFontSize(40);
+	const char* text = "しゅんげきラッシュ";
 
 	//文字の横幅を取得
-	int width = GetDrawStringWidthToHandle(text,static_cast<int>(strlen(text)),Game::kFontHandle);
+	int width = GetDrawStringWidthToHandle(text,static_cast<int>(strlen(text)),Game::kTitleFontHandle);
 
 	//画面サイズの半分(真ん中)
 	int x = (Game::kScreenWidth - width) / 2;
-	int y = Game::kScreenHeight / 2;
+	int y = Game::kScreenHeight / 2-100;
 
 	//描画　
-	DrawStringToHandle(x,y,text,0xffff00,Game::kFontHandle);
+	DrawStringToHandle(x + 4, y + 4, text, 0x000000, Game::kTitleFontHandle);
+	DrawStringToHandle(x, y, text, 0xffff00, Game::kTitleFontHandle);
 }
 
 

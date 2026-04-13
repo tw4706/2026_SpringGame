@@ -98,7 +98,7 @@ void Camera::AddRotation(float yaw, float pitch)
 	pitch_ += pitch;
 
 	//真上真下まで行かないよう制限
-	const float limit = DX_PI_F / 3.0f; //60度
+	const float limit = DX_PI_F / 4.0f; //60度
 	pitch_ = std::clamp(pitch_, -limit, limit);
 }
 

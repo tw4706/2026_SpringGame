@@ -151,18 +151,7 @@ void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, in
 	int width = GetDrawStringWidth(text, strlen(text));
 	int x = (screenW - width) / 2;
 
-	//太い縁取り
-	for (int dy = -3; dy <= 3; dy++)
-	{
-		for (int dx = -3; dx <= 3; dx++)
-		{
-			if (dx == 0 && dy == 0) continue;
-
-			DrawString(x + dx, y + dy, text, GetColor(0, 0, 0));
-		}
-	}
-
-	//本体
+	//描画
 	DrawString(x, y, text, color);
 }
 
@@ -228,7 +217,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 	else
 	{
-		//空のインプットを渡す（プレイヤーは操作できないが、アニメーションなどは更新するため）
+		//空のインプットを渡す（プレイヤーは操作できないが、アニメーションなどの更新をするため）
 		Input emptyInput;
 		pPlayer_->Update(emptyInput, dt_);
 	}
@@ -408,7 +397,7 @@ void SceneMain::NormalDraw()
 	//シャドウマップ描画
 	ShadowMap_DrawSetup(shadowMapHandle_);
 
-	//プレイヤーと敵を影用に描画
+	//プレイヤーと敵を影で使用するため影用に描画
 	pPlayer_->Draw();
 
 	for (auto& enemy : enemies_)
@@ -504,16 +493,16 @@ void SceneMain::NormalDraw()
 
 	uiManager_.Draw(time, score, timeBonusDisplay_, timeBonusTimer_);
 
-	float boostRatio = ScoreManager::GetBoostRatio();
+	float boostGauge = ScoreManager::GetBoostGauge();
 
-	if (boostRatio > 0.0f)
+	if (boostGauge > 0.0f)
 	{
 		int barX = 50;
 		int barY = 110;
 		int barW = 220;
 		int barH = 18;
 
-		int currentW = (std::max)(4, static_cast<int>(barW * boostRatio));
+		int currentW = (std::max)(4, static_cast<int>(barW * boostGauge));
 
 		//外枠
 		DrawBox(barX, barY, barX + barW, barY + barH,
@@ -529,15 +518,17 @@ void SceneMain::NormalDraw()
 			GetColor(255, 220, 0), "x2");
 	}
 
+	//開始の合図の描画
 	if (!isGameStarted_)
 	{
+		//スタートタイマーが60f(1びょう)より小さい場合はReadyそれ以降はGo!
 		if (gameStartTimer_ < kReadyFrame)
 		{
-			DrawFormatStringToHandle(Game::kScreenWidth / 2, Game::kScreenHeight / 2, GetColor(255, 255, 0),Game::kFontHandle, "READY");
+			DrawCenterTextWithOutline("READY",Game::kScreenHeight / 2,GetColor(255, 255, 0),Game::kScreenWidth);
 		}
 		else
 		{
-			DrawFormatStringToHandle(Game::kScreenWidth / 2, Game::kScreenHeight / 2, GetColor(0, 255, 255), Game::kFontHandle, "Go!");
+			DrawCenterTextWithOutline("Go!",Game::kScreenHeight / 2,GetColor(0, 255, 255),Game::kScreenWidth);
 		}
 	}
 }

@@ -42,12 +42,12 @@ void PopUI::Draw()
     if (type_ == ScorePopType::Score)
     {
         DrawFormatStringToHandle((int)screen.x,(int)screen.y,
-            GetColor(255, 255, 0),Game::kFontHandle,"+%d",value_);
+            GetColor(255, 255, 0),Game::kFontUIHandle,"+%d",value_);
     }
     else if (type_ == ScorePopType::Time)
     {
         DrawFormatStringToHandle(
             (int)screen.x,(int)screen.y,
-            GetColor(0, 255, 0),Game::kFontHandle,"+%.1fs",value_ / 1.0f);
+            GetColor(0, 255, 0),Game::kFontUIHandle,"+%.1fs",value_ / 1.0f);
     }
 }

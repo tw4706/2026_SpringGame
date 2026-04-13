@@ -8,7 +8,7 @@ void UIManager::DrawCenterText(const char* text, int y, int color)
 	int width = GetDrawStringWidth(text, strlen(text));
 	int x = (1280 - width) / 2;
 
-	DrawStringToHandle(x, y, text, color, Game::kFontHandle);
+	DrawStringToHandle(x, y, text, color, Game::kFontUIHandle);
 }
 
 void UIManager::Draw(int time, int score, float bonus, float bonusTimer)
@@ -28,7 +28,7 @@ void UIManager::Draw(int time, int score, float bonus, float bonusTimer)
 	{
 		sprintf_s(buf, "+%.1fs", bonus);
 		DrawStringToHandle(750,40,buf,
-			GetColor(0, 255, 0),Game::kFontHandle);
+			GetColor(0, 255, 0),Game::kFontUIHandle);
 	}
 }
 

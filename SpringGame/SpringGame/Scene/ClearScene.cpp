@@ -4,6 +4,7 @@
 #include"SceneMain.h"
 #include"../Input.h"
 #include"../Game.h"
+#include"../Application.h"
 #include<algorithm>
 #include<Dxlib.h>
 
@@ -70,6 +71,8 @@ void ClearScene::NormalUpdate(Input& input)
 
 	if (input.IsTriggered("retry"))
 	{
+		//SEçƒê∂
+		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
 		ScoreManager::Reset();
 		controller_.ResetScene(std::make_shared<SceneMain>(controller_));
 	}
@@ -111,7 +114,7 @@ void ClearScene::NormalDraw()
 	int scoreX = (Game::kScreenWidth - scoreW) / 2;
 
 	DrawStringToHandle(scoreX, Game::kScreenHeight / 2-100,
-		scoreText, GetColor(255, 255, 0), Game::kFontHandle);
+		scoreText, GetColor(255, 255, 0), Game::kFontUIHandle);
 
 	//ÉäÉgÉâÉCï\é¶
 	const char* retryText = "Press Retry";
@@ -123,6 +126,6 @@ void ClearScene::NormalDraw()
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawStringToHandle(retryX, Game::kScreenHeight / 2, 
-		retryText, GetColor(255, 255, 255), Game::kFontHandle);
+		retryText, GetColor(255, 255, 255), Game::kFontUIHandle);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
