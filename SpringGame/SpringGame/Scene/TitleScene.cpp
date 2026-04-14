@@ -115,12 +115,12 @@ void TitleScene::NormalDraw()
 	const char* pressStartText = "ボタンをおしてスタート";
 
 	//文字の横幅を取得
-	int width = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kTitleFontHandle);
+	int titleWidth = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kTitleFontHandle);
 
 	int pressStartWidth = GetDrawStringWidthToHandle(pressStartText, static_cast<int>(strlen(pressStartText)), Game::kTitleFontHandle);
 
 	//画面サイズの半分(真ん中)
-	int x = (Game::kScreenWidth - width) / 2;
+	int x = (Game::kScreenWidth - titleWidth) / 2;
 	int y = Game::kScreenHeight / 2 - 200;
 
 	//描画　
@@ -129,11 +129,11 @@ void TitleScene::NormalDraw()
 
 	int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
 
-	int pressStartx = (Game::kScreenWidth - width) / 2-50;
+	int pressStartx = (Game::kScreenWidth - pressStartWidth) / 2-50;
 	int pressStarty = Game::kScreenHeight / 2 + 100;
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawStringToHandle(pressStartx + 4, pressStarty + 4, pressStartText, 0x000000, Game::kTitleFontHandle);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawStringToHandle(pressStartx, pressStarty, pressStartText, 0xffffff, Game::kTitleFontHandle);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

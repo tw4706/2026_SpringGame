@@ -111,15 +111,15 @@ void ClearScene::NormalDraw()
 	char scoreText[64];
 	sprintf_s(scoreText, "SCORE: %d", displayScore_);
 
-	int scoreW = GetDrawStringWidth(scoreText, static_cast<int>(strlen(scoreText)));
+	int scoreW = GetDrawStringWidthToHandle(scoreText, static_cast<int>(strlen(scoreText)), Game::kFontUIHandle);
 	int scoreX = (Game::kScreenWidth - scoreW) / 2;
 
-	DrawStringToHandle(scoreX, Game::kScreenHeight / 2- kscoreTextOffsetY,scoreText,
+	DrawStringToHandle(scoreX, Game::kScreenHeight / 2 - kscoreTextOffsetY, scoreText,
 		GetColor(255, 255, 0), Game::kFontUIHandle);
 
 	//リトライ表示
 	const char* retryText = "Press Retry";
-	int retryW = GetDrawStringWidth(retryText, static_cast<int>(strlen(retryText)));
+	int retryW = GetDrawStringWidthToHandle(retryText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
 	int retryX = (Game::kScreenWidth - retryW) / 2;
 
 	//透明度
@@ -127,6 +127,6 @@ void ClearScene::NormalDraw()
 	int alpha = (int)(255 * alphaRate);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawStringToHandle(retryX, Game::kScreenHeight / 2, retryText, GetColor(255, 255, 255), Game::kFontUIHandle);
+	DrawStringToHandle(retryX, Game::kScreenHeight / 2 + 150, retryText, GetColor(255, 255, 255), Game::kFontUIHandle);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

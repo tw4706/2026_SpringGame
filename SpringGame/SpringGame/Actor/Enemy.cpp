@@ -238,6 +238,9 @@ void Enemy::OnHit(GameObject* attacker)
 	//エフェクトの再生
 	EffectManager::GetInstance().Play("hit",pos_ + kEffectOffset);
 
+	//SE再生
+	Application::GetInstance().GetSoundManager().PlaySe(SE::Attack);
+
 	//死亡アニメーション開始
 	animation_.ChangeState(AnimationState::Death);
 }

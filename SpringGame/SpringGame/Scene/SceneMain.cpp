@@ -84,7 +84,6 @@ void SceneMain::Init()
 		auto enemy = std::make_shared<Enemy>();
 		enemy->SetPlayer(pPlayer_.get());
 		enemy->SetScene(this);
-		enemy->Init();
 
 		//“G‚ğƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚É”z’u‚·‚é
 		float range = 1000.0f;
@@ -92,7 +91,7 @@ void SceneMain::Init()
 		float z = ((float)rand() / RAND_MAX) * range * 2 - range;
 
 		enemy->SetPos({ x, 0.0f, z });
-
+		enemy->Init();
 		enemies_.push_back(enemy);
 	}
 
@@ -174,7 +173,7 @@ void SceneMain::NormalUpdate(Input& input)
 	{
 		gameStartTimer_++;
 
-		if (gameStartTimer_ > kReadyFrame + kStartFrame)
+		if (gameStartTimer_ >= kReadyFrame + kStartFrame)
 		{
 			isGameStarted_ = true;
 		}
@@ -287,49 +286,51 @@ void SceneMain::NormalUpdate(Input& input)
 		timeBonusTimer_ -= dt_;
 	}
 
-	//“–‚½‚è”»’è‚Ìˆ—
-	collisionManager_.Clear();
-	//“–‚½‚è”»’è‚Ì“o˜^
-	collisionManager_.AddCollider(pPlayer_->GetCollider());
-	collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
-	for (auto& enemy : enemies_)
-	{
-		collisionManager_.AddCollider(enemy->GetCollider());
+	if (isGameStarted_)
+	{//“–‚½‚è”»’è‚Ìˆ—
+		collisionManager_.Clear();
+		//“–‚½‚è”»’è‚Ì“o˜^
+		collisionManager_.AddCollider(pPlayer_->GetCollider());
+		collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
+		for (auto& enemy : enemies_)
+		{
+			collisionManager_.AddCollider(enemy->GetCollider());
+		}
+
+		//”»’è
+		collisionManager_.CheckAllCollision();
+
+		//“G‚Ìíœˆ—
+		enemies_.erase(
+			std::remove_if(enemies_.begin(), enemies_.end(),
+				[](const std::shared_ptr<Enemy>& e)
+				{
+					return e->IsDestroy();
+				}),
+			enemies_.end());
+
+		//í‰½‘Ì‚©—N‚¢‚Ä‚¢‚é‚æ‚¤‚É‚·‚é
+		while (enemies_.size() < kEnemyMax)
+		{
+			auto enemy = std::make_shared<Enemy>();
+
+			float range = 1000.0f;
+
+			float x = ((float)rand() / RAND_MAX) * range * 2 - range;
+			float z = ((float)rand() / RAND_MAX) * range * 2 - range;
+
+			enemy->SetPos({ x, 0.0f, z });
+			enemy->SetPlayer(pPlayer_.get());
+			enemy->SetCamera(pCamera_.get());
+			enemy->SetScene(this);
+			enemy->Init();
+			enemies_.push_back(enemy);
+		}
 	}
-
-	//”»’è
-	collisionManager_.CheckAllCollision();
-
-	//“G‚Ìíœˆ—
-	enemies_.erase(
-		std::remove_if(enemies_.begin(), enemies_.end(),
-			[](const std::shared_ptr<Enemy>& e)
-			{
-				return e->IsDestroy();
-			}),
-		enemies_.end());
 
 	//UI‚Ìíœˆ—
 	pPopUIs_.erase(std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
 		[](const PopUI& p) { return p.IsDead(); }), pPopUIs_.end());
-
-	//í‰½‘Ì‚©—N‚¢‚Ä‚¢‚é‚æ‚¤‚É‚·‚é
-	while (enemies_.size() < kEnemyMax)
-	{
-		auto enemy = std::make_shared<Enemy>();
-
-		float range = 1000.0f;
-
-		float x = ((float)rand() / RAND_MAX) * range * 2 - range;
-		float z = ((float)rand() / RAND_MAX) * range * 2 - range;
-
-		enemy->SetPos({ x, 0.0f, z });
-		enemy->SetPlayer(pPlayer_.get());
-		enemy->SetCamera(pCamera_.get());
-		enemy->SetScene(this);
-		enemy->Init();
-		enemies_.push_back(enemy);
-	}
 
 	//§ŒÀŠÔ‚ª0‚É‚È‚Á‚½‚çƒNƒŠƒAƒV[ƒ“‚Ö‘JˆÚ
 	if (remainTime_ <= 0.0f && !isClearing_)
