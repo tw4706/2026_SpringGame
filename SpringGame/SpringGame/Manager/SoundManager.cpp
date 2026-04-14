@@ -33,8 +33,8 @@ void SoundManager::Init()
 	seVolume_ = kBaseSeVolume;
 	bgmVolume_ = kBaseBgmVolume;
 
-	bgmHandles_[BGM::Title] = LoadSoundMem("data/BGM・SE");
-	bgmHandles_[BGM::Game] = LoadSoundMem("data/BGM・SE");
+	bgmHandles_[BGM::Title] = LoadSoundMem("data/BGM・SE/Title.mp3");
+	bgmHandles_[BGM::Game] = LoadSoundMem("data/BGM・SE/Game.mp3");
 	bgmHandles_[BGM::Result] = LoadSoundMem("data/BGM・SE");
 
 	seHandles_[SE::Decide] = LoadSoundMem("data/BGM・SE/decide.mp3");
@@ -59,6 +59,13 @@ void SoundManager::PlaySe(SE se)
 void SoundManager::PlayBgm(BGM bgm)
 {
 	int handle = bgmHandles_[bgm];
+
+	if (currentBgmHandle_ == handle) return;
+
+	if (currentBgmHandle_ != -1)
+	{
+		StopSoundMem(currentBgmHandle_);
+	}
 
 	//再生しているBGMハンドルを更新する
 	currentBgmHandle_ = handle;

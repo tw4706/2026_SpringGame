@@ -35,6 +35,7 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	bg_.Init();
+	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Title);
 }
 
 void TitleScene::Update(Input& input)

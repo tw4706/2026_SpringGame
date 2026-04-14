@@ -1,13 +1,14 @@
 #include "SceneMain.h"
+#include"../Input.h"
+#include"../PopUI.h"
+#include "../Game.h"
+#include "ClearScene.h"
 #include"../Actor/Player.h"
 #include"../Actor/Enemy.h"
-#include"../Input.h"
 #include"../Physics/Camera.h"
-#include"../Manager/ScoreManager.h"
-#include"../PopUI.h"
 #include"SceneController.h"
-#include "ClearScene.h"
-#include "../Game.h"
+#include"../Application.h"
+#include"../Manager/ScoreManager.h"
 #include "../Manager/EffectManager.h"
 #include"EffekseerForDXLib.h"
 #include<algorithm>
@@ -77,6 +78,8 @@ void SceneMain::Init()
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
 	EffectManager::GetInstance().Load("dodge", "data/justDodge.efk");
 	EffectManager::GetInstance().Load("barrier", "data/barrier.efk");
+
+	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Game);
 
 	//ŠeƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—
 	for (int i = 0; i < kEnemyMax; i++)
