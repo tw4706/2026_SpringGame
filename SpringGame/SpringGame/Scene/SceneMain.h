@@ -52,22 +52,22 @@ private:
 	int hpHandle_ = -1;								//HPUIのハンドル
 	int floorHandle_ = -1;							//床のモデルハンドル
 	int shadowMapHandle_ = -1;						//シャドウマップハンドル
+	int damageIndex_ = -1;							//ダメージインデックス
+	int prevHp_ = 0;								//前フレームのHP
+	int displayHp_ = 0;								//表示しているHP
+	int hpAnimFrame_ = 0;							//HPUIアニメーションのフレーム
+	int hpKeepFrame_ = 0;							//HPUI保持フレーム
 	float remainTime_ = 0.0f;						//残り時間
 	float dt_ = 0.0f;								//経過時間
 	float timeScale_ = 0.0f;						//時間のスケール(スロー演出などで使用)
 	float slowTimer_ = 0.0f;						//スロー時間のタイマー
 	float timeBonusDisplay_ = 0.0f;					//時間ボーナスの表示用タイマー
 	float timeBonusTimer_ = 0.0f;					//時間ボーナスのタイマー
+	float hpAnimTimer_ = 0.0f;						//HPUIアニメーションのタイマー
+	float gameStartTimer_ = 0.0f;					//ゲーム開始合図のタイマー
+	bool isHpAnimating_ = false;					//HPUIがアニメーション中かどうか
 	bool isClearing_ = false;						//クリア中かどうか
 	bool fadeFinished_ = false;						//フェードが終了したかどうか
-	int prevHp_ = 0;								//前フレームのHP
-	int displayHp_ = 0;								//表示しているHP
-	int hpAnimFrame_ = 0;							//HPUIアニメーションのフレーム
-	int hpKeepFrame_ = 0;							//HPUI保持フレーム
-	float hpAnimTimer_ = 0.0f;						//HPUIアニメーションのタイマー
-	bool isHpAnimating_ = false;					//HPUIがアニメーション中かどうか
-	int damageIndex_ = -1;							//ダメージインデックス
-	float gameStartTimer_ = 0.0f;						//ゲーム開始合図のタイマー
 	bool isGameStarted_ = false;					//ゲーム開始したかどうか
 
 	Bg bg_;											//背景

@@ -3,7 +3,8 @@
 
 namespace
 {
-	constexpr int kBaseVolume = 80;
+	constexpr int kBaseBgmVolume = 200;
+	constexpr int kBaseSeVolume = 180;
 }
 
 SoundManager::SoundManager():
@@ -29,7 +30,8 @@ SoundManager::~SoundManager()
 
 void SoundManager::Init()
 {
-	volume_ = kBaseVolume;
+	seVolume_ = kBaseSeVolume;
+	bgmVolume_ = kBaseBgmVolume;
 
 	bgmHandles_[BGM::Title] = LoadSoundMem("data/BGM・SE");
 	bgmHandles_[BGM::Game] = LoadSoundMem("data/BGM・SE");
@@ -49,7 +51,7 @@ void SoundManager::PlaySe(SE se)
 	int handle = seHandles_[se];
 
 	//SEの音量
-	ChangeVolumeSoundMem(255, handle);
+	ChangeVolumeSoundMem(seVolume_, handle);
 
 	//SEの再生
 	PlaySoundMem(handle, DX_PLAYTYPE_BACK,TRUE);
@@ -58,11 +60,11 @@ void SoundManager::PlayBgm(BGM bgm)
 {
 	int handle = bgmHandles_[bgm];
 
-	//再生しているBGMハンドルを更新
+	//再生しているBGMハンドルを更新する
 	currentBgmHandle_ = handle;
 
 	//BGMの音量
-	ChangeVolumeSoundMem(180,currentBgmHandle_);
+	ChangeVolumeSoundMem(bgmVolume_,currentBgmHandle_);
 
 	//BGM再生
 	PlaySoundMem(currentBgmHandle_, DX_PLAYTYPE_LOOP);

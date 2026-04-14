@@ -78,9 +78,6 @@ bool Application::Init()
 	Game::kFontUIHandle = CreateFontToHandle("TanueiKakuPop", 40, -1);
 	Game::kTitleFontHandle = CreateFontToHandle("TanueiKakuPop", 64, -1);
 
-	//サウンドマネージャーの初期化
-	soundManager_.Init();
-
 	return true;
 }
 
@@ -90,7 +87,13 @@ void Application::Run()
 
 	//シーンの作成
 	Input input;
-	SceneController controller;//シーン遷移のためのコントロールオブジェクト
+
+	//シーン遷移のためのオブジェクト
+	SceneController controller;
+
+	//サウンドマネージャーの初期化
+	soundManager_.Init();
+
 	//最初のシーンをセットする
 	//何かしらシーンがないと,UpdateもDrawもできないため
 	controller.ChangeScene(std::make_shared<TitleScene>(controller));

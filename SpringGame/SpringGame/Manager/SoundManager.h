@@ -48,6 +48,7 @@ private:
 
 	int currentSeHandle_ = -1;
 	int currentBgmHandle_ = -1;
-	int volume_ = 0;
+	int seVolume_ = 0;
+	int bgmVolume_ = 0;
 };
 

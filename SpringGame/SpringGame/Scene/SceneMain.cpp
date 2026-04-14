@@ -19,7 +19,9 @@ namespace
 	constexpr int kEnemyMax = 3;
 	constexpr int kMaxHP = 3;
 
+	//HPUIのアニメーションの感覚
 	constexpr float kHpAnimInterval = 0.05f;
+	//HPUIを最後の画像で止めるためにそのアニメーションの最大数
 	constexpr int kHpAnimMaxFrame = 11;
 
 	//フェードの間隔
@@ -28,14 +30,7 @@ namespace
 	//制限時間
 	constexpr float kClearFadeTime = 60.0f;
 
-	constexpr int kFrameW = 32;
-	constexpr int kFrameH = 32;
-	constexpr float kHpScale = 2.0f;
-
-	//片側のマス数
-	constexpr int kGridNum = 10;
-	constexpr float kTileSize = 100.0f;
-
+	//ゲーム開始の合図を出すフレーム数
 	constexpr int kReadyFrame = 60;
 	constexpr int kStartFrame = 30;
 }
@@ -81,9 +76,6 @@ void SceneMain::Init()
 		VGet(-1500, -100, -1500),
 		VGet(1500, 800, 1500));
 
-	prevHp_ = kMaxHP;
-	displayHp_ = kMaxHP;
-
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/hit.efk");
 	EffectManager::GetInstance().Load("dodge", "data/justDodge.efk");
@@ -123,8 +115,12 @@ void SceneMain::Init()
 	MV1SetPosition(floorHandle_, VGet(0, -50, 0));
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
+	//HPの設定
+	prevHp_ = kMaxHP;
+	displayHp_ = kMaxHP;
+
+	//フレームカウントの設定
 	frameCount_ = kFadeInterval;
-	dt_ = (1.0f / 60.0f) * timeScale_;
 	isGameStarted_ = false;
 	remainTime_ = kClearFadeTime;
 }
@@ -438,48 +434,13 @@ void SceneMain::NormalDraw()
 	//プレイヤーの描画
 	pPlayer_->Draw();
 
-	//ジャスト回避時に画面の色を変更
-	if (timeScale_ < 1.0f)
-	{
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-		DrawBox(0, 0, 1280, 720, GetColor(180, 100, 255), TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
+	int time = (std::max)(0, (int)(remainTime_));
+	int score = ScoreManager::GetDispScore();
 
-	//HPUI描画
-	//現在のプレイヤーのHP取得
-	int hp = pPlayer_->GetHP();
-
-	int x = 50;
-	int y = 50;
-
-	//拡大後サイズ
-	int drawW = static_cast<int>(kFrameW * kHpScale);
-	int drawH = static_cast<int>(kFrameH * kHpScale);
-
-	//最大3このハートを描画する
-	const int MAX_HP = 3;
-
-	for (int i = 0; i < MAX_HP; i++)
-	{
-		int drawX = x + i * (drawW + 10);
-
-		//中心座標を指定する
-		int centerX = drawX + drawW / 2;
-		int centerY = y + drawH / 2;
-
-		int srcX = 0;
-
-		if (isHpAnimating_ && i == damageIndex_)srcX = hpAnimFrame_ * kFrameW;
-		else if (i < hp)srcX = 0;
-		else srcX = (kHpAnimMaxFrame - 1) * kFrameW;
-
-		DrawRectRotaGraph(centerX, centerY,
-			srcX, 192,
-			kFrameW, kFrameH,
-			kHpScale, 0.0,
-			hpHandle_, TRUE, FALSE);
-	}
+	//UIマネージャーの描画
+	uiManager_.Draw(pPlayer_->GetHP(),isHpAnimating_,damageIndex_,hpAnimFrame_,
+		ScoreManager::GetBoostGauge(), time, score, isGameStarted_,
+		gameStartTimer_,timeScale_,timeBonusDisplay_,timeBonusTimer_);
 
 #ifdef _DEBUG
 	SetFontSize(16);
@@ -487,48 +448,4 @@ void SceneMain::NormalDraw()
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "Frame:%d", frameCount_);
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
 #endif
-	SetFontSize(40);
-	int time = (std::max)(0, (int)(remainTime_));
-	int score = ScoreManager::GetDispScore();
-
-	uiManager_.Draw(time, score, timeBonusDisplay_, timeBonusTimer_);
-
-	float boostGauge = ScoreManager::GetBoostGauge();
-
-	if (boostGauge > 0.0f)
-	{
-		int barX = 50;
-		int barY = 110;
-		int barW = 220;
-		int barH = 18;
-
-		int currentW = (std::max)(4, static_cast<int>(barW * boostGauge));
-
-		//外枠
-		DrawBox(barX, barY, barX + barW, barY + barH,
-			GetColor(255, 255, 255), FALSE);
-
-		//中身
-		DrawBox(barX + 2, barY + 2,
-			barX + currentW - 2, barY + barH - 2,
-			GetColor(255, 220, 0), TRUE);
-
-		//x2表示
-		DrawFormatString(barX + barW + 10, barY - 4,
-			GetColor(255, 220, 0), "x2");
-	}
-
-	//開始の合図の描画
-	if (!isGameStarted_)
-	{
-		//スタートタイマーが60フレームより小さい場合はReadyそれ以降はGo!
-		if (gameStartTimer_ < kReadyFrame)
-		{
-			DrawCenterTextWithOutline("READY",Game::kScreenHeight / 2,GetColor(255, 255, 0),Game::kScreenWidth);
-		}
-		else
-		{
-			DrawCenterTextWithOutline("Go!",Game::kScreenHeight / 2,GetColor(0, 255, 255),Game::kScreenWidth);
-		}
-	}
 }

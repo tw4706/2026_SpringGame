@@ -474,7 +474,7 @@ void Player::UpdateKnockBack(float dt)
 	{
 		pos_ += knockbackVel_ * dt * kKnockbackMoveScale;
 
-		// 減速（自然に止まる）
+		//減速（自然に止まるようにする）
 		knockbackVel_ *= kKnockbackDeceration;
 
 		knockbackTimer_ -= dt;
@@ -511,6 +511,7 @@ void Player::UpdateAnimation(float dt)
 {
 	AnimationState animState = AnimationState::Idle;
 
+	//プレイヤーの状態とアニメーションの状態を紐づける
 	switch (state_)
 	{
 	case PlayerState::Idle:		animState = AnimationState::Idle; break;
@@ -554,12 +555,12 @@ void Player::UpdateAnalogStick(Input& input)
 		Matrix4x4 rotMat = Matrix4x4::RotateY(cameraYaw);
 		playerDir = rotMat.TransformForVector(stickL).Normalize();
 
-		//目標速度へ線形補間
+		//速度の線形補間
 		Vector3 targetVel = playerDir * kSpeed;
 		vel_.x_ = Vector3::Lerp(vel_.x_, targetVel.x_, kMoveLerp);
 		vel_.z_ = Vector3::Lerp(vel_.z_, targetVel.z_, kMoveLerp);
 
-		// プレイヤーの向きの更新
+		//プレイヤーの向いている方向の更新
 		float playerAngle = atan2f(-playerDir.x_, playerDir.z_);
 		float diff = playerAngle - moveAngle_;
 
