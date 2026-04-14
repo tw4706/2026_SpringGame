@@ -1,5 +1,5 @@
 #pragma once
-#include"../SoundManager.h"
+#include"../Manager/SoundManager.h"
 class Application
 {
 private:

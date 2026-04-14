@@ -1,10 +1,10 @@
 #include "Enemy.h"
 #include "../Scene/SceneMain.h"
-#include "../ScoreManager.h"
+#include "../Manager/ScoreManager.h"
 #include "../Physics/Vector3.h"
 #include "../Physics/Camera.h"
 #include "../Actor/Player.h"
-#include "../EffectManager.h"
+#include "../Manager/EffectManager.h"
 #include"../Application.h"
 #include<Dxlib.h>
 #include<cassert>

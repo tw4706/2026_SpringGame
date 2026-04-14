@@ -28,8 +28,8 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	fov_ = DX_PI / 2.0f;
-	fovTarget_ = DX_PI / 3.0f;
+	fov_ = static_cast<float>(DX_PI / 2.0f);
+	fovTarget_ = static_cast<float>(DX_PI / 3.0f);
 
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 

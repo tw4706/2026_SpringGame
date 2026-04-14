@@ -1,6 +1,6 @@
 #include "ClearScene.h"
 #include"SceneController.h"
-#include"../ScoreManager.h"
+#include"../Manager/ScoreManager.h"
 #include"SceneMain.h"
 #include"../Input.h"
 #include"../Game.h"
@@ -11,6 +11,8 @@
 namespace
 {
 	constexpr int kFadeInterval = 60;
+
+	constexpr int kscoreTextOffsetY = 100;
 }
 
 ClearScene::ClearScene(SceneController& controller) :
@@ -24,8 +26,6 @@ ClearScene::ClearScene(SceneController& controller) :
 	frameCount_ = kFadeInterval;
 	resultScore_ = ScoreManager::GetScore();
 	displayScore_ = 0;
-
-	SetFontSize(40);
 }
 
 ClearScene::~ClearScene()
@@ -69,6 +69,7 @@ void ClearScene::NormalUpdate(Input& input)
 		}
 	}
 
+	//リトライが行われたら
 	if (input.IsTriggered("retry"))
 	{
 		//SE再生
@@ -88,13 +89,13 @@ void ClearScene::FadeOutUpdate(Input& input)
 
 void ClearScene::FadeDraw()
 {
-	// 通常描画（UIなど）
+	//通常の描画
 	NormalDraw();
 
 	float rate = (float)frameCount_ / kFadeInterval;
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	// 黒 → 透明
+	//真っ黒画面から透明
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -110,22 +111,22 @@ void ClearScene::NormalDraw()
 	char scoreText[64];
 	sprintf_s(scoreText, "SCORE: %d", displayScore_);
 
-	int scoreW = GetDrawStringWidth(scoreText, strlen(scoreText));
+	int scoreW = GetDrawStringWidth(scoreText, static_cast<int>(strlen(scoreText)));
 	int scoreX = (Game::kScreenWidth - scoreW) / 2;
 
-	DrawStringToHandle(scoreX, Game::kScreenHeight / 2-100,
-		scoreText, GetColor(255, 255, 0), Game::kFontUIHandle);
+	DrawStringToHandle(scoreX, Game::kScreenHeight / 2- kscoreTextOffsetY,scoreText,
+		GetColor(255, 255, 0), Game::kFontUIHandle);
 
 	//リトライ表示
 	const char* retryText = "Press Retry";
-	int retryW = GetDrawStringWidth(retryText, strlen(retryText));
+	int retryW = GetDrawStringWidth(retryText, static_cast<int>(strlen(retryText)));
 	int retryX = (Game::kScreenWidth - retryW) / 2;
 
+	//透明度
 	float alphaRate = (sinf(blinkTimer_) + 1.0f) * 0.5f;
 	int alpha = (int)(255 * alphaRate);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawStringToHandle(retryX, Game::kScreenHeight / 2, 
-		retryText, GetColor(255, 255, 255), Game::kFontUIHandle);
+	DrawStringToHandle(retryX, Game::kScreenHeight / 2, retryText, GetColor(255, 255, 255), Game::kFontUIHandle);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

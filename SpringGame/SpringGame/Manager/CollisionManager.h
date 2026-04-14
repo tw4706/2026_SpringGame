@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Collider.h"
+#include "../Physics/Collider.h"
 
 class SphereCollider;
 class CollisionManager

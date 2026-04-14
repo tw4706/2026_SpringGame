@@ -3,7 +3,7 @@
 #include"../Physics/Matrix4x4.h"
 #include"../Physics/Vector3.h"
 #include "../Actor/Enemy.h"
-#include"../EffectManager.h"
+#include"../Manager/EffectManager.h"
 #include"../Physics/Camera.h"
 #include"../Application.h"
 #include"DxLib.h"
@@ -340,9 +340,6 @@ void Player::StartAttack()
 {
 	state_ = PlayerState::Attack;
 	attackTimer_ = kAttackTime;
-
-	//SEÄ¶
-	Application::GetInstance().GetSoundManager().PlaySe(SE::Attack);
 }
 
 void Player::StartDodge()
@@ -360,7 +357,6 @@ void Player::StartDodge()
 
 void Player::UpdateTimers(float deltaTime)
 {
-
 	if (attackTimer_ > 0.0f) attackTimer_ -= deltaTime;
 	if (dodgeTimer_ > 0.0f) dodgeTimer_ -= deltaTime;
 	if (hitTimer_ > 0.0f)hitTimer_ -= deltaTime;

@@ -99,12 +99,11 @@ void TitleScene::NormalDraw()
 	// カメラを中心へ向ける
 	SetCameraPositionAndTarget_UpVecY(
 		cameraPos.ToDxlibVector(),
-		center.ToDxlibVector()
-	);
+		center.ToDxlibVector());
 
 	bg_.Draw(center);
 
-	const char* text = "しゅんげきラッシュ";
+	const char* text = "Title Scene";
 
 	//文字の横幅を取得
 	int width = GetDrawStringWidthToHandle(text,static_cast<int>(strlen(text)),Game::kTitleFontHandle);

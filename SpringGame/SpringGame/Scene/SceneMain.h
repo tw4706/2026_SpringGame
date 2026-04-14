@@ -1,8 +1,8 @@
 #pragma once
 #include<memory>
 #include "Scene.h"
-#include"../Physics/CollisionManager.h"
-#include"../UIManager.h"
+#include"../Manager/CollisionManager.h"
+#include"../Manager/UIManager.h"
 #include"../Bg.h"
 
 class Enemy;
@@ -48,7 +48,7 @@ private:
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 
 private:
-	int frameCount_ = 0.0f;							//フレームカウント
+	int frameCount_ = 0;							//フレームカウント
 	int hpHandle_ = -1;								//HPUIのハンドル
 	int floorHandle_ = -1;							//床のモデルハンドル
 	int shadowMapHandle_ = -1;						//シャドウマップハンドル
@@ -67,7 +67,7 @@ private:
 	float hpAnimTimer_ = 0.0f;						//HPUIアニメーションのタイマー
 	bool isHpAnimating_ = false;					//HPUIがアニメーション中かどうか
 	int damageIndex_ = -1;							//ダメージインデックス
-	int gameStartTimer_ = 0.0f;						//ゲーム開始合図のタイマー
+	float gameStartTimer_ = 0.0f;						//ゲーム開始合図のタイマー
 	bool isGameStarted_ = false;					//ゲーム開始したかどうか
 
 	Bg bg_;											//背景

@@ -142,12 +142,12 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Bg.cpp" />
-    <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="Manager\EffectManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
-    <ClCompile Include="Physics\CollisionManager.cpp" />
+    <ClCompile Include="Manager\CollisionManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
@@ -158,11 +158,11 @@
     <ClCompile Include="Scene\SceneController.cpp" />
     <ClCompile Include="Scene\SceneMain.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
-    <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="Manager\ScoreManager.cpp" />
     <ClCompile Include="PopUI.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="SoundManager.cpp" />
-    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="Manager\SoundManager.cpp" />
+    <ClCompile Include="Manager\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Enemy.h" />
@@ -170,11 +170,11 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Bg.h" />
-    <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="Manager\EffectManager.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Physics\Collider.h" />
-    <ClInclude Include="Physics\CollisionManager.h" />
+    <ClInclude Include="Manager\CollisionManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
@@ -186,11 +186,11 @@
     <ClInclude Include="Scene\SceneController.h" />
     <ClInclude Include="Scene\SceneMain.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
-    <ClInclude Include="ScoreManager.h" />
+    <ClInclude Include="Manager\ScoreManager.h" />
     <ClInclude Include="PopUI.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="SoundManager.h" />
-    <ClInclude Include="UIManager.h" />
+    <ClInclude Include="Manager\SoundManager.h" />
+    <ClInclude Include="Manager\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />

@@ -1,5 +1,5 @@
 #include "UIManager.h"
-#include"Game.h"
+#include"../Game.h"
 #include <DxLib.h>
 #include <string.h>
 

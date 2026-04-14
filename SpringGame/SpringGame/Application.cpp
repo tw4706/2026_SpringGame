@@ -3,7 +3,7 @@
 #include "Input.h"
 #include "../Scene/TitleScene.h"
 #include "../Scene/SceneController.h"
-#include"../SoundManager.h"
+#include"../Manager/SoundManager.h"
 #include "EffekseerForDXLib.h"
 #include<Dxlib.h>
 

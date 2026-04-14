@@ -3,12 +3,12 @@
 #include"../Actor/Enemy.h"
 #include"../Input.h"
 #include"../Physics/Camera.h"
-#include"../ScoreManager.h"
+#include"../Manager/ScoreManager.h"
 #include"../PopUI.h"
 #include"SceneController.h"
 #include "ClearScene.h"
 #include "../Game.h"
-#include "../EffectManager.h"
+#include "../Manager/EffectManager.h"
 #include"EffekseerForDXLib.h"
 #include<algorithm>
 #include <Dxlib.h>
@@ -148,7 +148,7 @@ void SceneMain::AddScorePop(const Vector3& pos, int value)
 
 void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, int screenW)
 {
-	int width = GetDrawStringWidth(text, strlen(text));
+	int width = GetDrawStringWidth(text, static_cast<int>(strlen(text)));
 	int x = (screenW - width) / 2;
 
 	//描画
@@ -521,7 +521,7 @@ void SceneMain::NormalDraw()
 	//開始の合図の描画
 	if (!isGameStarted_)
 	{
-		//スタートタイマーが60f(1びょう)より小さい場合はReadyそれ以降はGo!
+		//スタートタイマーが60フレームより小さい場合はReadyそれ以降はGo!
 		if (gameStartTimer_ < kReadyFrame)
 		{
 			DrawCenterTextWithOutline("READY",Game::kScreenHeight / 2,GetColor(255, 255, 0),Game::kScreenWidth);

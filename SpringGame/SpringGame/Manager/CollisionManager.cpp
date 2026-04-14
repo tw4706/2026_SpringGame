@@ -1,5 +1,5 @@
 #include "CollisionManager.h"
-#include"SphereCollider.h"
+#include"../Physics/SphereCollider.h"
 
 void CollisionManager::AddCollider(Collider* col)
 {
