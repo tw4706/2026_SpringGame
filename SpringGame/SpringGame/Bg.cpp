@@ -7,6 +7,13 @@ Bg::Bg()
 
 Bg::~Bg()
 {
+	//ƒnƒ“ƒhƒ‹‚Ìíœ
+	DeleteGraph(skyTex_[0]);
+	DeleteGraph(skyTex_[1]);
+	DeleteGraph(skyTex_[2]);
+	DeleteGraph(skyTex_[3]);
+	DeleteGraph(skyTex_[4]);
+	DeleteGraph(skyTex_[5]);
 }
 
 void Bg::Init()

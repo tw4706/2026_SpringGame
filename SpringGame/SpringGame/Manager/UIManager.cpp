@@ -25,6 +25,16 @@ namespace
 	constexpr int kStartFrame = 30;
 }
 
+UIManager::UIManager():
+	handle_(-1)
+{
+}
+
+UIManager::~UIManager()
+{
+	DeleteGraph(handle_);
+}
+
 void UIManager::Init()
 {
 	handle_ = LoadGraph("data/HP.png");
@@ -40,7 +50,7 @@ void UIManager::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFram
 	DrawHPUI(hp, isHpAnimating, damageIndex, hpAnimFrame);
 	DrawBoostGauge(boostGauge);
 	DrawGameStart(isGameStarted, gameStartTimer);
-	DrawSlowEffect(timeScale);
+	DrawDodgeScreenColor(timeScale);
 }
 
 void UIManager::DrawHPUI(int hp, bool isAnimating, int damageIndex, int animFrame)
@@ -60,8 +70,8 @@ void UIManager::DrawHPUI(int hp, bool isAnimating, int damageIndex, int animFram
 		int drawX = x + i * (drawW + 10);
 
 		//中心座標を指定する
-		int centerX = drawX + drawW / 2;
-		int centerY = y + drawH / 2;
+		int centerX = drawX + (int)(kFrameW * kHpScale);
+		int centerY = y + (int)(kFrameH * kHpScale);
 
 		int srcX = 0;
 
@@ -127,7 +137,7 @@ void UIManager::DrawGameStart(bool isGameStarted, int timer)
 	}
 }
 
-void UIManager::DrawSlowEffect(float timeScale)
+void UIManager::DrawDodgeScreenColor(float timeScale)
 {
 	if (timeScale >= 1.0f) return;
 
@@ -138,7 +148,7 @@ void UIManager::DrawSlowEffect(float timeScale)
 
 void UIManager::DrawCenterText(const char* text, int y, int color)
 {
-	int width = GetDrawStringWidth(text, strlen(text));
+	int width = GetDrawStringWidthToHandle(text, strlen(text), Game::kFontUIHandle);
 	int x = (Game::kScreenWidth - width) / 2;
 
 	DrawStringToHandle(x, y, text, color, Game::kFontUIHandle);
@@ -147,7 +157,8 @@ void UIManager::DrawCenterText(const char* text, int y, int color)
 void UIManager::DrawTime(float time)
 {
 	char buf[64];
-	sprintf_s(buf, "TIME : %.2f", time);
+	sprintf_s(buf, "%.2f", time);
+	DrawCenterText("TIME:", 40, GetColor(255, 255, 255));
 
 	//Timeの表示
 	DrawCenterText(buf, 40, GetColor(255, 255, 255));

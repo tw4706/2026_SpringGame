@@ -65,9 +65,6 @@ void SceneMain::Init()
 	SetUseZBuffer3D(true);		//Zバッファを使います
 	SetWriteZBuffer3D(true);	//描画する物体はZバッファにも距離を書き込む
 
-	//HPバーの画像のロード
-	hpHandle_ = LoadGraph("data/HP.png");
-
 	//シャドウマップの生成
 	shadowMapHandle_ = MakeShadowMap(4096, 4096);
 	SetShadowMapLightDirection(shadowMapHandle_, VGet(-0.5f, -1.0f, 0.5f));
@@ -110,9 +107,12 @@ void SceneMain::Init()
 	//背景の初期化
 	bg_.Init();
 
+	//UIマネージャーの初期化
+	uiManager_.Init();
+
 	//床のモデル読み込み
 	floorHandle_ = MV1LoadModel("data/floor.mv1");
-	MV1SetPosition(floorHandle_, VGet(0, -50, 0));
+	MV1SetPosition(floorHandle_, VGet(0.0f, -50.0f, 0.0f));
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
 	//HPの設定
@@ -153,11 +153,6 @@ void SceneMain::DrawCenterTextWithOutline(const char* text, int y, int color, in
 
 void SceneMain::FadeInUpdate(Input& input)
 {
-	for (auto& enemy : enemies_)
-	{
-		enemy->Update(dt_);
-	}
-
 	//空のインプットを渡す（プレイヤーは操作できないが、アニメーションなどは更新するため）
 	Input emptyInput;
 	pPlayer_->Update(emptyInput, dt_);
@@ -434,13 +429,13 @@ void SceneMain::NormalDraw()
 	//プレイヤーの描画
 	pPlayer_->Draw();
 
-	float time = (std::max)(0.0f,remainTime_);
+	float time = (std::max)(0.0f, remainTime_);
 	int score = ScoreManager::GetDispScore();
 
 	//UIマネージャーの描画
-	uiManager_.Draw(pPlayer_->GetHP(),isHpAnimating_,damageIndex_,hpAnimFrame_,
+	uiManager_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_,
 		ScoreManager::GetBoostGauge(), time, score, isGameStarted_,
-		gameStartTimer_,timeScale_,timeBonusDisplay_,timeBonusTimer_);
+		gameStartTimer_, timeScale_, timeBonusDisplay_, timeBonusTimer_);
 
 #ifdef _DEBUG
 	SetFontSize(16);

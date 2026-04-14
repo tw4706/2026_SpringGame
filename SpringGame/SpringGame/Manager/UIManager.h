@@ -4,6 +4,8 @@
 class UIManager
 {
 public:
+	UIManager();
+	~UIManager();
 
 	void Init();
 
@@ -49,10 +51,10 @@ private:
 	void DrawGameStart(bool isGameStarted, int timer);
 
 	/// <summary>
-	/// スローエフェクトの描画
+	/// 回避時のスクリーンの描画
 	/// </summary>
 	/// <param name="timeScale">スローの倍率</param>
-	void DrawSlowEffect(float timeScale);
+	void DrawDodgeScreenColor(float timeScale);
 
 	/// <summary>
 	/// 文字列を画面中央に描画する関数

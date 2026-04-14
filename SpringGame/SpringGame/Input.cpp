@@ -19,7 +19,7 @@ Input::Input() :inputData_{}, lastInputData_{}, inputTable_{}
 	inputTable_["attack"] = { {PeripheralType::keyboard,KEY_INPUT_Z},
 						{PeripheralType::pad1,PAD_INPUT_B} };
 	inputTable_["retry"] = { {PeripheralType::keyboard,KEY_INPUT_RETURN},
-						{PeripheralType::pad1,PAD_INPUT_B} };
+						{PeripheralType::pad1,PAD_INPUT_A} };
 	inputTable_["dodge"] = { {PeripheralType::keyboard,KEY_INPUT_D},
 						{PeripheralType::pad1,PAD_INPUT_A} };
 
