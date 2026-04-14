@@ -25,7 +25,7 @@ namespace
 	constexpr int kStartFrame = 30;
 }
 
-UIManager::UIManager():
+UIManager::UIManager() :
 	handle_(-1)
 {
 }
@@ -158,9 +158,24 @@ void UIManager::DrawTime(float time)
 {
 	char buf[64];
 	sprintf_s(buf, "%.2f", time);
-	DrawCenterText("TIME:", 40, GetColor(255, 255, 255));
 
-	//Timeの表示
-	DrawCenterText(buf, 40, GetColor(255, 255, 255));
+	//基準位置
+	int baseX = Game::kScreenWidth / 2;
+	int y = 40;
+
+	//"TIME :" の幅
+	int timeWidth = GetDrawStringWidthToHandle("TIME :", strlen("TIME :"), Game::kFontUIHandle);
+
+	//数字の幅の最大を決めることで数字がずれても最低この値までは保証される
+	int numberWidth = GetDrawStringWidthToHandle("00.00", strlen("00.00"), Game::kFontUIHandle);
+
+	//全体を中央にする
+	int startX = baseX - (timeWidth + 10 + numberWidth) / 2;
+
+	//タイム
+	DrawStringToHandle(startX, y, "TIME :", GetColor(255, 255, 255), Game::kFontUIHandle);
+
+	//数字
+	DrawStringToHandle(startX + timeWidth + 10, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
 }
 
