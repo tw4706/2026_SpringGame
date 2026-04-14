@@ -7,7 +7,7 @@ public:
 
 	void Init();
 
-	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float boostGauge,int time,int score,bool isGameStarted,int gameStartTimer,float timeScale,float bonus,float bonusTimer);
+	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float boostGauge,float time,int score,bool isGameStarted,int gameStartTimer,float timeScale,float bonus,float bonusTimer);
 
 private:
 
@@ -15,7 +15,7 @@ private:
 	/// •¶Žš‚Ì•`‰æ
 	/// </summary>
 	/// <param name="time"></param>
-	void DrawTime(int time);
+	void DrawTime(float time);
 
 	/// <summary>
 	/// HPUI‚Ì•`‰æ

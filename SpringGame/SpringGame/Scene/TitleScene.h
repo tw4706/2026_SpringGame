@@ -26,6 +26,7 @@ public:
 private:
 	int frameCount_;
 	float bgAngle_;
+	float blinkTimer_;
 	Bg bg_;
 };
 

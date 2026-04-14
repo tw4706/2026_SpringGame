@@ -434,7 +434,7 @@ void SceneMain::NormalDraw()
 	//プレイヤーの描画
 	pPlayer_->Draw();
 
-	int time = (std::max)(0, (int)(remainTime_));
+	float time = (std::max)(0.0f,remainTime_);
 	int score = ScoreManager::GetDispScore();
 
 	//UIマネージャーの描画

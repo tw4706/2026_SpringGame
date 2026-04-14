@@ -3,12 +3,12 @@ C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Actor\Player.cp
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Animation.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Animation.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Application.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Application.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Bg.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Bg.obj
-C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\EffectManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\EffectManager.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\EffectManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\EffectManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Game.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Game.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\ClearScene.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\ClearScene.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Model.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Model.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\Collider.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Collider.obj
-C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\CollisionManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\CollisionManager.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\CollisionManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\CollisionManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\GameObject.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\GameObject.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Input.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Input.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\main.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\main.obj
@@ -19,8 +19,8 @@ C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\Scene.cpp
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\SceneController.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SceneController.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\SceneMain.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SceneMain.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\SphereCollider.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SphereCollider.obj
-C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\ScoreManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\ScoreManager.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\ScoreManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\ScoreManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\PopUI.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\PopUI.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\TitleScene.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\TitleScene.obj
-C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\SoundManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SoundManager.obj
-C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\UIManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\UIManager.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\SoundManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SoundManager.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\UIManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\UIManager.obj

@@ -31,7 +31,7 @@ void UIManager::Init()
 }
 
 void UIManager::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFrame,
-	float boostGauge, int time, int score, bool isGameStarted,
+	float boostGauge, float time, int score, bool isGameStarted,
 	int gameStartTimer, float timeScale, float bonus, float bonusTimer)
 {
 	DrawTime(time);
@@ -144,10 +144,10 @@ void UIManager::DrawCenterText(const char* text, int y, int color)
 	DrawStringToHandle(x, y, text, color, Game::kFontUIHandle);
 }
 
-void UIManager::DrawTime(int time)
+void UIManager::DrawTime(float time)
 {
 	char buf[64];
-	sprintf_s(buf, "TIME : %d", time);
+	sprintf_s(buf, "TIME : %.2f", time);
 
 	//Time‚Ì•\Ž¦
 	DrawCenterText(buf, 40, GetColor(255, 255, 255));
