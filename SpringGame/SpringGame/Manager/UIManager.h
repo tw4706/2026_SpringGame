@@ -51,6 +51,12 @@ private:
 	void DrawGameStart(bool isGameStarted, int timer);
 
 	/// <summary>
+	/// タイムアップの描画
+	/// </summary>
+	/// <param name="timer">タイマー</param>
+	void DrawTimeUp(float timer);
+
+	/// <summary>
 	/// 回避時のスクリーンの描画
 	/// </summary>
 	/// <param name="timeScale">スローの倍率</param>

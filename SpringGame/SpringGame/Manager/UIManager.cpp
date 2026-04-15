@@ -51,6 +51,7 @@ void UIManager::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFram
 	DrawBoostGauge(boostGauge);
 	DrawGameStart(isGameStarted, gameStartTimer);
 	DrawDodgeScreenColor(timeScale);
+	DrawTimeUp(time);
 }
 
 void UIManager::DrawHPUI(int hp, bool isAnimating, int damageIndex, int animFrame)
@@ -70,8 +71,8 @@ void UIManager::DrawHPUI(int hp, bool isAnimating, int damageIndex, int animFram
 		int drawX = x + i * (drawW + 10);
 
 		//中心座標を指定する
-		int centerX = drawX + (int)(kFrameW * kHpScale);
-		int centerY = y + (int)(kFrameH * kHpScale);
+		int centerX = drawX + (int)(kFrameW * kHpScale * 0.5f);
+		int centerY = y + (int)(kFrameH * kHpScale * 0.5f);
 
 		int srcX = 0;
 
@@ -103,10 +104,30 @@ void UIManager::DrawBoostGauge(float gauge)
 void UIManager::DrawScore(int score)
 {
 	char buf[64];
-	sprintf_s(buf, "SCORE : %d", score);
+	sprintf_s(buf, "%d", score);
+
+	//基準位置
+	int baseX = Game::kScreenWidth / 2;
+	int y = 80;
+
+	//"SCORE :" の幅
+	int scoreWidth = GetDrawStringWidthToHandle("SCORE :", strlen("SCORE :"), Game::kFontUIHandle);
+
+	//数字の幅の最大を決めることで数字がずれても最低この値までは保証される
+	int numberWidth = GetDrawStringWidthToHandle("0000", strlen("0000"), Game::kFontUIHandle);
+
+	//全体を中央にする
+	int startX = baseX - (scoreWidth + 10 + scoreWidth) / 2 + 50;
+
+	int x = startX + scoreWidth + 10;
+
+	//SCORE:
+	DrawStringToHandle(startX + 4, y + 4, "SCORE :", GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(startX, y, "SCORE :", GetColor(255, 255, 255), Game::kFontUIHandle);
 
 	//スコアの表示
-	DrawCenterText(buf, 90, GetColor(255, 80, 80));
+	DrawStringToHandle(x + 4, y + 4, buf, GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(x, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
 }
 
 void UIManager::DrawBonus(float bonus, float timer)
@@ -117,7 +138,8 @@ void UIManager::DrawBonus(float bonus, float timer)
 	sprintf_s(buf, "+%.1fs", bonus);
 
 	//ボーナスの描画
-	DrawStringToHandle(750, 40, buf, GetColor(0, 255, 0), Game::kFontUIHandle);
+	DrawStringToHandle(800 + 4, 40 + 4, buf, GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(800, 40, buf, GetColor(0, 255, 0), Game::kFontUIHandle);
 }
 
 void UIManager::DrawGameStart(bool isGameStarted, int timer)
@@ -134,6 +156,20 @@ void UIManager::DrawGameStart(bool isGameStarted, int timer)
 		{
 			DrawCenterText("Go!", Game::kScreenHeight / 2, GetColor(0, 255, 255));
 		}
+	}
+}
+
+void UIManager::DrawTimeUp(float timer)
+{
+	int timeUpX = Game::kScreenWidth / 2;
+	int timeUpY = Game::kScreenHeight / 2;
+
+	if (timer <= 0.0f)
+	{
+		//タイムアップの文字
+		DrawStringToHandle(timeUpX + 4, timeUpY + 4, "TIME UP", GetColor(0, 0, 0), Game::kFontUIHandle);
+		DrawStringToHandle(timeUpX, timeUpY, "TIME UP", GetColor(0, 255, 0), Game::kFontUIHandle);
+		timer = 0;
 	}
 }
 
@@ -172,10 +208,14 @@ void UIManager::DrawTime(float time)
 	//全体を中央にする
 	int startX = baseX - (timeWidth + 10 + numberWidth) / 2;
 
+	int x = startX + timeWidth + 10;
+
 	//タイム
+	DrawStringToHandle(startX + 4, y + 4, "TIME :", GetColor(0, 0, 0), Game::kFontUIHandle);
 	DrawStringToHandle(startX, y, "TIME :", GetColor(255, 255, 255), Game::kFontUIHandle);
 
 	//数字
-	DrawStringToHandle(startX + timeWidth + 10, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
+	DrawStringToHandle(x + 4, y + 4, buf, GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(x, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
 }
 

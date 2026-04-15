@@ -3,8 +3,8 @@
 
 namespace
 {
-	constexpr int kBaseBgmVolume = 200;
-	constexpr int kBaseSeVolume = 180;
+	constexpr int kBaseBgmVolume = 180;
+	constexpr int kBaseSeVolume = 220;
 }
 
 SoundManager::SoundManager():

@@ -38,9 +38,8 @@ void Bg::Draw(const Vector3& cameraPos)
 	VECTOR c = cameraPos.ToDxlibVector();
 
 	// =========================
-	// 共通：各面の4頂点生成関数風に書く
+	// 各面の4頂点生成関数のように書く
 	// =========================
-
 	auto drawFace = [&](VECTOR v0, VECTOR v1, VECTOR v2, VECTOR v3, int tex)
 		{
 			VERTEX3D v[4];
@@ -53,8 +52,8 @@ void Bg::Draw(const Vector3& cameraPos)
 			//完全リセット
 			for (int i = 0; i < 4; i++)
 			{
-				v[i].dif = GetColorU8(255, 255, 255, 255); //色そのまま
-				v[i].spc = GetColorU8(0, 0, 0, 0);        //反射消す
+				v[i].dif = GetColorU8(255, 255, 255, 255);	//色そのまま
+				v[i].spc = GetColorU8(0, 0, 0, 0);			//反射消す
 			}
 
 			//UV固定

@@ -339,7 +339,6 @@ void SceneMain::NormalUpdate(Input& input)
 	if (remainTime_ <= 0.0f && !isClearing_)
 	{
 		isClearing_ = true;
-
 		controller_.PushScene(std::make_shared<ClearScene>(controller_));
 		return;
 	}
@@ -350,10 +349,9 @@ void SceneMain::NormalUpdate(Input& input)
 		if (pPlayer_->IsDeathAnimEnd())
 		{
 			isClearing_ = true;
-
 			controller_.PushScene(std::make_shared<ClearScene>(controller_));
+			return;
 		}
-		return;
 	}
 }
 

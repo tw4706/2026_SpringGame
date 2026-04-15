@@ -69,6 +69,7 @@ private:
 	bool isClearing_ = false;						//クリア中かどうか
 	bool fadeFinished_ = false;						//フェードが終了したかどうか
 	bool isGameStarted_ = false;					//ゲーム開始したかどうか
+	bool isTimeUp_ = false;							//タイムアップになったかどうか
 
 	Bg bg_;											//背景
 	UIManager uiManager_;							//UIマネージャー
