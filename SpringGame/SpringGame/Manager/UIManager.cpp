@@ -161,14 +161,19 @@ void UIManager::DrawGameStart(bool isGameStarted, int timer)
 
 void UIManager::DrawTimeUp(float timer)
 {
-	int timeUpX = Game::kScreenWidth / 2;
-	int timeUpY = Game::kScreenHeight / 2;
+	const char* timeUpText = "TIME UP";
+
+	//TIME UPの文字の幅を取得
+	int timeUpWidth = GetDrawStringWidthToHandle(timeUpText,strlen(timeUpText),Game::kFontUIHandle);
+
+	int x = (Game::kScreenWidth - timeUpWidth) / 2;
+	int y = Game::kScreenHeight / 2;
 
 	if (timer <= 0.0f)
 	{
 		//タイムアップの文字
-		DrawStringToHandle(timeUpX + 4, timeUpY + 4, "TIME UP", GetColor(0, 0, 0), Game::kFontUIHandle);
-		DrawStringToHandle(timeUpX, timeUpY, "TIME UP", GetColor(0, 255, 0), Game::kFontUIHandle);
+		DrawStringToHandle(x + 4, y + 4, timeUpText, GetColor(0, 0, 0), Game::kFontUIHandle);
+		DrawStringToHandle(x, y, timeUpText, GetColor(0, 255, 0), Game::kFontUIHandle);
 		timer = 0;
 	}
 }

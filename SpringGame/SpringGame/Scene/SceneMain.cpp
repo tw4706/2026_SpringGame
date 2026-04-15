@@ -29,7 +29,7 @@ namespace
 	constexpr int kFadeInterval = 60;
 
 	//制限時間
-	constexpr float kClearFadeTime = 60.0f;
+	constexpr float kGamePlayTime = 10.0f;
 
 	//ゲーム開始の合図を出すフレーム数
 	constexpr int kReadyFrame = 60;
@@ -124,7 +124,7 @@ void SceneMain::Init()
 	//フレームカウントの設定
 	frameCount_ = kFadeInterval;
 	isGameStarted_ = false;
-	remainTime_ = kClearFadeTime;
+	remainTime_ = kGamePlayTime;
 }
 
 void SceneMain::Update(Input& input)
@@ -204,7 +204,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	//プレイヤーとカメラの更新
-	if (isGameStarted_)
+	if (isGameStarted_&&!isTimeUp_)
 	{
 		pPlayer_->Update(input, dt_);
 	}
@@ -336,11 +336,20 @@ void SceneMain::NormalUpdate(Input& input)
 		[](const PopUI& p) { return p.IsDead(); }), pPopUIs_.end());
 
 	//制限時間が0になったらクリアシーンへ遷移
-	if (remainTime_ <= 0.0f && !isClearing_)
+	if (remainTime_ <= 0.0f && !isTimeUp_)
 	{
-		isClearing_ = true;
-		controller_.PushScene(std::make_shared<ClearScene>(controller_));
-		return;
+		isTimeUp_ = true;
+		remainTime_ = 0.0f;
+	}
+
+	//制限時間が0になってボタンが押されたらシーン遷移を行う
+	if (isTimeUp_)
+	{
+		if (input.IsTriggered("attack"))
+		{
+			controller_.PushScene(std::make_shared<ClearScene>(controller_));
+			return;
+		}
 	}
 
 	//プレイヤーが死亡したらクリアシーンに遷移
