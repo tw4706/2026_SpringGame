@@ -43,6 +43,13 @@ public:
 	void OnHit(GameObject* attacker)override;
 
 	/// <summary>
+	/// タイトル用プレイヤーの描画
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="angle">角度</param>
+	void DrawTitlePlayer(const Vector3& pos, float angle);
+
+	/// <summary>
 	/// プレイヤーの座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
@@ -78,7 +85,10 @@ public:
 	/// <returns>攻撃判定のコライダーの参照</returns>
 	SphereCollider* GetAttackCollider() { return &attackCollider_; }
 
-	//カメラのセット
+	/// <summary>
+	/// カメラのセット
+	/// </summary>
+	/// <param name="camera">カメラのポインタ</param>
 	void SetCamera(Camera* camera) { pCamera_ = camera; }
 
 	//衝突処理
@@ -147,7 +157,6 @@ private:
 	/// </summary>
 	/// <param name="dt">経過時間</param>
 	void UpdateKnockBack(float dt);
-
 
 	/// <summary>
 	/// 回避処理

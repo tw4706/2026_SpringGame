@@ -19,7 +19,7 @@ void EffectManager::Update()
 		}
 		else
 		{
-			++it;
+			it++;
 		}
 	}
 }

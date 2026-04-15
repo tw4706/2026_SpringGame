@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include"../Bg.h"
+#include"../Actor/Player.h"
 
 class TitleScene :public Scene
 {
@@ -24,9 +25,20 @@ public:
 	DrawFunc_t draw_;
 
 private:
+	//タイトル用プレイヤーの情報
+	struct FallingPlayer
+	{
+		Vector3 pos;
+		float rotY;
+		float speed;
+	};
+
 	int frameCount_;
 	float bgAngle_;
 	float blinkTimer_;
+
 	Bg bg_;
+	Player titlePlayer_;				//タイトル演出用プレイヤー
+	std::vector<FallingPlayer>fallingPlayers_;
 };
 

@@ -26,6 +26,7 @@ ClearScene::ClearScene(SceneController& controller) :
 	frameCount_ = kFadeInterval;
 	resultScore_ = ScoreManager::GetScore();
 	displayScore_ = 0;
+	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
 
 ClearScene::~ClearScene()

@@ -83,8 +83,10 @@ namespace
 	//エフェクトの位置(高さ)
 	const Vector3 kEffectOffset = { 0.0f,80.0f,0.0f };
 
+	//回避時の残像の表示時間
 	constexpr float kAfterImageLife = 0.3f;
 
+	//回避時間
 	constexpr float kAfterImageTime = 0.02f;
 
 	constexpr float kRotateLerpKeyboard = 0.2f;
@@ -691,4 +693,12 @@ void Player::OnHit(GameObject* attacker)
 
 	//無敵時間
 	invincibleTimer_ = kInvincibleTime;
+}
+
+void Player::DrawTitlePlayer(const Vector3& pos, float angle)
+{
+	pos_ = pos;
+	moveAngle_ = angle;
+	UpdateMatrix();
+	Draw();
 }
