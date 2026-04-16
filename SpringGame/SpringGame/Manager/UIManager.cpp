@@ -104,6 +104,7 @@ void UIManager::DrawBoostGauge(float gauge)
 void UIManager::DrawScore(int score)
 {
 	char buf[64];
+	const char* scoreText = "SCORE :";
 	sprintf_s(buf, "%d", score);
 
 	//基準位置
@@ -111,7 +112,7 @@ void UIManager::DrawScore(int score)
 	int y = 80;
 
 	//"SCORE :" の幅
-	int scoreWidth = GetDrawStringWidthToHandle("SCORE :", strlen("SCORE :"), Game::kFontUIHandle);
+	int scoreWidth = GetDrawStringWidthToHandle(scoreText, strlen(scoreText), Game::kFontUIHandle);
 
 	//数字の幅の最大を決めることで数字がずれても最低この値までは保証される
 	int numberWidth = GetDrawStringWidthToHandle("0000", strlen("0000"), Game::kFontUIHandle);
@@ -122,8 +123,8 @@ void UIManager::DrawScore(int score)
 	int x = startX + scoreWidth + 10;
 
 	//SCORE:
-	DrawStringToHandle(startX + 4, y + 4, "SCORE :", GetColor(0, 0, 0), Game::kFontUIHandle);
-	DrawStringToHandle(startX, y, "SCORE :", GetColor(255, 255, 255), Game::kFontUIHandle);
+	DrawStringToHandle(startX + 4, y + 4, scoreText, GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(startX, y, scoreText, GetColor(255, 255, 255), Game::kFontUIHandle);
 
 	//スコアの表示
 	DrawStringToHandle(x + 4, y + 4, buf, GetColor(0, 0, 0), Game::kFontUIHandle);
@@ -164,7 +165,7 @@ void UIManager::DrawTimeUp(float timer)
 	const char* timeUpText = "TIME UP";
 
 	//TIME UPの文字の幅を取得
-	int timeUpWidth = GetDrawStringWidthToHandle(timeUpText,strlen(timeUpText),Game::kFontUIHandle);
+	int timeUpWidth = GetDrawStringWidthToHandle(timeUpText, strlen(timeUpText), Game::kFontUIHandle);
 
 	int x = (Game::kScreenWidth - timeUpWidth) / 2;
 	int y = Game::kScreenHeight / 2;
@@ -198,6 +199,7 @@ void UIManager::DrawCenterText(const char* text, int y, int color)
 void UIManager::DrawTime(float time)
 {
 	char buf[64];
+	const char* timeText = "TIME :";
 	sprintf_s(buf, "%.2f", time);
 
 	//基準位置
@@ -205,7 +207,7 @@ void UIManager::DrawTime(float time)
 	int y = 40;
 
 	//"TIME :" の幅
-	int timeWidth = GetDrawStringWidthToHandle("TIME :", strlen("TIME :"), Game::kFontUIHandle);
+	int timeWidth = GetDrawStringWidthToHandle(timeText, strlen(timeText), Game::kFontUIHandle);
 
 	//数字の幅の最大を決めることで数字がずれても最低この値までは保証される
 	int numberWidth = GetDrawStringWidthToHandle("00.00", strlen("00.00"), Game::kFontUIHandle);
@@ -216,8 +218,8 @@ void UIManager::DrawTime(float time)
 	int x = startX + timeWidth + 10;
 
 	//タイム
-	DrawStringToHandle(startX + 4, y + 4, "TIME :", GetColor(0, 0, 0), Game::kFontUIHandle);
-	DrawStringToHandle(startX, y, "TIME :", GetColor(255, 255, 255), Game::kFontUIHandle);
+	DrawStringToHandle(startX + 4, y + 4, timeText, GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(startX, y, timeText, GetColor(255, 255, 255), Game::kFontUIHandle);
 
 	//数字
 	DrawStringToHandle(x + 4, y + 4, buf, GetColor(0, 0, 0), Game::kFontUIHandle);

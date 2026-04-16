@@ -8,6 +8,7 @@
 #include"../Physics/Camera.h"
 #include"SceneController.h"
 #include"../Application.h"
+#include"../OperationGuideUI.h"
 #include"../Manager/ScoreManager.h"
 #include "../Manager/EffectManager.h"
 #include"EffekseerForDXLib.h"
@@ -48,6 +49,7 @@ SceneMain::SceneMain(SceneController& contorller) :
 	update_(&SceneMain::FadeInUpdate),
 	draw_(&SceneMain::FadeDraw)
 {
+	pOperationGuideUI_ = std::make_shared<OperationGuideUI>();
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
 }
@@ -112,6 +114,9 @@ void SceneMain::Init()
 
 	//UIマネージャーの初期化
 	uiManager_.Init();
+
+	//操作説明クラスの初期化
+	pOperationGuideUI_->Init();
 
 	//床のモデル読み込み
 	floorHandle_ = MV1LoadModel("data/floor.mv1");
@@ -450,6 +455,9 @@ void SceneMain::NormalDraw()
 	uiManager_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_,
 		ScoreManager::GetBoostGauge(), time, score, isGameStarted_,
 		gameStartTimer_, timeScale_, timeBonusDisplay_, timeBonusTimer_);
+
+	//操作説明の描画
+	pOperationGuideUI_->Draw();
 
 #ifdef _DEBUG
 	SetFontSize(16);

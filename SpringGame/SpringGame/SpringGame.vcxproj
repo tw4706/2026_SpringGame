@@ -144,6 +144,7 @@
     <ClCompile Include="Bg.cpp" />
     <ClCompile Include="Manager\EffectManager.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="OperationGuideUI.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Bg.h" />
     <ClInclude Include="Manager\EffectManager.h" />
+    <ClInclude Include="OperationGuideUI.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Physics\Collider.h" />
