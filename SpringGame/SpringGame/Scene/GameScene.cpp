@@ -9,7 +9,6 @@
 #include"SceneController.h"
 #include"../Application.h"
 #include"../OperationGuideUI.h"
-#include"../Manager/ScoreManager.h"
 #include "../Manager/EffectManager.h"
 #include "../EnemySpawner.h"
 #include"EffekseerForDXLib.h"
@@ -20,6 +19,11 @@ namespace
 {
 	//敵の最大で出現する数
 	constexpr int kEnemyMax = 3;
+
+	//敵を生成するスポナーの設置数
+	constexpr int kEnemySpawnerNum = 5;
+
+	//最大体力
 	constexpr int kMaxHP = 3;
 
 	//HPUIのアニメーションの感覚
@@ -47,7 +51,7 @@ GameScene::GameScene(SceneController& contorller) :
 	frameCount_(0),
 	hpHandle_(-1),
 	floorHandle_(-1),
-	remainTime_(0.0f),
+	clearTime_(0.0f),
 	timeScale_(1.0f),
 	slowTimer_(0.0f),
 	dt_(0.0f),
@@ -90,14 +94,19 @@ void GameScene::Init()
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Game);
 
 	//各クラスの初期化処理
-	auto spawner = std::make_shared<EnemySpawner>();
+	//敵の生成
+	for (int i = 0; i < kEnemySpawnerNum; i++)
+	{
+		auto spawner = std::make_shared<EnemySpawner>();
 
-	spawner->Init({ 0,0,500 }, 300.0f);
-	spawner->SetPlayer(pPlayer_.get());
-	spawner->SetCamera(pCamera_.get());
-	spawner->SetScene(this);
+		float z = 500.0f + i * 1500.0f;
 
-	pEnemySpawner_.push_back(spawner);
+		spawner->Init({ 0.0f, 0.0f, z }, 600.0f);
+		spawner->SetPlayer(pPlayer_.get());
+		spawner->SetCamera(pCamera_.get());
+
+		pEnemySpawner_.push_back(spawner);
+	}
 
 	//プレイヤーの初期化
 	pPlayer_->Init();
@@ -111,7 +120,7 @@ void GameScene::Init()
 	bg_.Init();
 
 	//UIマネージャーの初期化
-	uiManager_.Init();
+	gameSceneUI_.Init();
 
 	//操作説明クラスの初期化
 	pOperationGuideUI_->Init();
@@ -128,7 +137,7 @@ void GameScene::Init()
 	//フレームカウントの設定
 	frameCount_ = kFadeInterval;
 	isGameStarted_ = false;
-	remainTime_ = kGamePlayTime;
+	clearTime_ = 0.0f;
 }
 
 void GameScene::Update(Input& input)
@@ -189,10 +198,7 @@ void GameScene::NormalUpdate(Input& input)
 	if (isGameStarted_)
 	{
 		//時間の更新
-		remainTime_ -= dt_;
-
-		//スコアの更新処理
-		ScoreManager::Update(dt_);
+		clearTime_ += dt_;
 	}
 
 	//ポップするスコアの更新処理
@@ -266,10 +272,6 @@ void GameScene::NormalUpdate(Input& input)
 		slowTimer_ = 0.2f;						//スロー時間
 		pCamera_->StartZoom(DX_PI_F / 6.0f);	//カメラのズーム開始
 
-		//ジャスト回避成功時に制限時間を増やす
-		remainTime_ += 2.0f;
-		ScoreManager::AddScoreBoostTime();
-
 		timeBonusDisplay_ = 2.0f;
 		timeBonusTimer_ = 1.0f;
 	}
@@ -313,24 +315,6 @@ void GameScene::NormalUpdate(Input& input)
 	//UIの削除処理
 	pPopUIs_.erase(std::remove_if(pPopUIs_.begin(), pPopUIs_.end(),
 		[](const PopUI& p) { return p.IsDead(); }), pPopUIs_.end());
-
-	//制限時間が0になったらクリアシーンへ遷移
-	if (remainTime_ <= 0.0f && !isTimeUp_)
-	{
-		isTimeUp_ = true;
-		remainTime_ = 0.0f;
-	}
-
-	//制限時間が0になってボタンが押されたらシーン遷移を行う
-	if (isTimeUp_)
-	{
-		if (input.IsTriggered("attack"))
-		{
-			update_ = &GameScene::FadeOutUpdate;
-			draw_ = &GameScene::FadeDraw;
-			return;
-		}
-	}
 
 	//プレイヤーが死亡したらクリアシーンに遷移
 	if (pPlayer_->IsDead() && !isClearing_)
@@ -423,12 +407,10 @@ void GameScene::NormalDraw()
 	//プレイヤーの描画
 	pPlayer_->Draw();
 
-	float time = (std::max)(0.0f, remainTime_);
-	int score = ScoreManager::GetDispScore();
+	float time = (std::max)(0.0f, clearTime_);
 
 	//UIマネージャーの描画
-	uiManager_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_,
-		ScoreManager::GetBoostGauge(), time, score, isGameStarted_,
+	gameSceneUI_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_, time, isGameStarted_,
 		gameStartTimer_, timeScale_, timeBonusDisplay_, timeBonusTimer_);
 
 	//操作説明の描画
@@ -439,5 +421,16 @@ void GameScene::NormalDraw()
 	DrawString(0, 0, "SceneMain", GetColor(255, 255, 255));
 	DrawFormatString(0, 16, GetColor(255, 255, 255), "Frame:%d", frameCount_);
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "HP:%d", pPlayer_->GetHP());
+
+	//現在ステージ上にいる敵の数
+	int totalEnemyCount = 0;
+
+	for (auto& spawner : pEnemySpawner_)
+	{
+		totalEnemyCount += (int)spawner->GetEnemy().size();
+	}
+
+	DrawFormatString(20, 200, GetColor(255, 255, 255),
+		"Total Enemy : %d", totalEnemyCount);
 #endif
 }

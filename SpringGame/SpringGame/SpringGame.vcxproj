@@ -160,11 +160,10 @@
     <ClCompile Include="Scene\SceneController.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
-    <ClCompile Include="Manager\ScoreManager.cpp" />
     <ClCompile Include="PopUI.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Manager\SoundManager.cpp" />
-    <ClCompile Include="Manager\UIManager.cpp" />
+    <ClCompile Include="Manager\GameSceneUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Enemy.h" />
@@ -190,11 +189,10 @@
     <ClInclude Include="Scene\SceneController.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
-    <ClInclude Include="Manager\ScoreManager.h" />
     <ClInclude Include="PopUI.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Manager\SoundManager.h" />
-    <ClInclude Include="Manager\UIManager.h" />
+    <ClInclude Include="Manager\GameSceneUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />

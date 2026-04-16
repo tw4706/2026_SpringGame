@@ -6,7 +6,6 @@
 class Enemy;
 class Player;
 class Camera;
-class GameScene;
 class EnemySpawner
 {
 public:
@@ -35,12 +34,6 @@ public:
 	/// <param name="camera">カメラ</param>
 	void SetCamera(Camera* camera);
 
-	/// <summary>
-	/// ゲームシーンのセット
-	/// </summary>
-	/// <param name="scene">ゲームシーン</param>
-	void SetScene(GameScene* scene);
-
 private:
 	Vector3 pos_;		//座標
 	float radius_;		//半径
@@ -51,7 +44,6 @@ private:
 
 	Player* pPlayer_;
 	Camera* pCamera_;
-	GameScene* pScene_;
 	std::vector<std::shared_ptr<Enemy>>pEnemies_;
 };
 

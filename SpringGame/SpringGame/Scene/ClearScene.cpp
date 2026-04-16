@@ -1,7 +1,6 @@
 #include "ClearScene.h"
 #include "TitleScene.h"
 #include"SceneController.h"
-#include"../Manager/ScoreManager.h"
 #include"GameScene.h"
 #include"../Input.h"
 #include"../Game.h"
@@ -25,8 +24,6 @@ ClearScene::ClearScene(SceneController& controller) :
 	displayScore_(0)
 {
 	frameCount_ = kFadeInterval;
-	resultScore_ = ScoreManager::GetScore();
-	displayScore_ = 0;
 
 	//BGM再生
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
@@ -78,7 +75,6 @@ void ClearScene::NormalUpdate(Input& input)
 	{
 		//SE再生
 		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
-		ScoreManager::Reset();
 		
 		//ゲームシーンに戻る
 		controller_.ResetScene(std::make_shared<GameScene>(controller_));
@@ -113,16 +109,6 @@ void ClearScene::NormalDraw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// スコア表示
-	char scoreText[64];
-	sprintf_s(scoreText, "SCORE: %d", displayScore_);
-
-	int scoreW = GetDrawStringWidthToHandle(scoreText, static_cast<int>(strlen(scoreText)), Game::kFontUIHandle);
-	int scoreX = (Game::kScreenWidth - scoreW) / 2;
-
-	DrawStringToHandle(scoreX, Game::kScreenHeight / 2 - kscoreTextOffsetY, scoreText,
-		GetColor(255, 255, 0), Game::kFontUIHandle);
 
 	//リトライ表示
 	const char* retryText = "Aボタンでリスタート";

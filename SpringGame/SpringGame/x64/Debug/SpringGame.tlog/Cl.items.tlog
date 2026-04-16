@@ -21,8 +21,7 @@ C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Scene\Scene.cpp;C:\User
 C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Scene\SceneController.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SceneController.obj
 C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Scene\GameScene.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\GameScene.obj
 C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Physics\SphereCollider.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SphereCollider.obj
-C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Manager\ScoreManager.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\ScoreManager.obj
 C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\PopUI.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\PopUI.obj
 C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Scene\TitleScene.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\TitleScene.obj
 C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Manager\SoundManager.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\SoundManager.obj
-C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Manager\UIManager.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\UIManager.obj
+C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\Manager\GameSceneUI.cpp;C:\Users\yongy\git\2026_SpringGame\SpringGame\SpringGame\x64\Debug\GameSceneUI.obj

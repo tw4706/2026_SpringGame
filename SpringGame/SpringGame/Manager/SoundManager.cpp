@@ -20,6 +20,7 @@ namespace
 	const char* kPlayerDeathSe = "data/BGM・SE/playerDeath.mp3";
 	const char* kCountDownSe = "data/BGM・SE/ready.mp3";
 	const char* kStartSe = "data/BGM・SE/go.mp3";
+	const char* kCancelSe = "data/BGM・SE/cancel.mp3";
 }
 
 SoundManager::SoundManager():
@@ -61,6 +62,7 @@ void SoundManager::Init()
 	seHandles_[SE::PlayerDeath] = LoadSoundMem(kPlayerDeathSe);
 	seHandles_[SE::CountDown] = LoadSoundMem(kCountDownSe);
 	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
+	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSe);
 }
 
 void SoundManager::PlaySe(SE se)

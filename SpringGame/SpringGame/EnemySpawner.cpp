@@ -13,8 +13,7 @@ EnemySpawner::EnemySpawner() :
 	spawnTimer_(0.0f),
 	spawnInteval_(0.0f),
 	pPlayer_(nullptr),
-	pCamera_(nullptr),
-	pScene_(nullptr)
+	pCamera_(nullptr)
 {
 
 }
@@ -31,7 +30,7 @@ void EnemySpawner::Init(const Vector3& pos, float radius)
 	isActive_ = false;
 
 	spawnTimer_ = 0.0f;
-	spawnInteval_ = 0.8f;
+	spawnInteval_ = 1.2f;
 }
 
 void EnemySpawner::Update(const Vector3& playerPos, float dt)
@@ -58,8 +57,8 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 			auto enemy = std::make_shared<Enemy>();
 
 			//敵の生成位置をスポナーの周りのランダムな位置から生成
-			float offsetX = static_cast<float>(GetRand(200) - 100);
-			float offsetZ = static_cast<float>(GetRand(200) - 100);
+			float offsetX = static_cast<float>(GetRand(400) - 100);
+			float offsetZ = static_cast<float>(GetRand(400) - 100);
 
 			Vector3 spawnPos = pos_ + Vector3(offsetX, 0.0f, offsetZ);
 
@@ -69,7 +68,6 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 
 			enemy->SetPlayer(pPlayer_);
 			enemy->SetCamera(pCamera_);
-			enemy->SetScene(pScene_);
 
 			pEnemies_.push_back(enemy);
 		}
@@ -83,7 +81,21 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 
 	//削除処理
 	pEnemies_.erase(std::remove_if(pEnemies_.begin(), pEnemies_.end(),
-		[](std::shared_ptr<Enemy>& e) {return e->IsDestroy(); }), pEnemies_.end());
+		[&](std::shared_ptr<Enemy>& e)
+		{
+			//通常の削除
+			if (e->IsDestroy()){return true;}
+
+			//プレイヤーとの距離
+			Vector3 enemyPos = e->GetPos();
+			float dx = enemyPos.x_ - playerPos.x_;
+			float dz = enemyPos.z_ - playerPos.z_;
+			float distanceSq = dx * dx + dz * dz;
+
+			//1000以上離れた敵は削除する
+			return distanceSq >= 1500.0f * 1500.0f;
+		}),
+		pEnemies_.end());
 }
 
 void EnemySpawner::Draw()
@@ -107,8 +119,4 @@ void EnemySpawner::SetPlayer(Player* player)
 void EnemySpawner::SetCamera(Camera* camera)
 {
 	pCamera_ = camera;
-}
-void EnemySpawner::SetScene(GameScene* scene)
-{
-	pScene_ = scene;
 }

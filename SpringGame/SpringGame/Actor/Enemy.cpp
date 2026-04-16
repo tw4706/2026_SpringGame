@@ -1,6 +1,4 @@
 #include "Enemy.h"
-#include "../Scene/GameScene.h"
-#include "../Manager/ScoreManager.h"
 #include "../Physics/Vector3.h"
 #include "../Physics/Camera.h"
 #include "../Actor/Player.h"
@@ -239,14 +237,6 @@ void Enemy::OnHit(GameObject* attacker)
 
 	//“–‚½‚è”»’è‚ð–³Œø‚É‚·‚é
 	collider_.SetEnable(false);
-
-	//“_”‰ÁŽZ
-	int addScore = ScoreManager::AddScore();
-
-	if (pScene_)
-	{
-		pScene_->AddScorePop(pos_ + kScorePopOffset, addScore);
-	}
 
 	if (pCamera_)
 	{

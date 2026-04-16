@@ -18,7 +18,8 @@ enum class SE
 	JustDodge,
 	PlayerDeath,
 	CountDown,
-	Start
+	Start,
+	Cancel
 };
 
 class SoundManager

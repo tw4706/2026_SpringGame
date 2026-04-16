@@ -218,6 +218,8 @@ void Player::Update(Input& input, float dt)
 		Vector3 effectPos = pos_ + forward * kBarrierEffectDistance + kEffectOffset;
 
 		EffectManager::GetInstance().Play("barrier", effectPos);
+
+		Application::GetInstance().GetSoundManager().PlaySe(SE::Cancel);
 	}
 
 	isTouchingWall_ = hitWall;
@@ -237,7 +239,7 @@ void Player::Update(Input& input, float dt)
 		}
 		else
 		{
-			++it;
+			it++;
 		}
 	}
 
@@ -282,9 +284,9 @@ void Player::Draw()
 	}
 
 	char buf[128];
-	sprintf_s(buf, "Pos: (%.2f, %.2f, %.2f)", pos_.x_, pos_.y_, pos_.z_);
+	sprintf_s(buf, "Pos: %.2f, %.2f, %.2f", pos_.x_, pos_.y_, pos_.z_);
 
-	DrawString(20, 20, buf, 0xffffff);
+	DrawString(20, 180, buf, 0xffffff);
 #endif
 }
 

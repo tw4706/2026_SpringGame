@@ -2,7 +2,7 @@
 #include<memory>
 #include "Scene.h"
 #include"../Manager/CollisionManager.h"
-#include"../Manager/UIManager.h"
+#include"../Manager/GameSceneUI.h"
 #include"../Bg.h"
 
 class Enemy;
@@ -59,7 +59,7 @@ private:
 	int displayHp_ = 0;												//表示しているHP
 	int hpAnimFrame_ = 0;											//HPUIアニメーションのフレーム
 	int hpKeepFrame_ = 0;											//HPUI保持フレーム
-	float remainTime_ = 0.0f;										//残り時間
+	float clearTime_ = 0.0f;										//残り時間
 	float dt_ = 0.0f;												//経過時間
 	float timeScale_ = 0.0f;										//時間のスケール(スロー演出などで使用)
 	float slowTimer_ = 0.0f;										//スロー時間のタイマー
@@ -74,7 +74,7 @@ private:
 	bool isTimeUp_ = false;											//タイムアップになったかどうか
 
 	Bg bg_;															//背景
-	UIManager uiManager_;											//UIマネージャー
+	GameSceneUI	gameSceneUI_;										//ゲームシーン用UI
 	std::shared_ptr<OperationGuideUI>pOperationGuideUI_;			//操作説明
 	CollisionManager collisionManager_;								//当たり判定マネージャー
 	std::vector<PopUI>pPopUIs_;										//プレイヤーの頭上に表示するPopUI
