@@ -410,8 +410,12 @@ void GameScene::NormalDraw()
 	//“GƒXƒ|ƒi[‚Ì•`‰æ
 	for (auto& spawner : pEnemySpawner_)
 	{
+		//ƒXƒ|ƒi[‚Ì•`‰æ
+		spawner->Draw();
+
 		for (auto& enemy : spawner->GetEnemy())
 		{
+			//“G‚Ì•`‰æ
 			enemy->Draw();
 		}
 	}

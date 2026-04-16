@@ -1,19 +1,26 @@
 #include "EnemySpawner.h"
 #include"../Actor/Enemy.h"
 
-EnemySpawner::EnemySpawner():
-	pos_{0.0f,0.0f,0.0f},
+namespace
+{
+	constexpr int kEnemyMax = 3;
+}
+
+EnemySpawner::EnemySpawner() :
+	pos_{ 0.0f,0.0f,0.0f },
 	radius_(0.0f),
 	isActive_(false),
 	spawnTimer_(0.0f),
-	spawnInteval_(0.0f)
+	spawnInteval_(0.0f),
+	pPlayer_(nullptr),
+	pCamera_(nullptr),
+	pScene_(nullptr)
 {
 
 }
 
 EnemySpawner::~EnemySpawner()
 {
-
 }
 
 void EnemySpawner::Init(const Vector3& pos, float radius)
@@ -46,12 +53,17 @@ void EnemySpawner::Update(const Vector3& playerPos)
 
 	spawnTimer_ += 1.0f / 60.0f;
 
-	if (spawnTimer_ >= spawnInteval_)
+	//ê∂ê¨éûä‘Ç…Ç»Ç¡ÇΩÇ©Ç¬ìGÇÃêîÇ™ç≈ëÂêîÇÊÇËè≠Ç»Ç¢èÍçáê∂ê¨Ç∑ÇÈ
+	if (spawnTimer_ >= spawnInteval_ && pEnemies_.size() < kEnemyMax)
 	{
-		spawnTimer_ = 2.0f;
+		spawnTimer_ = 0.0f;
 
 		auto enemy = std::make_shared<Enemy>();
 		enemy->Init();
+
+		enemy->SetPlayer(pPlayer_);
+		enemy->SetCamera(pCamera_);
+		enemy->SetScene(pScene_);
 
 		pEnemies_.push_back(enemy);
 	}
@@ -64,23 +76,19 @@ void EnemySpawner::Update(const Vector3& playerPos)
 
 	//çÌèúèàóù
 	pEnemies_.erase(std::remove_if(pEnemies_.begin(), pEnemies_.end(),
-		[](std::shared_ptr<Enemy>& e){return e->IsDestroy();}),pEnemies_.end());
+		[](std::shared_ptr<Enemy>& e) {return e->IsDestroy(); }), pEnemies_.end());
 }
 
 void EnemySpawner::Draw()
 {
 #ifdef _DEBUG
-	int x = static_cast<int>(pos_.x_);
-	int y = static_cast<int>(pos_.y_);
+	Vector3 screenPos;
+	ConvWorldPosToScreenPos(screenPos.ToDxlibVector());
 
-	int r = static_cast<int>(radius_);
+	int x = (int)screenPos.x_;
+	int y = (int)screenPos.y_;
 
-	DrawCircle(x, y, r, GetColor(255, 255, 0), false);
-
-	if (isActive_)
-	{
-		DrawCircle(x, y, r, GetColor(255, 255, 0), false);
-	}
+	DrawSphere3D(screenPos.ToDxlibVector(), (int)radius_, 16, 0xffff00, 0xffff00, false);
 #endif
 }
 
