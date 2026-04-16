@@ -35,10 +35,9 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	bg_.Init();
-	titlePlayer_.Init();
-	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Title);
 
-	fallingPlayers_.clear();
+	//BGM再生
+	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Title);
 }
 
 void TitleScene::Update(Input& input)
@@ -74,30 +73,6 @@ void TitleScene::NormalUpdate(Input& input)
 		draw_ = &TitleScene::FadeDraw;
 		frameCount_ = 0;
 	}
-
-	//ボタンを押すとタイトル用プレイヤーが生成される
-	if (input.IsTriggered("fallPlayer"))
-	{
-		float x = static_cast<float>(GetRand(600) - 300);
-		float z = static_cast<float>(GetRand(600) - 300);
-
-		fallingPlayers_.push_back({{x, 300.0f, z},0.0f,0.0f});
-
-		//SE再生
-		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
-	}
-
-	//タイトル用プレイヤーの更新
-	for (auto& player : fallingPlayers_)
-	{
-		player.speed += 0.4f;
-		player.pos.y_ -= player.speed;
-		player.rotY += 0.2f;
-	}
-	
-	//落下するタイトル用プレイヤーの削除処理
-	fallingPlayers_.erase(std::remove_if(fallingPlayers_.begin(),fallingPlayers_.end(),
-			[](const FallingPlayer& player){return player.pos.y_ < -500.0f;}),fallingPlayers_.end());
 }
 
 void TitleScene::FadeOutUpdate(Input& input)
@@ -138,12 +113,6 @@ void TitleScene::NormalDraw()
 
 	//背景の描画
 	bg_.Draw(center);
-
-	//タイトル用プレイヤーの描画
-	for (auto& player : fallingPlayers_)
-	{
-		titlePlayer_.DrawTitlePlayer(player.pos, player.rotY);
-	}
 
 	//タイトル名
 	const char* text = "らびっとスマッシュ";

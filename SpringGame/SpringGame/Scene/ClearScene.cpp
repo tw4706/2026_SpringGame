@@ -1,4 +1,5 @@
 #include "ClearScene.h"
+#include "TitleScene.h"
 #include"SceneController.h"
 #include"../Manager/ScoreManager.h"
 #include"SceneMain.h"
@@ -17,8 +18,8 @@ namespace
 
 ClearScene::ClearScene(SceneController& controller) :
 	Scene(controller),
-	update_(&ClearScene::NormalUpdate),
-	draw_(&ClearScene::NormalDraw),
+	update_(&ClearScene::FadeInUpdate),
+	draw_(&ClearScene::FadeDraw),
 	frameCount_(0),
 	resultScore_(0),
 	displayScore_(0)
@@ -26,6 +27,8 @@ ClearScene::ClearScene(SceneController& controller) :
 	frameCount_ = kFadeInterval;
 	resultScore_ = ScoreManager::GetScore();
 	displayScore_ = 0;
+
+	//BGM再生
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
 
@@ -76,7 +79,10 @@ void ClearScene::NormalUpdate(Input& input)
 		//SE再生
 		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
 		ScoreManager::Reset();
+		
+		//ゲームシーンに戻る
 		controller_.ResetScene(std::make_shared<SceneMain>(controller_));
+		return;
 	}
 }
 
@@ -119,7 +125,7 @@ void ClearScene::NormalDraw()
 		GetColor(255, 255, 0), Game::kFontUIHandle);
 
 	//リトライ表示
-	const char* retryText = "Press Retry";
+	const char* retryText = "Aボタンでリスタート";
 	int retryW = GetDrawStringWidthToHandle(retryText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
 	int retryX = (Game::kScreenWidth - retryW) / 2;
 

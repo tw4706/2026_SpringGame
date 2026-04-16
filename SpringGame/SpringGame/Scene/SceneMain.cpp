@@ -79,6 +79,7 @@ void SceneMain::Init()
 	EffectManager::GetInstance().Load("dodge", "data/justDodge.efk");
 	EffectManager::GetInstance().Load("barrier", "data/barrier.efk");
 
+	//BGM再生
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Game);
 
 	//各クラスの初期化処理
@@ -204,7 +205,7 @@ void SceneMain::NormalUpdate(Input& input)
 	}
 
 	//プレイヤーとカメラの更新
-	if (isGameStarted_&&!isTimeUp_)
+	if (isGameStarted_ && !isTimeUp_)
 	{
 		pPlayer_->Update(input, dt_);
 	}
@@ -347,7 +348,8 @@ void SceneMain::NormalUpdate(Input& input)
 	{
 		if (input.IsTriggered("attack"))
 		{
-			controller_.PushScene(std::make_shared<ClearScene>(controller_));
+			update_ = &SceneMain::FadeOutUpdate;
+			draw_ = &SceneMain::FadeDraw;
 			return;
 		}
 	}
@@ -369,11 +371,12 @@ void SceneMain::FadeOutUpdate(Input& input)
 	frameCount_++;
 
 	//フェード完了後に1フレーム待つ
-	if (frameCount_ >= kFadeInterval)
+	if (frameCount_ >= kFadeInterval && isTimeUp_)
 	{
 		frameCount_ = 0;
 		draw_ = &SceneMain::NormalDraw;
 		controller_.PushScene(std::make_shared<ClearScene>(controller_));
+		return;
 	}
 }
 
