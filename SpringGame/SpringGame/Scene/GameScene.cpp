@@ -11,6 +11,7 @@
 #include"../OperationGuideUI.h"
 #include"../Manager/ScoreManager.h"
 #include "../Manager/EffectManager.h"
+#include "../EnemySpawner.h"
 #include"EffekseerForDXLib.h"
 #include<algorithm>
 #include <Dxlib.h>
@@ -89,20 +90,14 @@ void GameScene::Init()
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Game);
 
 	//各クラスの初期化処理
-	for (int i = 0; i < kEnemyMax; i++)
-	{
-		auto enemy = std::make_shared<Enemy>();
-		enemy->SetPlayer(pPlayer_.get());
-		enemy->SetScene(this);
+	auto spawner = std::make_shared<EnemySpawner>();
 
-		//敵をランダムな位置に配置する
-		float x = ((float)rand() / RAND_MAX) * (kWalkXLimit * 2) - kWalkXLimit;
-		float z = ((float)rand() / RAND_MAX) * kWalkZLimit;
+	spawner->Init({ 0,0,500 }, 300.0f);
+	spawner->SetPlayer(pPlayer_.get());
+	spawner->SetCamera(pCamera_.get());
+	spawner->SetScene(this);
 
-		enemy->SetPos({ x, 0.0f, z });
-		enemy->Init();
-		enemies_.push_back(enemy);
-	}
+	pEnemySpawner_.push_back(spawner);
 
 	//プレイヤーの初期化
 	pPlayer_->Init();
@@ -198,18 +193,17 @@ void GameScene::NormalUpdate(Input& input)
 
 		//スコアの更新処理
 		ScoreManager::Update(dt_);
-
-		//各クラスの更新処理
-		for (auto& enemy : enemies_)
-		{
-			enemy->Update(dt_);
-		}
 	}
 
 	//ポップするスコアの更新処理
 	for (auto& p : pPopUIs_)
 	{
 		p.Update(dt_);
+	}
+
+	for (auto& spawner : pEnemySpawner_)
+	{
+		spawner->Update(pPlayer_->GetPos());
 	}
 
 	//プレイヤーとカメラの更新
@@ -304,38 +298,16 @@ void GameScene::NormalUpdate(Input& input)
 		//当たり判定の登録
 		collisionManager_.AddCollider(pPlayer_->GetCollider());
 		collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
-		for (auto& enemy : enemies_)
+		for (auto& spawner : pEnemySpawner_)
 		{
-			collisionManager_.AddCollider(enemy->GetCollider());
+			for (auto& enemy : spawner->GetEnemy())
+			{
+				collisionManager_.AddCollider(enemy->GetCollider());
+			}
 		}
 
 		//判定
 		collisionManager_.CheckAllCollision();
-
-		//敵の削除処理
-		enemies_.erase(
-			std::remove_if(enemies_.begin(), enemies_.end(),
-				[](const std::shared_ptr<Enemy>& e)
-				{
-					return e->IsDestroy();
-				}),
-			enemies_.end());
-
-		//常時何体か湧いているようにする
-		while (enemies_.size() < kEnemyMax)
-		{
-			auto enemy = std::make_shared<Enemy>();
-
-			float x = ((float)rand() / RAND_MAX) * (kWalkXLimit * 2) - kWalkXLimit;
-			float z = ((float)rand() / RAND_MAX) * kWalkZLimit;
-
-			enemy->SetPos({ x, 0.0f, z });
-			enemy->SetPlayer(pPlayer_.get());
-			enemy->SetCamera(pCamera_.get());
-			enemy->SetScene(this);
-			enemy->Init();
-			enemies_.push_back(enemy);
-		}
 	}
 
 	//UIの削除処理
@@ -411,11 +383,6 @@ void GameScene::NormalDraw()
 	//プレイヤーと敵を影で使用するため影用に描画
 	pPlayer_->Draw();
 
-	for (auto& enemy : enemies_)
-	{
-		enemy->Draw();
-	}
-
 	//シャドウマップ描画終了
 	ShadowMap_DrawEnd();
 
@@ -434,16 +401,19 @@ void GameScene::NormalDraw()
 
 	SetUseBackCulling(true);
 
-	//敵の描画
-	for (auto& enemy : enemies_)
-	{
-		enemy->Draw();
-	}
-
 	//スコアの描画
 	for (auto& p : pPopUIs_)
 	{
 		p.Draw();
+	}
+
+	//敵スポナーの描画
+	for (auto& spawner : pEnemySpawner_)
+	{
+		for (auto& enemy : spawner->GetEnemy())
+		{
+			enemy->Draw();
+		}
 	}
 
 	//プレイヤーの描画

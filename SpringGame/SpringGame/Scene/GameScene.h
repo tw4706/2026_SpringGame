@@ -10,6 +10,7 @@ class Player;
 class Input;
 class Camera;
 class PopUI;
+class EnemySpawner;
 class OperationGuideUI;
 class GameScene :public Scene
 {
@@ -49,36 +50,36 @@ private:
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 
 private:
-	int frameCount_ = 0;								//フレームカウント
-	int hpHandle_ = -1;									//HPUIのハンドル
-	int floorHandle_ = -1;								//床のモデルハンドル
-	int shadowMapHandle_ = -1;							//シャドウマップハンドル
-	int damageIndex_ = -1;								//ダメージインデックス
-	int prevHp_ = 0;									//前フレームのHP
-	int displayHp_ = 0;									//表示しているHP
-	int hpAnimFrame_ = 0;								//HPUIアニメーションのフレーム
-	int hpKeepFrame_ = 0;								//HPUI保持フレーム
-	float remainTime_ = 0.0f;							//残り時間
-	float dt_ = 0.0f;									//経過時間
-	float timeScale_ = 0.0f;							//時間のスケール(スロー演出などで使用)
-	float slowTimer_ = 0.0f;							//スロー時間のタイマー
-	float timeBonusDisplay_ = 0.0f;						//時間ボーナスの表示用タイマー
-	float timeBonusTimer_ = 0.0f;						//時間ボーナスのタイマー
-	float hpAnimTimer_ = 0.0f;							//HPUIアニメーションのタイマー
-	float gameStartTimer_ = 0.0f;						//ゲーム開始合図のタイマー
-	bool isHpAnimating_ = false;						//HPUIがアニメーション中かどうか
-	bool isClearing_ = false;							//クリア中かどうか
-	bool fadeFinished_ = false;							//フェードが終了したかどうか
-	bool isGameStarted_ = false;						//ゲーム開始したかどうか
-	bool isTimeUp_ = false;								//タイムアップになったかどうか
+	int frameCount_ = 0;											//フレームカウント
+	int hpHandle_ = -1;												//HPUIのハンドル
+	int floorHandle_ = -1;											//床のモデルハンドル
+	int shadowMapHandle_ = -1;										//シャドウマップハンドル
+	int damageIndex_ = -1;											//ダメージインデックス
+	int prevHp_ = 0;												//前フレームのHP
+	int displayHp_ = 0;												//表示しているHP
+	int hpAnimFrame_ = 0;											//HPUIアニメーションのフレーム
+	int hpKeepFrame_ = 0;											//HPUI保持フレーム
+	float remainTime_ = 0.0f;										//残り時間
+	float dt_ = 0.0f;												//経過時間
+	float timeScale_ = 0.0f;										//時間のスケール(スロー演出などで使用)
+	float slowTimer_ = 0.0f;										//スロー時間のタイマー
+	float timeBonusDisplay_ = 0.0f;									//時間ボーナスの表示用タイマー
+	float timeBonusTimer_ = 0.0f;									//時間ボーナスのタイマー
+	float hpAnimTimer_ = 0.0f;										//HPUIアニメーションのタイマー
+	float gameStartTimer_ = 0.0f;									//ゲーム開始合図のタイマー
+	bool isHpAnimating_ = false;									//HPUIがアニメーション中かどうか
+	bool isClearing_ = false;										//クリア中かどうか
+	bool fadeFinished_ = false;										//フェードが終了したかどうか
+	bool isGameStarted_ = false;									//ゲーム開始したかどうか
+	bool isTimeUp_ = false;											//タイムアップになったかどうか
 
-	Bg bg_;												//背景
-	UIManager uiManager_;								//UIマネージャー
-	std::shared_ptr<OperationGuideUI>pOperationGuideUI_;//操作説明
-	CollisionManager collisionManager_;					//当たり判定マネージャー
-	std::vector<PopUI>pPopUIs_;							//プレイヤーの頭上に表示するPopUI
-	std::shared_ptr<Player>pPlayer_;					//プレイヤー
-	std::shared_ptr<Camera>pCamera_;					//カメラ
-	std::vector<std::shared_ptr<Enemy>> enemies_;		//敵
+	Bg bg_;															//背景
+	UIManager uiManager_;											//UIマネージャー
+	std::shared_ptr<OperationGuideUI>pOperationGuideUI_;			//操作説明
+	CollisionManager collisionManager_;								//当たり判定マネージャー
+	std::vector<PopUI>pPopUIs_;										//プレイヤーの頭上に表示するPopUI
+	std::shared_ptr<Player>pPlayer_;								//プレイヤー
+	std::shared_ptr<Camera>pCamera_;								//カメラ
+	std::vector<std::shared_ptr<EnemySpawner>>pEnemySpawner_;		//敵のスポナー(生成場所)
 };
 
