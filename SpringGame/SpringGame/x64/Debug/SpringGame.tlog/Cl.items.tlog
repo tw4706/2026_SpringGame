@@ -3,6 +3,7 @@ C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Actor\Player.cp
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Animation.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Animation.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Application.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Application.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Bg.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Bg.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\EnemySpawner.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\EnemySpawner.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\EffectManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\EffectManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Game.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\Game.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\OperationGuideUI.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Debug\OperationGuideUI.obj

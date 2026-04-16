@@ -142,6 +142,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Bg.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="Manager\EffectManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="OperationGuideUI.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Bg.h" />
+    <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="Manager\EffectManager.h" />
     <ClInclude Include="OperationGuideUI.h" />
     <ClInclude Include="Scene\ClearScene.h" />
