@@ -9,7 +9,7 @@ public:
 
 	void Init();
 
-	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float boostGauge,float time,int score,bool isGameStarted,int gameStartTimer,float timeScale,float bonus,float bonusTimer);
+	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float boostGauge,float time,int score,bool isGameStarted, float gameStartTimer,float timeScale,float bonus,float bonusTimer);
 
 private:
 
@@ -48,7 +48,7 @@ private:
 	/// </summary>
 	/// <param name="isGameStarted">ゲームが始まっているならtrue,始まっていないならfalse</param>
 	/// <param name="timer">タイマー</param>
-	void DrawGameStart(bool isGameStarted, int timer);
+	void DrawGameStart(bool isGameStarted, float gameStartTimer);
 
 	/// <summary>
 	/// タイムアップの描画

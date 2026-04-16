@@ -1,7 +1,7 @@
 #include "TitleScene.h"
 #include"../Physics/Vector3.h"
 #include "SceneController.h"
-#include "SceneMain.h"
+#include "GameScene.h"
 #include"../Input.h"
 #include"../Game.h"
 #include"../Application.h"
@@ -80,7 +80,7 @@ void TitleScene::FadeOutUpdate(Input& input)
 	bgAngle_ += 0.003f;
 	if (frameCount_++ >= kFadeInterval)
 	{
-		controller_.ChangeScene(std::make_shared<SceneMain>(controller_));
+		controller_.ChangeScene(std::make_shared<GameScene>(controller_));
 	}
 }
 

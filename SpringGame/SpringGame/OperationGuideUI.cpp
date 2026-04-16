@@ -43,10 +43,10 @@ void OperationGuideUI::Draw()
 	int buttonSizeX, buttonSizeY;
 	GetGraphSize(aButtonHandle_, &buttonSizeX, &buttonSizeY);
 
-	int buttonATextX = x + (buttonSizeX * scale / 2) + 60;
+	int buttonATextX = static_cast<int>(x + (buttonSizeX * scale / 2) + 60);
 	int buttonATextY = y - 20;
 
-	int buttonBTextX = x + (buttonSizeX * scale / 2) +10;
+	int buttonBTextX = static_cast<int>(x + (buttonSizeX * scale / 2) +10);
 	int buttonBTextY = y + 45;
 
 	DrawStringToHandle(buttonATextX + 4 - 50, buttonATextY + 4, AButtonText, GetColor(0, 0, 0), Game::kFontUIHandle);

@@ -6,7 +6,7 @@
 
 class Player;
 class Camera;
-class SceneMain;
+class GameScene;
 class Enemy :public GameObject
 {
 public:
@@ -64,7 +64,7 @@ public:
 	/// シーンのセット
 	/// </summary>
 	/// <param name="scene">シーン名</param>
-	void SetScene(SceneMain* scene) { pScene_ = scene; }
+	void SetScene(GameScene* scene) { pScene_ = scene; }
 
 	/// <summary>
 	/// 敵が削除されているかどうか
@@ -89,7 +89,7 @@ private:
 
 	Player* pPlayer_=nullptr;		//プレイヤーのポインタ
 	Camera* pCamera_ = nullptr;		//カメラのポインタ
-	SceneMain* pScene_ = nullptr;	//ゲームシーンのポインタ
+	GameScene* pScene_ = nullptr;	//ゲームシーンのポインタ
 	Model model_;					//モデル
 	Model copyModel_;				//複製用のモデル
 	Animation animation_;			//アニメーション

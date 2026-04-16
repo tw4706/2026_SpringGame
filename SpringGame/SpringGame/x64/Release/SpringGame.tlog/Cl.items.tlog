@@ -18,7 +18,7 @@ C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\Camera.
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\Vector3.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\Vector3.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\Scene.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\Scene.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\SceneController.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\SceneController.obj
-C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\SceneMain.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\SceneMain.obj
+C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Scene\GameScene.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\GameScene.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Physics\SphereCollider.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\SphereCollider.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\Manager\ScoreManager.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\ScoreManager.obj
 C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\PopUI.cpp;C:\Users\OsakiTowa\Desktop\2026_SpringGame\SpringGame\SpringGame\x64\Release\PopUI.obj

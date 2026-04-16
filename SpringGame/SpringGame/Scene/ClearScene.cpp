@@ -2,7 +2,7 @@
 #include "TitleScene.h"
 #include"SceneController.h"
 #include"../Manager/ScoreManager.h"
-#include"SceneMain.h"
+#include"GameScene.h"
 #include"../Input.h"
 #include"../Game.h"
 #include"../Application.h"
@@ -81,7 +81,7 @@ void ClearScene::NormalUpdate(Input& input)
 		ScoreManager::Reset();
 		
 		//ƒQ[ƒ€ƒV[ƒ“‚É–ß‚é
-		controller_.ResetScene(std::make_shared<SceneMain>(controller_));
+		controller_.ResetScene(std::make_shared<GameScene>(controller_));
 		return;
 	}
 }

@@ -21,8 +21,8 @@ namespace
 	constexpr float kHpScale = 2.0f;
 
 	//ゲーム開始の合図を出すフレーム数
-	constexpr int kReadyFrame = 60;
-	constexpr int kStartFrame = 30;
+	constexpr float kReadyFrame = 60.0f;
+	constexpr float kStartFrame = 30.0f;
 }
 
 UIManager::UIManager() :
@@ -42,7 +42,7 @@ void UIManager::Init()
 
 void UIManager::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFrame,
 	float boostGauge, float time, int score, bool isGameStarted,
-	int gameStartTimer, float timeScale, float bonus, float bonusTimer)
+	float gameStartTimer, float timeScale, float bonus, float bonusTimer)
 {
 	DrawTime(time);
 	DrawScore(score);
@@ -112,10 +112,10 @@ void UIManager::DrawScore(int score)
 	int y = 80;
 
 	//"SCORE :" の幅
-	int scoreWidth = GetDrawStringWidthToHandle(scoreText, strlen(scoreText), Game::kFontUIHandle);
+	int scoreWidth = GetDrawStringWidthToHandle(scoreText, static_cast<int>(strlen(scoreText)), Game::kFontUIHandle);
 
 	//数字の幅の最大を決めることで数字がずれても最低この値までは保証される
-	int numberWidth = GetDrawStringWidthToHandle("0000", strlen("0000"), Game::kFontUIHandle);
+	int numberWidth = GetDrawStringWidthToHandle("0000", static_cast<int>(strlen("0000")), Game::kFontUIHandle);
 
 	//全体を中央にする
 	int startX = baseX - (scoreWidth + 10 + scoreWidth) / 2 + 50;
@@ -143,13 +143,13 @@ void UIManager::DrawBonus(float bonus, float timer)
 	DrawStringToHandle(800, 40, buf, GetColor(0, 255, 0), Game::kFontUIHandle);
 }
 
-void UIManager::DrawGameStart(bool isGameStarted, int timer)
+void UIManager::DrawGameStart(bool isGameStarted, float gameStartTimer)
 {
 	//開始の合図の描画
 	if (!isGameStarted)
 	{
 		//スタートタイマーが60フレームより小さい場合はReadyそれ以降はGo!
-		if (timer < kReadyFrame)
+		if (gameStartTimer <= kReadyFrame)
 		{
 			DrawCenterText("READY", Game::kScreenHeight / 2, GetColor(255, 255, 0));
 		}
@@ -165,7 +165,7 @@ void UIManager::DrawTimeUp(float timer)
 	const char* timeUpText = "TIME UP";
 
 	//TIME UPの文字の幅を取得
-	int timeUpWidth = GetDrawStringWidthToHandle(timeUpText, strlen(timeUpText), Game::kFontUIHandle);
+	int timeUpWidth = GetDrawStringWidthToHandle(timeUpText, static_cast<int>(strlen(timeUpText)), Game::kFontUIHandle);
 
 	int x = (Game::kScreenWidth - timeUpWidth) / 2;
 	int y = Game::kScreenHeight / 2;
@@ -190,7 +190,7 @@ void UIManager::DrawDodgeScreenColor(float timeScale)
 
 void UIManager::DrawCenterText(const char* text, int y, int color)
 {
-	int width = GetDrawStringWidthToHandle(text, strlen(text), Game::kFontUIHandle);
+	int width = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kFontUIHandle);
 	int x = (Game::kScreenWidth - width) / 2;
 
 	DrawStringToHandle(x, y, text, color, Game::kFontUIHandle);
@@ -207,10 +207,10 @@ void UIManager::DrawTime(float time)
 	int y = 40;
 
 	//"TIME :" の幅
-	int timeWidth = GetDrawStringWidthToHandle(timeText, strlen(timeText), Game::kFontUIHandle);
+	int timeWidth = GetDrawStringWidthToHandle(timeText, static_cast<int>(strlen(timeText)), Game::kFontUIHandle);
 
 	//数字の幅の最大を決めることで数字がずれても最低この値までは保証される
-	int numberWidth = GetDrawStringWidthToHandle("00.00", strlen("00.00"), Game::kFontUIHandle);
+	int numberWidth = GetDrawStringWidthToHandle("00.00", static_cast<int>(strlen("00.00")), Game::kFontUIHandle);
 
 	//全体を中央にする
 	int startX = baseX - (timeWidth + 10 + numberWidth) / 2;

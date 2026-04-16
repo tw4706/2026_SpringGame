@@ -157,7 +157,7 @@
     <ClCompile Include="Physics\Vector3.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneController.cpp" />
-    <ClCompile Include="Scene\SceneMain.cpp" />
+    <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
     <ClCompile Include="Manager\ScoreManager.cpp" />
     <ClCompile Include="PopUI.cpp" />
@@ -186,7 +186,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SceneController.h" />
-    <ClInclude Include="Scene\SceneMain.h" />
+    <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="Manager\ScoreManager.h" />
     <ClInclude Include="PopUI.h" />
