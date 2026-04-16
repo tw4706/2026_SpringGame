@@ -43,13 +43,6 @@ public:
 	void OnHit(GameObject* attacker)override;
 
 	/// <summary>
-	/// タイトル用プレイヤーの描画
-	/// </summary>
-	/// <param name="pos">座標</param>
-	/// <param name="angle">角度</param>
-	void DrawTitlePlayer(const Vector3& pos, float angle);
-
-	/// <summary>
 	/// プレイヤーの座標の取得
 	/// </summary>
 	/// <returns>座標</returns>

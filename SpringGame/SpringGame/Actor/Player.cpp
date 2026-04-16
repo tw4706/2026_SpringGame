@@ -35,9 +35,6 @@ namespace
 	//モデルのサイズ
 	constexpr float kModelScale = 0.5f;
 
-	//移動制限するための定数
-	const float kWalkLimit = 950.0f;
-
 	//回避時間
 	constexpr float kDodgeTime = 0.25f;
 
@@ -91,6 +88,10 @@ namespace
 
 	constexpr float kRotateLerpKeyboard = 0.2f;
 	constexpr float kRotateLerpAnalogStick = 0.3f;
+
+	//移動制限するための定数
+	const float kWalkXLimit = 130.0f;
+	const float kWalkZLimit = 10000.0f;
 
 	//壁制限のしきい値(誤差)
 	constexpr float kWallHitEpsilon = 0.01f;
@@ -203,10 +204,10 @@ void Player::Update(Input& input, float dt)
 	//制限されている見えない壁に触れた瞬間にエフェクトを生成する
 	Vector3 beforePos = pos_;
 
-	if (pos_.x_ > kWalkLimit) pos_.x_ = kWalkLimit;
-	if (pos_.x_ < -kWalkLimit) pos_.x_ = -kWalkLimit;
-	if (pos_.z_ > kWalkLimit) pos_.z_ = kWalkLimit;
-	if (pos_.z_ < -kWalkLimit) pos_.z_ = -kWalkLimit;
+	if (pos_.x_ > kWalkXLimit) pos_.x_ = kWalkXLimit;
+	if (pos_.x_ < -kWalkXLimit) pos_.x_ = -kWalkXLimit;
+	if (pos_.z_ > kWalkZLimit) pos_.z_ = kWalkZLimit;
+	if (pos_.z_ < 0.0f) pos_.z_ = 0.0f;
 
 	bool hitWall = fabs(beforePos.x_ - pos_.x_) > kWallHitEpsilon || fabs(beforePos.z_ - pos_.z_) > kWallHitEpsilon;
 
@@ -276,14 +277,14 @@ void Player::Draw()
 	//攻撃判定の描画
 	if (state_ == PlayerState::Attack)
 	{
-		DrawSphere3D(
-			attackCollider_.GetPos().ToDxlibVector(),
-			attackCollider_.GetRadian(),
-			16,
-			0xffff00,
-			0xffff00,
-			FALSE);
+		DrawSphere3D(attackCollider_.GetPos().ToDxlibVector(),
+			attackCollider_.GetRadian(), 16, 0xffff00, 0xffff00, FALSE);
 	}
+
+	char buf[128];
+	sprintf_s(buf, "Pos: (%.2f, %.2f, %.2f)", pos_.x_, pos_.y_, pos_.z_);
+
+	DrawString(20, 20, buf, 0xffffff);
 #endif
 }
 
@@ -693,12 +694,4 @@ void Player::OnHit(GameObject* attacker)
 
 	//無敵時間
 	invincibleTimer_ = kInvincibleTime;
-}
-
-void Player::DrawTitlePlayer(const Vector3& pos, float angle)
-{
-	pos_ = pos;
-	moveAngle_ = angle;
-	UpdateMatrix();
-	Draw();
 }

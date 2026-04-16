@@ -24,7 +24,8 @@ TitleScene::TitleScene(SceneController& controller) :
 	draw_(&TitleScene::FadeDraw),
 	frameCount_(kFadeInterval),
 	bgAngle_(0.0f),
-	blinkTimer_(0.0f)
+	blinkTimer_(0.0f),
+	titleHandle_(-1)
 {
 }
 
@@ -35,6 +36,8 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	bg_.Init();
+
+	titleHandle_ = LoadGraph("data/titleLogo.png");
 
 	//BGM再生
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Title);
@@ -115,22 +118,24 @@ void TitleScene::NormalDraw()
 	bg_.Draw(center);
 
 	//タイトル名
-	const char* text = "らびっとスマッシュ";
+	//const char* text = "らびっとスマッシュ";
 	const char* pressStartText = "ボタンをおしてスタート";
 
-	//文字の横幅を取得
-	int titleWidth = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kTitleFontHandle);
+	////文字の横幅を取得
+	//int titleWidth = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kTitleFontHandle);
 
 	int pressStartWidth = GetDrawStringWidthToHandle(pressStartText, static_cast<int>(strlen(pressStartText)), Game::kTitleFontHandle);
 
-	//画面サイズの半分(真ん中)
-	int x = (Game::kScreenWidth - titleWidth) / 2;
-	int y = Game::kScreenHeight / 2 - 200;
+	////画面サイズの半分(真ん中)
+	//int x = (Game::kScreenWidth - titleWidth) / 2;
+	//int y = Game::kScreenHeight / 2 - 200;
 
-	//描画　
-	DrawStringToHandle(x + 4, y + 4, text, 0x000000, Game::kTitleFontHandle);
-	DrawStringToHandle(x, y, text, 0xffff00, Game::kTitleFontHandle);
+	////描画　
+	//DrawStringToHandle(x + 4, y + 4, text, 0x000000, Game::kTitleFontHandle);
+	//DrawStringToHandle(x, y, text, 0xffff00, Game::kTitleFontHandle);
 
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0.1f, 0.0f, titleHandle_, true);
+	;
 	int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
 
 	int pressStartx = (Game::kScreenWidth - pressStartWidth) / 2;

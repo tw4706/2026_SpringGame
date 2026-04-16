@@ -18,6 +18,8 @@ namespace
 	const char* kDodgeSe = "data/BGM・SE/dodge.mp3";
 	const char* kJustDodgeSe = "data/BGM・SE/justDodge.wav";
 	const char* kPlayerDeathSe = "data/BGM・SE/playerDeath.mp3";
+	const char* kCountDownSe = "data/BGM・SE/ready.mp3";
+	const char* kStartSe = "data/BGM・SE/go.mp3";
 }
 
 SoundManager::SoundManager():
@@ -57,6 +59,8 @@ void SoundManager::Init()
 	seHandles_[SE::Dodge] = LoadSoundMem(kDodgeSe);
 	seHandles_[SE::JustDodge] = LoadSoundMem(kJustDodgeSe);
 	seHandles_[SE::PlayerDeath] = LoadSoundMem(kPlayerDeathSe);
+	seHandles_[SE::CountDown] = LoadSoundMem(kCountDownSe);
+	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
 }
 
 void SoundManager::PlaySe(SE se)

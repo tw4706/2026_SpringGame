@@ -30,11 +30,15 @@ namespace
 	constexpr int kFadeInterval = 60;
 
 	//制限時間
-	constexpr float kGamePlayTime = 10.0f;
+	constexpr float kGamePlayTime = 60.0f;
 
 	//ゲーム開始の合図を出すフレーム数
 	constexpr int kReadyFrame = 60;
 	constexpr int kStartFrame = 30;
+
+	//敵の生成範囲
+	constexpr float kWalkXLimit = 130.0f;
+	constexpr float kWalkZLimit = 10000.0f;
 }
 
 GameScene::GameScene(SceneController& contorller) :
@@ -92,9 +96,8 @@ void GameScene::Init()
 		enemy->SetScene(this);
 
 		//敵をランダムな位置に配置する
-		float range = 1000.0f;
-		float x = ((float)rand() / RAND_MAX) * range * 2 - range;
-		float z = ((float)rand() / RAND_MAX) * range * 2 - range;
+		float x = ((float)rand() / RAND_MAX) * (kWalkXLimit * 2) - kWalkXLimit;
+		float z = ((float)rand() / RAND_MAX) * kWalkZLimit;
 
 		enemy->SetPos({ x, 0.0f, z });
 		enemy->Init();
@@ -120,7 +123,7 @@ void GameScene::Init()
 
 	//床のモデル読み込み
 	floorHandle_ = MV1LoadModel("data/floor.mv1");
-	MV1SetPosition(floorHandle_, VGet(0.0f, -50.0f, 0.0f));
+	MV1SetPosition(floorHandle_, VGet(0.0f, -50.0f, 3000.0f));
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
 	//HPの設定
@@ -323,10 +326,8 @@ void GameScene::NormalUpdate(Input& input)
 		{
 			auto enemy = std::make_shared<Enemy>();
 
-			float range = 1000.0f;
-
-			float x = ((float)rand() / RAND_MAX) * range * 2 - range;
-			float z = ((float)rand() / RAND_MAX) * range * 2 - range;
+			float x = ((float)rand() / RAND_MAX) * (kWalkXLimit * 2) - kWalkXLimit;
+			float z = ((float)rand() / RAND_MAX) * kWalkZLimit;
 
 			enemy->SetPos({ x, 0.0f, z });
 			enemy->SetPlayer(pPlayer_.get());

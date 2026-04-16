@@ -1,6 +1,7 @@
 #include "UIManager.h"
 #include"../Game.h"
 #include"../Manager/ScoreManager.h"
+#include"../Application.h"
 #include <DxLib.h>
 #include <string>
 #include <algorithm>
@@ -152,10 +153,12 @@ void UIManager::DrawGameStart(bool isGameStarted, float gameStartTimer)
 		if (gameStartTimer <= kReadyFrame)
 		{
 			DrawCenterText("READY", Game::kScreenHeight / 2, GetColor(255, 255, 0));
+			Application::GetInstance().GetSoundManager().PlaySe(SE::CountDown);
 		}
 		else
 		{
 			DrawCenterText("Go!", Game::kScreenHeight / 2, GetColor(0, 255, 255));
+			Application::GetInstance().GetSoundManager().PlaySe(SE::Start);
 		}
 	}
 }

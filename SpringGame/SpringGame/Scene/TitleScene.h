@@ -28,6 +28,7 @@ private:
 	int frameCount_;
 	float bgAngle_;
 	float blinkTimer_;
+	int titleHandle_;
 
 	Bg bg_;				//îwåi
 };
