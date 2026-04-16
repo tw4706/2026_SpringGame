@@ -202,13 +202,31 @@ void Enemy::Draw()
 {
 	model_.Draw();
 #ifdef _DEBUG
-	// “–‚½‚è”»’è‚Ì•`‰æ
 	unsigned int color = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 0);
 
+	//“G‚Ì“–‚½‚è”»’è•`‰æ
 	DrawSphere3D(
 		collider_.GetPos().ToDxlibVector(), // ’†S
 		collider_.GetRadian(),				// ”¼Œa
 		16, color, color, FALSE);
+
+	//’Ç]”ÍˆÍ‚Ì•`‰æ
+	DrawSphere3D(
+		pos_.ToDxlibVector(),
+		kChaseRange,
+		32,
+		GetColor(0, 0, 255),
+		GetColor(0, 0, 255),
+		FALSE);
+
+	//’âŽ~”ÍˆÍ‚Ì•`‰æ
+	DrawSphere3D(
+		pos_.ToDxlibVector(),
+		kStopRange,
+		32,
+		GetColor(255, 255, 0),
+		GetColor(255, 255, 0),
+		FALSE);
 #endif
 }
 
@@ -256,6 +274,11 @@ void Enemy::OnCollision(GameObject* other)
 		other->GetCollider()->SetEnable(false);
 		OnHit(other);
 	}
+}
+
+void Enemy::SetSpawnPos(const Vector3& spawnPos)
+{
+	pos_ = spawnPos;
 }
 
 AnimationState Enemy::GetState()const

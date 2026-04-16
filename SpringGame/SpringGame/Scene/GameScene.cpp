@@ -203,7 +203,7 @@ void GameScene::NormalUpdate(Input& input)
 
 	for (auto& spawner : pEnemySpawner_)
 	{
-		spawner->Update(pPlayer_->GetPos());
+		spawner->Update(pPlayer_->GetPos(),dt_);
 	}
 
 	//プレイヤーとカメラの更新

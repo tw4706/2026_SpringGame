@@ -14,7 +14,7 @@ public:
 	~EnemySpawner();
 
 	void Init(const Vector3&pos,float radius);
-	void Update(const Vector3&playerPos);
+	void Update(const Vector3& playerPos, float dt);
 	void Draw();
 
 	/// <summary>

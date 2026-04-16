@@ -67,6 +67,12 @@ public:
 	void SetScene(GameScene* scene) { pScene_ = scene; }
 
 	/// <summary>
+	/// スポーン位置のセット
+	/// </summary>
+	/// <param name="spawnPos"></param>
+	void SetSpawnPos(const Vector3& spawnPos);
+
+	/// <summary>
 	/// 敵が削除されているかどうか
 	/// </summary>
 	/// <returns>削除されていたらtrue,削除されていなかったらfalse</returns>

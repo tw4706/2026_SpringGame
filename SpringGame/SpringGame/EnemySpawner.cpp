@@ -31,47 +31,54 @@ void EnemySpawner::Init(const Vector3& pos, float radius)
 	isActive_ = false;
 
 	spawnTimer_ = 0.0f;
-	spawnInteval_ = 2.0f;
+	spawnInteval_ = 0.8f;
 }
 
-void EnemySpawner::Update(const Vector3& playerPos)
+void EnemySpawner::Update(const Vector3& playerPos, float dt)
 {
-	//距離
+	//距離の計算
 	float distance = (playerPos.x_ - pos_.x_) * (playerPos.x_ - pos_.x_) +
 		(playerPos.z_ - pos_.z_) * (playerPos.z_ - pos_.z_);
 
 	float radiusSq = radius_ * radius_;
 
+	isActive_ = (distance <= radiusSq);
+
 	//この距離の範囲に入ったらスポナーを起動させる
-	if (distance <= radiusSq)
+	//範囲外だったらスポナーは起動しない
+	if (isActive_)
 	{
-		isActive_ = true;
+		spawnTimer_ += dt;
+
+		//生成時間になったかつ敵の数が最大数より少ない場合生成する
+		if (spawnTimer_ >= spawnInteval_ && pEnemies_.size() < kEnemyMax)
+		{
+			spawnTimer_ = 0.0f;
+
+			auto enemy = std::make_shared<Enemy>();
+
+			//敵の生成位置をスポナーの周りのランダムな位置から生成
+			float offsetX = static_cast<float>(GetRand(200) - 100);
+			float offsetZ = static_cast<float>(GetRand(200) - 100);
+
+			Vector3 spawnPos = pos_ + Vector3(offsetX, 0.0f, offsetZ);
+
+			//先に生成位置を決めてから初期化する
+			enemy->SetSpawnPos(spawnPos);
+			enemy->Init();
+
+			enemy->SetPlayer(pPlayer_);
+			enemy->SetCamera(pCamera_);
+			enemy->SetScene(pScene_);
+
+			pEnemies_.push_back(enemy);
+		}
 	}
 
-	//起動していないときは何もしない
-	if (!isActive_)return;
-
-	spawnTimer_ += 1.0f / 60.0f;
-
-	//生成時間になったかつ敵の数が最大数より少ない場合生成する
-	if (spawnTimer_ >= spawnInteval_ && pEnemies_.size() < kEnemyMax)
+	//敵の更新
+	for (auto& enemies : pEnemies_)
 	{
-		spawnTimer_ = 0.0f;
-
-		auto enemy = std::make_shared<Enemy>();
-		enemy->Init();
-
-		enemy->SetPlayer(pPlayer_);
-		enemy->SetCamera(pCamera_);
-		enemy->SetScene(pScene_);
-
-		pEnemies_.push_back(enemy);
-	}
-
-	// 敵更新
-	for (auto& e : pEnemies_)
-	{
-		e->Update();
+		enemies->Update(dt);
 	}
 
 	//削除処理
@@ -82,13 +89,9 @@ void EnemySpawner::Update(const Vector3& playerPos)
 void EnemySpawner::Draw()
 {
 #ifdef _DEBUG
-	Vector3 screenPos;
-	ConvWorldPosToScreenPos(screenPos.ToDxlibVector());
 
-	int x = (int)screenPos.x_;
-	int y = (int)screenPos.y_;
-
-	DrawSphere3D(screenPos.ToDxlibVector(), (int)radius_, 16, 0xffff00, 0xffff00, false);
+	//スポナーの生成範囲の描画
+	DrawSphere3D(pos_.ToDxlibVector(),radius_,16,GetColor(255, 255, 0),GetColor(255, 255, 0),FALSE);
 #endif
 }
 
