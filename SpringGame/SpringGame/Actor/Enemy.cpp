@@ -90,6 +90,8 @@ void Enemy::Init()
 	collider_.SetEnable(false);
 	collider_.SetColliderType(ColliderType::Charactor);
 	collider_.SetPos(pos_ + kColOffset);
+
+	EffectManager::GetInstance().Play("spawn", pos_);
 }
 
 void Enemy::Update(float dt)

@@ -1,5 +1,6 @@
 #include "EnemySpawner.h"
 #include"../Actor/Enemy.h"
+#include"../Manager/EffectManager.h"
 
 namespace
 {
@@ -10,6 +11,9 @@ EnemySpawner::EnemySpawner() :
 	pos_{ 0.0f,0.0f,0.0f },
 	radius_(0.0f),
 	isActive_(false),
+	isLocked_(false),
+	isCleared_(false),
+	isSpawned_(false),
 	spawnTimer_(0.0f),
 	spawnInteval_(0.0f),
 	pPlayer_(nullptr),
@@ -28,13 +32,18 @@ void EnemySpawner::Init(const Vector3& pos, float radius)
 	radius_ = radius;
 
 	isActive_ = false;
+	isLocked_ = false;
+	isCleared_ = false;
+	isSpawned_ = false;
 
 	spawnTimer_ = 0.0f;
-	spawnInteval_ = 1.2f;
+	spawnInteval_ = 0.1f;
 }
 
 void EnemySpawner::Update(const Vector3& playerPos, float dt)
 {
+
+
 	//距離の計算
 	float distance = (playerPos.x_ - pos_.x_) * (playerPos.x_ - pos_.x_) +
 		(playerPos.z_ - pos_.z_) * (playerPos.z_ - pos_.z_);
@@ -43,34 +52,45 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 
 	isActive_ = (distance <= radiusSq);
 
+	// プレイヤーが範囲に入ったらロック開始
+	if (!isLocked_ && !isCleared_ && distance <= radiusSq)
+	{
+		isLocked_ = true;
+		EffectManager::GetInstance().Play("areaLock", pos_);
+	}
+
 	//この距離の範囲に入ったらスポナーを起動させる
 	//範囲外だったらスポナーは起動しない
-	if (isActive_)
+	if (isLocked_ && !isCleared_)
 	{
 		spawnTimer_ += dt;
 
-		//生成時間になったかつ敵の数が最大数より少ない場合生成する
 		if (spawnTimer_ >= spawnInteval_ && pEnemies_.size() < kEnemyMax)
 		{
 			spawnTimer_ = 0.0f;
 
 			auto enemy = std::make_shared<Enemy>();
 
-			//敵の生成位置をスポナーの周りのランダムな位置から生成
 			float offsetX = static_cast<float>(GetRand(400) - 100);
 			float offsetZ = static_cast<float>(GetRand(400) - 100);
 
 			Vector3 spawnPos = pos_ + Vector3(offsetX, 0.0f, offsetZ);
 
-			//先に生成位置を決めてから初期化する
 			enemy->SetSpawnPos(spawnPos);
 			enemy->Init();
-
 			enemy->SetPlayer(pPlayer_);
 			enemy->SetCamera(pCamera_);
 
 			pEnemies_.push_back(enemy);
+			isSpawned_=true;
 		}
+	}
+
+	//そのスポナーの周りの敵が全滅しているなら行動範囲の制限解除
+	if (isLocked_ && isSpawned_ && pEnemies_.empty())
+	{
+		isLocked_ = false;
+		isCleared_ = true;
 	}
 
 	//敵の更新

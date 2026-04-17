@@ -32,8 +32,8 @@ public:
 	virtual~Player();
 
 	void Init()override;
-	void Update()override{};
-	void Update(Input&input, float dt);
+	void Update()override {};
+	void Update(Input& input, float dt);
 	void Draw()override;
 
 	/// <summary>
@@ -46,7 +46,7 @@ public:
 	/// プレイヤーの座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	Vector3 GetPos()const{ return pos_; }
+	Vector3 GetPos()const { return pos_; }
 
 	/// <summary>
 	/// カメラの中止店の取得
@@ -84,6 +84,12 @@ public:
 	/// <param name="camera">カメラのポインタ</param>
 	void SetCamera(Camera* camera) { pCamera_ = camera; }
 
+	/// <summary>
+	/// 座標のセット
+	/// </summary>
+	/// <param name="pos">座標</param>
+	void SetPos(const Vector3& pos) { pos_ = pos; }
+
 	//衝突処理
 	void OnCollision(GameObject* other);
 	//無敵状態かどうか
@@ -96,7 +102,6 @@ public:
 
 	bool IsDeathAnimEnd()const { return state_ == PlayerState::Death && animation_.IsEnd(); }
 private:
-
 	/// <summary>
 	/// 移動処理
 	/// </summary>

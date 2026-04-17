@@ -86,9 +86,11 @@ void GameScene::Init()
 		VGet(1500, 800, 1500));
 
 	//エフェクトのロード
-	EffectManager::GetInstance().Load("hit", "data/hit.efk");
-	EffectManager::GetInstance().Load("dodge", "data/justDodge.efk");
-	EffectManager::GetInstance().Load("barrier", "data/barrier.efk");
+	EffectManager::GetInstance().Load("hit", "data/Effect/hit.efk");
+	EffectManager::GetInstance().Load("dodge", "data/Effect/justDodge.efk");
+	EffectManager::GetInstance().Load("barrier", "data/Effect/barrier.efk");
+	EffectManager::GetInstance().Load("spawn", "data/Effect/enemySpawn.efk");
+	EffectManager::GetInstance().Load("areaLock", "data/Effect/areaLock.efk");
 
 	//BGM再生
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Game);
@@ -207,9 +209,47 @@ void GameScene::NormalUpdate(Input& input)
 		p.Update(dt_);
 	}
 
+	//敵スポナーの更新
 	for (auto& spawner : pEnemySpawner_)
 	{
-		spawner->Update(pPlayer_->GetPos(),dt_);
+		spawner->Update(pPlayer_->GetPos(), dt_);
+	}
+
+	EnemySpawner* lockedSpawner = nullptr;
+
+	//1つだけ取得
+	for (auto& spawner : pEnemySpawner_)
+	{
+		if (spawner->IsLocked())
+		{
+			lockedSpawner = spawner.get();
+			break;
+		}
+	}
+
+	if (lockedSpawner)
+	{
+		Vector3 playerPos = pPlayer_->GetPos();
+		Vector3 center = lockedSpawner->GetPos();
+
+		float dx = playerPos.x_ - center.x_;
+		float dz = playerPos.z_ - center.z_;
+
+		float distSq = dx * dx + dz * dz;
+		float radius = lockedSpawner->GetRadius();
+
+		if (distSq > radius * radius)
+		{
+			float dist = sqrtf(distSq);
+
+			dx /= dist;
+			dz /= dist;
+
+			playerPos.x_ = center.x_ + dx * radius;
+			playerPos.z_ = center.z_ + dz * radius;
+
+			pPlayer_->SetPos(playerPos);
+		}
 	}
 
 	//プレイヤーとカメラの更新
@@ -223,6 +263,7 @@ void GameScene::NormalUpdate(Input& input)
 		Input emptyInput;
 		pPlayer_->Update(emptyInput, dt_);
 	}
+
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
