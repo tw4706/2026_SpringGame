@@ -26,6 +26,12 @@ public:
 	/// <returns>ハンドルを返す</returns>
 	int Play(const std::string& name, const Vector3& pos);
 
+	/// <summary>
+	/// エフェクトの停止
+	/// </summary>
+	/// <param name="handle">ハンドル</param>
+	void Stop(int handle);
+
 private:
 	//エフェクトハンドルを管理するマップ
 	std::map<std::string, int>effects_;

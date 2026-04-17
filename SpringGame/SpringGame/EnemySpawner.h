@@ -43,6 +43,8 @@ public:
 	void SetCamera(Camera* camera);
 
 private:
+	int areaLockHandle_;//移動制限エフェクトハンドル
+
 	Vector3 pos_;		//座標
 	float radius_;		//半径
 	bool isActive_;		//スポナーが発動したかどうか

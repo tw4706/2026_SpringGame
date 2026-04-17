@@ -1,6 +1,7 @@
 #include "EnemySpawner.h"
 #include"../Actor/Enemy.h"
 #include"../Manager/EffectManager.h"
+#include"EffekseerForDXLib.h"
 
 namespace
 {
@@ -8,6 +9,7 @@ namespace
 }
 
 EnemySpawner::EnemySpawner() :
+	areaLockHandle_(-1),
 	pos_{ 0.0f,0.0f,0.0f },
 	radius_(0.0f),
 	isActive_(false),
@@ -24,6 +26,7 @@ EnemySpawner::EnemySpawner() :
 
 EnemySpawner::~EnemySpawner()
 {
+	DeleteGraph(areaLockHandle_);
 }
 
 void EnemySpawner::Init(const Vector3& pos, float radius)
@@ -42,7 +45,12 @@ void EnemySpawner::Init(const Vector3& pos, float radius)
 
 void EnemySpawner::Update(const Vector3& playerPos, float dt)
 {
-
+	if (areaLockHandle_ != -1)
+	{
+		SetPosPlayingEffekseer3DEffect(
+			areaLockHandle_,
+			pos_.x_, pos_.y_, pos_.z_);
+	}
 
 	//距離の計算
 	float distance = (playerPos.x_ - pos_.x_) * (playerPos.x_ - pos_.x_) +
@@ -56,7 +64,8 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 	if (!isLocked_ && !isCleared_ && distance <= radiusSq)
 	{
 		isLocked_ = true;
-		EffectManager::GetInstance().Play("areaLock", pos_);
+
+		areaLockHandle_ = EffectManager::GetInstance().Play("areaLock", pos_);
 	}
 
 	//この距離の範囲に入ったらスポナーを起動させる
@@ -98,6 +107,17 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 	{
 		enemies->Update(dt);
 	}
+
+	//ハンドルの削除処理
+	if (isCleared_)
+	{
+		if (areaLockHandle_ != -1)
+		{
+			EffectManager::GetInstance().Stop(areaLockHandle_);
+			areaLockHandle_ = -1;
+		}
+	}
+
 
 	//削除処理
 	pEnemies_.erase(std::remove_if(pEnemies_.begin(), pEnemies_.end(),

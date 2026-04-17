@@ -44,3 +44,8 @@ int EffectManager::Play(const std::string& name, const Vector3& pos)
 
 	return handle;
 }
+
+void EffectManager::Stop(int handle)
+{
+	StopEffekseer3DEffect(handle);
+}
