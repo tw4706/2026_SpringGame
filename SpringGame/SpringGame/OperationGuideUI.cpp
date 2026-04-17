@@ -37,8 +37,8 @@ void OperationGuideUI::Draw()
 	DrawRotaGraph(x, y + 70, scale, angle, bButtonHandle_, true);
 
 	//‘€ì‚Ì•¶š‚Ì•`‰æ
-	const char* AButtonText = "‚±‚¤‚°‚«";
-	const char* bButtonText = "‚©‚¢‚Ğ";
+	const char* AButtonText = "‚©‚¢‚Ğ";
+	const char* bButtonText = "‚±‚¤‚°‚«";
 
 	int buttonSizeX, buttonSizeY;
 	GetGraphSize(aButtonHandle_, &buttonSizeX, &buttonSizeY);

@@ -21,7 +21,7 @@ namespace
 	constexpr int kEnemyMax = 3;
 
 	//敵を生成するスポナーの設置数
-	constexpr int kEnemySpawnerNum = 5;
+	constexpr int kEnemySpawnerNum = 6;
 
 	//最大体力
 	constexpr int kMaxHP = 3;
@@ -99,7 +99,7 @@ void GameScene::Init()
 	{
 		auto spawner = std::make_shared<EnemySpawner>();
 
-		float z = 500.0f + i * 1500.0f;
+		float z = 700.0f + i * 1500.0f;
 
 		spawner->Init({ 0.0f, 0.0f, z }, 600.0f);
 		spawner->SetPlayer(pPlayer_.get());
