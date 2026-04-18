@@ -1,5 +1,6 @@
 #include "SceneController.h"
 #include "Scene.h"
+#include"../Manager/EffectManager.h"
 
 SceneController::SceneController()
 {
@@ -19,6 +20,7 @@ void SceneController::ResetScene(std::shared_ptr<Scene> scene)
 
 void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 {
+
 	//もし、リストが空の場合、普通に代入でChangeSceneしようとすると
 	//当然、emptyの箱に対してChangeしようとするので、クラッシュします。
 	//このため、最初にemptyかどうかチェックします。
@@ -29,7 +31,8 @@ void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 		//少なくとも1つは積まれている状態にする
 		scenes_.push_back(scene);
 	}
-	else {
+	else
+	{
 
 		scenes_.back() = scene;// この行の時点で元のシーンは自動的に削除されています。
 	}
@@ -37,7 +40,10 @@ void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 }
 
 void SceneController::PushScene(std::shared_ptr<Scene> scene)
-{
+{	
+	//シーンを切り替える前に全エフェクトの停止を行う
+	EffectManager::GetInstance().StopAll();
+
 	scenes_.push_back(scene);
 }
 

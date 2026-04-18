@@ -1,5 +1,6 @@
 #include "EnemySpawner.h"
 #include"../Actor/Enemy.h"
+#include"../SpringGame/Application.h"
 #include"../Manager/EffectManager.h"
 #include"EffekseerForDXLib.h"
 
@@ -26,11 +27,7 @@ EnemySpawner::EnemySpawner() :
 
 EnemySpawner::~EnemySpawner()
 {
-	//エフェクトの削除
-	if (areaLockHandle_ != -1)
-	{
-		EffectManager::GetInstance().Stop(areaLockHandle_);
-	}
+	EffectManager::GetInstance().Stop(areaLockHandle_);
 }
 
 void EnemySpawner::Init(const Vector3& pos, float radius)
@@ -51,9 +48,7 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 {
 	if (areaLockHandle_ != -1)
 	{
-		SetPosPlayingEffekseer3DEffect(
-			areaLockHandle_,
-			pos_.x_, pos_.y_, pos_.z_);
+		SetPosPlayingEffekseer3DEffect(areaLockHandle_,pos_.x_, pos_.y_, pos_.z_);
 	}
 
 	//距離の計算
@@ -69,7 +64,11 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 	{
 		isLocked_ = true;
 
+		//エフェクト再生
 		areaLockHandle_ = EffectManager::GetInstance().Play("areaLock", pos_);
+
+		//SE再生
+		Application::GetInstance().GetSoundManager().PlaySe(SE::AreaLock);
 	}
 
 	//この距離の範囲に入ったらスポナーを起動させる
@@ -80,8 +79,8 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 		{
 			auto enemy = std::make_shared<Enemy>();
 
-			float offsetX = static_cast<float>(GetRand(400) - 100);
-			float offsetZ = static_cast<float>(GetRand(400) - 100);
+			float offsetX = static_cast<float>(GetRand(1200) - 600);
+			float offsetZ = static_cast<float>(GetRand(1200) - 600);
 
 			Vector3 spawnPos = pos_ + Vector3(offsetX, 0.0f, offsetZ);
 
@@ -114,11 +113,13 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 	{
 		if (areaLockHandle_ != -1)
 		{
+			//SE再生
+			Application::GetInstance().GetSoundManager().PlaySe(SE::AreaRelease);
+
 			EffectManager::GetInstance().Stop(areaLockHandle_);
 			areaLockHandle_ = -1;
 		}
 	}
-
 
 	//削除処理
 	pEnemies_.erase(std::remove_if(pEnemies_.begin(), pEnemies_.end(),
@@ -163,4 +164,13 @@ void EnemySpawner::SetPlayer(Player* player)
 void EnemySpawner::SetCamera(Camera* camera)
 {
 	pCamera_ = camera;
+}
+
+void EnemySpawner::StopEffect()
+{
+	if (areaLockHandle_ != -1)
+	{
+		StopEffekseer3DEffect(areaLockHandle_);
+		areaLockHandle_ = -1;
+	}
 }

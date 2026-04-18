@@ -364,9 +364,10 @@ void GameScene::NormalUpdate(Input& input)
 		{
 			isClearing_ = true;
 
-			//シーンを切り替える前に全エフェクトの停止を行う
-			EffectManager::GetInstance().StopAll();
-
+			for (auto& spawner : pEnemySpawner_)
+			{
+				spawner->StopEffect();
+			}
 			controller_.PushScene(std::make_shared<ClearScene>(controller_));
 			return;
 		}

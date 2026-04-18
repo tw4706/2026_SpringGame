@@ -42,6 +42,8 @@ public:
 	/// <param name="camera">カメラ</param>
 	void SetCamera(Camera* camera);
 
+	void StopEffect();
+
 private:
 	int areaLockHandle_;//移動制限エフェクトハンドル
 

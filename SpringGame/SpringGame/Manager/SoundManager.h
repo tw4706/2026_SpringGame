@@ -19,7 +19,9 @@ enum class SE
 	PlayerDeath,
 	CountDown,
 	Start,
-	Cancel
+	Cancel,
+	AreaLock,
+	AreaRelease
 };
 
 class SoundManager

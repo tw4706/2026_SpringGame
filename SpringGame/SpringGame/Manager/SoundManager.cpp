@@ -21,6 +21,8 @@ namespace
 	const char* kCountDownSe = "data/BGM・SE/ready.mp3";
 	const char* kStartSe = "data/BGM・SE/go.mp3";
 	const char* kCancelSe = "data/BGM・SE/cancel.mp3";
+	const char* kAreaLockSe = "data/BGM・SE/areaLock.mp3";
+	const char* kAreaReleaseSe = "data/BGM・SE/areaRelease.mp3";
 }
 
 SoundManager::SoundManager():
@@ -63,6 +65,8 @@ void SoundManager::Init()
 	seHandles_[SE::CountDown] = LoadSoundMem(kCountDownSe);
 	seHandles_[SE::Start] = LoadSoundMem(kStartSe);
 	seHandles_[SE::Cancel] = LoadSoundMem(kCancelSe);
+	seHandles_[SE::AreaLock] = LoadSoundMem(kAreaLockSe);
+	seHandles_[SE::AreaRelease] = LoadSoundMem(kAreaReleaseSe);
 }
 
 void SoundManager::PlaySe(SE se)
