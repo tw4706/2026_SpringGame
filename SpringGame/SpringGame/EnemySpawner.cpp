@@ -26,7 +26,11 @@ EnemySpawner::EnemySpawner() :
 
 EnemySpawner::~EnemySpawner()
 {
-	DeleteGraph(areaLockHandle_);
+	//エフェクトの削除
+	if (areaLockHandle_ != -1)
+	{
+		EffectManager::GetInstance().Stop(areaLockHandle_);
+	}
 }
 
 void EnemySpawner::Init(const Vector3& pos, float radius)
@@ -60,7 +64,7 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 
 	isActive_ = (distance <= radiusSq);
 
-	// プレイヤーが範囲に入ったらロック開始
+	// プレイヤーが範囲に入ったらエリアの制限を開始(エフェクトも出す)
 	if (!isLocked_ && !isCleared_ && distance <= radiusSq)
 	{
 		isLocked_ = true;
@@ -70,14 +74,10 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 
 	//この距離の範囲に入ったらスポナーを起動させる
 	//範囲外だったらスポナーは起動しない
-	if (isLocked_ && !isCleared_)
+	if (isLocked_ && !isCleared_ && !isSpawned_)
 	{
-		spawnTimer_ += dt;
-
-		if (spawnTimer_ >= spawnInteval_ && pEnemies_.size() < kEnemyMax)
+		for (int i = 0; i < kEnemyMax; i++)
 		{
-			spawnTimer_ = 0.0f;
-
 			auto enemy = std::make_shared<Enemy>();
 
 			float offsetX = static_cast<float>(GetRand(400) - 100);
@@ -91,8 +91,9 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 			enemy->SetCamera(pCamera_);
 
 			pEnemies_.push_back(enemy);
-			isSpawned_=true;
 		}
+
+		isSpawned_ = true;
 	}
 
 	//そのスポナーの周りの敵が全滅しているなら行動範囲の制限解除
@@ -123,8 +124,11 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 	pEnemies_.erase(std::remove_if(pEnemies_.begin(), pEnemies_.end(),
 		[&](std::shared_ptr<Enemy>& e)
 		{
-			//通常の削除
-			if (e->IsDestroy()){return true;}
+			//削除
+			if (e->IsDestroy())
+			{
+				return true;
+			}
 
 			//プレイヤーとの距離
 			Vector3 enemyPos = e->GetPos();

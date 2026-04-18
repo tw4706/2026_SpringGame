@@ -194,6 +194,8 @@ private:
 	bool isJustDodge_;						//ジャスト回避のフラグ
 	bool isJustDodgeTriggered_;				//ジャスト回避の判定がされたかどうか
 	int justDodgeFrame_;					//ジャスト回避の猶予フレーム数
+	bool isJustDodgeBuff_;					//ジャスト回避後のバフを受けているか
+	float justDodgeBuffTimer_;				//ジャスト回避後のバフ時間
 	int hp_;								//HP
 	Vector3 knockbackVel_;					//ノックバック速度
 	float knockbackTimer_;					//ノックバックタイマー

@@ -363,6 +363,10 @@ void GameScene::NormalUpdate(Input& input)
 		if (pPlayer_->IsDeathAnimEnd())
 		{
 			isClearing_ = true;
+
+			//シーンを切り替える前に全エフェクトの停止を行う
+			EffectManager::GetInstance().StopAll();
+
 			controller_.PushScene(std::make_shared<ClearScene>(controller_));
 			return;
 		}

@@ -367,6 +367,15 @@ void Player::UpdateTimers(float deltaTime)
 	if (hitTimer_ > 0.0f)hitTimer_ -= deltaTime;
 	if (invincibleTimer_ > 0.0f) invincibleTimer_ -= deltaTime;
 	if (justDodgeFrame_ > 0)justDodgeFrame_--;
+	if (isJustDodgeBuff_)
+	{
+		justDodgeBuffTimer_ -= deltaTime;
+
+		if (justDodgeBuffTimer_ <= 0.0f)
+		{
+			isJustDodgeBuff_ = false;
+		}
+	}
 }
 
 void Player::HandleInput(Input& input)
@@ -452,6 +461,18 @@ void Player::UpdateState()
 
 void Player::UpdateAttack()
 {
+	//ƒWƒƒƒXƒg‰ñ”ðŽž‚ÍUŒ‚”»’è‚ðL‚°‚é
+	float attackRadius = kAttackColSize;
+
+	//ƒWƒƒƒXƒg‰ñ”ð‚Ìƒoƒt‚ðŽó‚¯‚Ä‚¢‚éê‡‚ÍUŒ‚”»’è‚ðL‚°‚é
+	if (isJustDodgeBuff_)
+	{
+		attackRadius *= 5.0f;
+	}
+
+	//UŒ‚”»’è‚Ì”¼Œa‚ðƒZƒbƒg
+	attackCollider_.SetRadian(attackRadius);
+
 	//ƒvƒŒƒCƒ„[‚Ì‘O•û‚ÉUŒ‚”»’è‚ð¶¬‚·‚é
 	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 	Vector3 attackPos = pos_ + forward * kAttackDistance + kColOffset;
@@ -629,6 +650,9 @@ void Player::OnCollision(GameObject* other)
 				isJustDodgeTriggered_ = true;
 
 				invincibleTimer_ = kInvincibleTime;
+
+				isJustDodgeBuff_ = true;
+				justDodgeBuffTimer_ = 0.5f;
 
 				//SEÄ¶
 				Application::GetInstance().GetSoundManager().PlaySe(SE::JustDodge);

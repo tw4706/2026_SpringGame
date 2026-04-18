@@ -48,4 +48,20 @@ int EffectManager::Play(const std::string& name, const Vector3& pos)
 void EffectManager::Stop(int handle)
 {
 	StopEffekseer3DEffect(handle);
+
+	//エフェクトを停止したらリストからも削除する
+	handles_.erase(
+		std::remove(handles_.begin(), handles_.end(), handle),
+		handles_.end());
+
+}
+
+void EffectManager::StopAll()
+{
+	for (auto& handle : handles_)
+	{
+		StopEffekseer3DEffect(handle);
+	}
+
+	handles_.clear();
 }

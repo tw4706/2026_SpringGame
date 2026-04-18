@@ -18,6 +18,12 @@ public:
 	float GetRadian()const { return r_; }
 
 	/// <summary>
+	/// 半径のセット
+	/// </summary>
+	/// <param name="r"></param>
+	void SetRadian(float r) { r_ = r; }
+
+	/// <summary>
 	/// 衝突判定
 	/// </summary>
 	/// <param name="other">コライダーの名前</param>

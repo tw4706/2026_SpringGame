@@ -32,6 +32,11 @@ public:
 	/// <param name="handle">ハンドル</param>
 	void Stop(int handle);
 
+	/// <summary>
+	/// すべてのエフェクトの停止
+	/// </summary>
+	void StopAll();
+
 private:
 	//エフェクトハンドルを管理するマップ
 	std::map<std::string, int>effects_;
