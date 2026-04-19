@@ -93,6 +93,7 @@ void GameScene::Init()
 	EffectManager::GetInstance().Load("barrier", "data/Effect/barrier.efk");
 	EffectManager::GetInstance().Load("spawn", "data/Effect/enemySpawn.efk");
 	EffectManager::GetInstance().Load("areaLock", "data/Effect/areaLock.efk");
+	EffectManager::GetInstance().Load("enemyAttack", "data/Effect/enemyAttack.efk");
 
 	//BGMÄ¶
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Game);
@@ -376,7 +377,7 @@ void GameScene::NormalUpdate(Input& input)
 			{
 				spawner->StopEffect();
 			}
-			controller_.PushScene(std::make_shared<ClearScene>(controller_));
+			controller_.PushScene(std::make_shared<ClearScene>(controller_, clearTime_));
 			return;
 		}
 	}
@@ -391,7 +392,7 @@ void GameScene::FadeOutUpdate(Input& input)
 	{
 		frameCount_ = 0;
 		draw_ = &GameScene::NormalDraw;
-		controller_.PushScene(std::make_shared<ClearScene>(controller_));
+		controller_.PushScene(std::make_shared<ClearScene>(controller_, clearTime_));
 		return;
 	}
 }

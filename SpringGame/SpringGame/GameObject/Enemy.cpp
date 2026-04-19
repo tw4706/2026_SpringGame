@@ -51,20 +51,46 @@ namespace
 	constexpr float kDirectionEpsilon = 0.001f;
 
 	constexpr float kFrameRate = 60.0f;
+
+	//攻撃を開始する距離
+	constexpr float kAttackRange = 120.0f;
+
+	//攻撃のクールタイム
+	constexpr float kAttackCooldown = 2.0f;
+
+	//攻撃持続時間
+	constexpr float kAttackDuration = 0.3f;
+
+	//攻撃判定のサイズ
+	constexpr float kAttackColSize = 80.0f;
+
+	//予備動作時間
+	constexpr float kPreAttackTime = 1.0f;
 }
 
 Enemy::Enemy() :
 	GameObject(Vector3(400.0f, 0.0f, 0.0f), Vector3(0, 0, 0)),
 	state_(AnimationState::Spawn),
 	collider_(kColSize),
+	attackCollider_(kAttackColSize),
 	isHit_(false),
 	hitTimer_(0.0f),
 	isDead_(false),
 	isDestroy_(false),
-	isSpawning_(true)
+	isSpawning_(true),
+	attackTimer_(0.0f),
+	isAttacking_(false),
+	isPrevAttacking_(false),
+	prevAttackTimer_(0.0f)
 {
 	pos_ = kFirstPos;
 	collider_.SetOwner(this);
+	attackCollider_.SetOwner(this);
+
+	//攻撃判定の初期化
+	attackCollider_.SetEnable(false);
+	attackCollider_.SetColliderType(ColliderType::Attack);
+	attackCollider_.SetOwner(this);
 
 	//コライダーを登録
 	GameObject::pCollider_ = &collider_;
@@ -152,7 +178,7 @@ void Enemy::Update(float dt)
 	//追従
 	if (distance < kChaseRange)
 	{
-		if (distance > kStopRange)
+		if (distance < kAttackRange)
 		{
 			//停止距離に近いほど減速する
 			float t = (distance - kStopRange) / (kChaseRange - kStopRange);
@@ -164,6 +190,15 @@ void Enemy::Update(float dt)
 		{
 			//完全停止
 			vel_ = Vector3(0, 0, 0);
+
+			if (attackTimer_ <= 0.0f && !isAttacking_ && !isPrevAttacking_)
+			{
+				isPrevAttacking_ = true;
+				prevAttackTimer_ = kPreAttackTime;
+
+				//攻撃準備エフェクト
+				EffectManager::GetInstance().Play("enemyAttack", pos_);
+			}
 		}
 	}
 	else
@@ -180,11 +215,27 @@ void Enemy::Update(float dt)
 		MV1SetRotationXYZ(model_.GetHandle(), VGet(0.0f, angleY, 0.0f));
 	}
 
-	state_ = GetState();
-	animation_.ChangeState(state_);
+	//アニメーションの切り替え
+	if (isAttacking_)
+	{
+		if (state_ != AnimationState::Attack)
+		{
+			animation_.ChangeState(AnimationState::Attack);
+			state_ = AnimationState::Attack;
+		}
+	}
+	else if (isPrevAttacking_)
+	{
+		animation_.ChangeState(AnimationState::PrevAttack);
+	}
+	else
+	{
+		state_ = GetState();
+		animation_.ChangeState(state_);
+	}
 	animation_.Update(dt);
 
-	//タイマー減少
+	//ヒットタイマー減少
 	if (hitTimer_ > 0.0f)
 	{
 		hitTimer_ -= dt;
@@ -192,6 +243,48 @@ void Enemy::Update(float dt)
 	else
 	{
 		isHit_ = false;
+	}
+
+	//予備動作中
+	if (isPrevAttacking_)
+	{
+		prevAttackTimer_ -= dt;
+
+		if (prevAttackTimer_ <= 0.0f)
+		{
+			isPrevAttacking_ = false;
+
+			//攻撃を開始させる
+			isAttacking_ = true;
+			attackTimer_ = kAttackDuration;
+		}
+	}
+
+	if (isAttacking_)
+	{
+		attackTimer_ -= dt;
+
+		//攻撃判定あり
+		attackCollider_.SetEnable(true);
+
+		//攻撃判定を敵の前に前配置する
+		//Vector3 attackPos = pos_ + dir * 80.0f + kColOffset;
+		Vector3 attackPos = pos_;
+		attackCollider_.SetPos(attackPos);
+
+		if (attackTimer_ <= 0.0f)
+		{
+			isAttacking_ = false;
+			attackTimer_ = kAttackCooldown;
+
+			attackCollider_.SetEnable(false);
+		}
+	}
+	else
+	{
+		attackTimer_ -= dt;
+
+		attackCollider_.SetEnable(false);
 	}
 
 	collider_.SetPos(pos_ + kColOffset);
@@ -205,28 +298,28 @@ void Enemy::Draw()
 	unsigned int color = isHit_ ? GetColor(255, 0, 0) : GetColor(0, 255, 0);
 
 	//敵の当たり判定描画
-	DrawSphere3D(
-		collider_.GetPos().ToDxlibVector(), // 中心
-		collider_.GetRadian(),				// 半径
-		16, color, color, FALSE);
+	DrawSphere3D(collider_.GetPos().ToDxlibVector(),
+		collider_.GetRadian(),16, color, color, FALSE);
 
 	//追従範囲の描画
-	DrawSphere3D(
-		pos_.ToDxlibVector(),
-		kChaseRange,
-		32,
-		GetColor(0, 0, 255),
-		GetColor(0, 0, 255),
-		FALSE);
+	DrawSphere3D(pos_.ToDxlibVector(),kChaseRange,
+		32,GetColor(0, 0, 255),GetColor(0, 0, 255),FALSE);
 
 	//停止範囲の描画
-	DrawSphere3D(
-		pos_.ToDxlibVector(),
-		kStopRange,
-		32,
-		GetColor(255, 255, 0),
-		GetColor(255, 255, 0),
-		FALSE);
+	DrawSphere3D(pos_.ToDxlibVector(),kStopRange,
+		32,GetColor(255, 255, 0),GetColor(255, 255, 0),FALSE);
+
+	//攻撃範囲
+	if (attackCollider_.IsEnable())
+	{
+		DrawSphere3D(
+			attackCollider_.GetPos().ToDxlibVector(),
+			attackCollider_.GetRadian(),
+			16,
+			GetColor(255, 0, 255),
+			GetColor(255, 0, 255),
+			FALSE);
+	}
 #endif
 }
 
@@ -260,6 +353,15 @@ void Enemy::OnCollision(GameObject* other)
 	if (isDead_ || isSpawning_) return;
 
 	isHit_ = true;
+
+	if (other->GetCollider()->GetColliderType() == ColliderType::Charactor)
+	{
+		if (attackCollider_.IsEnable())
+		{
+			//ここでプレイヤーにダメージ
+			other->OnHit(this);
+		}
+	}
 
 	if (other->GetCollider()->GetColliderType() == ColliderType::Attack)
 	{

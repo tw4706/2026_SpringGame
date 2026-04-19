@@ -79,13 +79,18 @@ private:
 	AnimationState GetState()const;
 
 private:
-	SphereCollider collider_;		//スフィアコライダー
 	bool isHit_;					//攻撃当たっているかどうか
 	float hitTimer_;				//ヒットタイマー
 	bool isDead_;					//死亡しているかどうか
 	bool isDestroy_;				//削除されているかどうか
 	bool isSpawning_;				//生成されているかどうか
+	float attackTimer_;				//攻撃時間のタイマー
+	bool isAttacking_;				//攻撃しているかどうか
+	bool isPrevAttacking_;			//攻撃準備かどうか				
+	float prevAttackTimer_;			//攻撃準備タイマー
 
+	SphereCollider collider_;		//スフィアコライダー
+	SphereCollider attackCollider_;	//攻撃判定
 	Player* pPlayer_=nullptr;		//プレイヤーのポインタ
 	Camera* pCamera_ = nullptr;		//カメラのポインタ
 	Model model_;					//モデル

@@ -6,7 +6,7 @@ class Input;
 class ClearScene :public Scene
 {
 public:
-	ClearScene(SceneController& controller);
+	ClearScene(SceneController& controller,float clearTime);
 	~ClearScene();
 
 	void Init()override {};
@@ -35,6 +35,7 @@ private:
 	float blinkTimer_ = 0.0f;
 	int resultScore_ = 0;
 	int displayScore_ = 0;
+	float clearTime_;	//クリア時間
 
 	ResultMenu currentMenu_=ResultMenu::Retry;//現在選択されている選択肢の状態
 };

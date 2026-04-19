@@ -5,7 +5,7 @@
 #include"../System/Input.h"
 #include"../Game.h"
 #include"../System/Application.h"
-#include<algorithm>
+#include <algorithm>
 #include<Dxlib.h>
 
 namespace
@@ -13,10 +13,14 @@ namespace
 	constexpr int kFadeInterval = 60;
 
 	constexpr int kscoreTextOffsetY = 100;
+
+	//ゲームの時間
+	constexpr float kGamePlayTime = 60.0f;
 }
 
-ClearScene::ClearScene(SceneController& controller) :
+ClearScene::ClearScene(SceneController& controller, float clearTime) :
 	Scene(controller),
+	clearTime_(clearTime),
 	update_(&ClearScene::FadeInUpdate),
 	draw_(&ClearScene::FadeDraw),
 	frameCount_(kFadeInterval),
@@ -142,6 +146,24 @@ void ClearScene::NormalDraw()
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+	//表示用
+	int timeInt = (int)clearTime_;
+	int timeDec = (int)((clearTime_ - timeInt) * 10);
+
+	char buf[64];
+	sprintf_s(buf, "TIME : %d.%d", timeInt, timeDec);
+
+	// 文字幅取得
+	int width = GetDrawStringWidthToHandle(buf, strlen(buf), Game::kFontUIHandle);
+
+	//表示する座標
+	int x = Game::kScreenWidth / 2;
+	int y = 100;
+
+	//描画
+	DrawStringToHandle(x,y,buf,GetColor(255, 255, 255),Game::kFontUIHandle);
+
+	//選択肢
 	const char* retryText = "リトライ";
 	const char* titleText = "タイトルへもどる";
 
@@ -149,8 +171,8 @@ void ClearScene::NormalDraw()
 	int baseY = Game::kScreenHeight / 2 + 50;
 
 	//拡縮
-	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 5.0f) : 1.0f;
-	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 5.0f) : 1.0f;
+	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 0.5f) : 1.0f;
+	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 0.5f) : 1.0f;
 
 	//文字幅取得
 	int retryW = GetDrawStringWidthToHandle(retryText, strlen(retryText), Game::kFontUIHandle);
@@ -158,7 +180,7 @@ void ClearScene::NormalDraw()
 
 	//描画
 	DrawExtendStringToHandle(
-		centerX - retryW / 2,
+		centerX - (int)(retryW * retryScale / 2),
 		baseY,
 		retryScale,
 		retryScale,
@@ -167,7 +189,7 @@ void ClearScene::NormalDraw()
 		Game::kFontUIHandle);
 
 	DrawExtendStringToHandle(
-		centerX - titleW / 2,
+		centerX - (int)(titleW * titleScale / 2),
 		baseY + 50,
 		titleScale,
 		titleScale,

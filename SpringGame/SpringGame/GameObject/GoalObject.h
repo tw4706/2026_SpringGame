@@ -13,8 +13,10 @@ public:
 	void Draw()override;
 private:
 	float angle_;
+	float hitTimer_;
+	bool isHit_;
 
-	//SphereCollider pCollider_;
+	SphereCollider pCollider_;
 	Model model_;
 };
 

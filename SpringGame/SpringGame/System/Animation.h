@@ -13,6 +13,7 @@ enum class AnimationState
     Run,
     Hit,
     Attack,
+    PrevAttack,
     Death,
     Dodge
 };

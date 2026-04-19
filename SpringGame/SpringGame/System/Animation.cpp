@@ -14,7 +14,9 @@ namespace
 	//“G
 	const char* kEnemySpawn = "MonsterArmature|Jump";
 	const char* kEnemyIdle = "MonsterArmature|Idle";
-	const char* kEnemyRun = "MonsterArmature|Walk";
+	const char* kEnemyRun = "MonsterArmature|Dance";
+	const char* kEnemyAttack = "MonsterArmature|Bite_Front";
+	const char* kEnemyPrevAttack = "MonsterArmature|No";
 	const char* kEnemyDeath = "MonsterArmature|Death";
 
 	constexpr float kAnimationSpeed = 30.0f;
@@ -249,6 +251,12 @@ void Animation::ChangeState(AnimationState state)
 			break;
 		case AnimationState::Run:
 			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyRun);
+			break;
+		case AnimationState::Attack:
+			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyAttack);
+			break;
+		case AnimationState::PrevAttack:
+			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyPrevAttack);
 			break;
 		case AnimationState::Death:
 			animIndex = MV1GetAnimIndex(modelHandle_, kEnemyDeath);
