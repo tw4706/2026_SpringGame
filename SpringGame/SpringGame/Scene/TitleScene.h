@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
-#include"../Bg.h"
-#include"../Actor/Player.h"
+#include"../GameObject/Bg.h"
+#include"../GameObject/Player.h"
 
 class TitleScene :public Scene
 {

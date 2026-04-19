@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include"../Manager/CollisionManager.h"
 #include"../Manager/GameSceneUI.h"
-#include"../Bg.h"
+#include"../GameObject/Bg.h"
 
 class Enemy;
 class Player;

@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "../Actor/Player.h"
+#include "../GameObject/Player.h"
 #include"../Physics/Matrix4x4.h"
 #include<Dxlib.h>
 #include<algorithm>

@@ -1,5 +1,5 @@
 #include "SphereCollider.h"
-#include "../GameObject.h"
+#include "../GameObject/GameObject.h"
 
 SphereCollider::SphereCollider(float r):
 	r_(r)

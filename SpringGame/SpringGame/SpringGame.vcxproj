@@ -137,21 +137,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Actor\Enemy.cpp" />
-    <ClCompile Include="Actor\Player.cpp" />
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Bg.cpp" />
-    <ClCompile Include="EnemySpawner.cpp" />
+    <ClCompile Include="GameObject\Enemy.cpp" />
+    <ClCompile Include="GameObject\Player.cpp" />
+    <ClCompile Include="System\Animation.cpp" />
+    <ClCompile Include="System\Application.cpp" />
+    <ClCompile Include="GameObject\Bg.cpp" />
+    <ClCompile Include="GameObject\EnemySpawner.cpp" />
     <ClCompile Include="Manager\EffectManager.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="OperationGuideUI.cpp" />
-    <ClCompile Include="Scene\ClearScene.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="UI\OperationGuideUI.cpp" />
+    <ClCompile Include="Scene\ResultScene.cpp" />
+    <ClCompile Include="GameObject\Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Manager\CollisionManager.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="GameObject\GameObject.cpp" />
+    <ClCompile Include="System\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics\Matrix4x4.cpp" />
     <ClCompile Include="Physics\Camera.cpp" />
@@ -160,27 +160,27 @@
     <ClCompile Include="Scene\SceneController.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
-    <ClCompile Include="PopUI.cpp" />
+    <ClCompile Include="UI\PopUI.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Manager\SoundManager.cpp" />
     <ClCompile Include="Manager\GameSceneUI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor\Enemy.h" />
-    <ClInclude Include="Actor\Player.h" />
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="Bg.h" />
-    <ClInclude Include="EnemySpawner.h" />
+    <ClInclude Include="GameObject\Enemy.h" />
+    <ClInclude Include="GameObject\Player.h" />
+    <ClInclude Include="System\Animation.h" />
+    <ClInclude Include="System\Application.h" />
+    <ClInclude Include="GameObject\Bg.h" />
+    <ClInclude Include="GameObject\EnemySpawner.h" />
     <ClInclude Include="Manager\EffectManager.h" />
-    <ClInclude Include="OperationGuideUI.h" />
-    <ClInclude Include="Scene\ClearScene.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="UI\OperationGuideUI.h" />
+    <ClInclude Include="Scene\ResultScene.h" />
+    <ClInclude Include="GameObject\Model.h" />
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Manager\CollisionManager.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="System\Input.h" />
     <ClInclude Include="Physics\Matrix4x4.h" />
     <ClInclude Include="Physics\Camera.h" />
     <ClInclude Include="Physics\Vector3.h" />
@@ -189,7 +189,7 @@
     <ClInclude Include="Scene\SceneController.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
-    <ClInclude Include="PopUI.h" />
+    <ClInclude Include="UI\PopUI.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Manager\SoundManager.h" />
     <ClInclude Include="Manager\GameSceneUI.h" />

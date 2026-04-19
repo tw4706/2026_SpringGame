@@ -1,6 +1,6 @@
 #include "GameSceneUI.h"
 #include"../Game.h"
-#include"../Application.h"
+#include"../System/Application.h"
 #include <DxLib.h>
 #include <string>
 #include <algorithm>

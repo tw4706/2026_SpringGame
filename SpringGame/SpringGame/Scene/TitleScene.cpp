@@ -2,9 +2,9 @@
 #include"../Physics/Vector3.h"
 #include "SceneController.h"
 #include "GameScene.h"
-#include"../Input.h"
+#include"../System/Input.h"
 #include"../Game.h"
-#include"../Application.h"
+#include"../System/Application.h"
 #include<Dxlib.h>
 #include<memory>
 #include<algorithm>
