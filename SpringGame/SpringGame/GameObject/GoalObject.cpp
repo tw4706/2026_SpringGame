@@ -3,7 +3,11 @@
 namespace
 {
 	const Vector3 kFirstPos = { 0.0f,0.0f,10000.0f };
-	const Vector3 kModelScale = { 10.0f,10.0f,10.0f };
+
+	const Vector3 kModelScale = { 5.0f,5.0f,5.0f };
+
+	//当たり判定の位置調整
+	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };
 }
 
 GoalObject::GoalObject() :
@@ -11,10 +15,10 @@ GoalObject::GoalObject() :
 	angle_(0.0f)
 {
 	pos_ = kFirstPos;
-	pCollider_->SetOwner(this);
+	//pCollider_.SetOwner(this);
 
 	//コライダーを登録
-	GameObject::pCollider_ = pCollider_;
+	//GameObject::pCollider_ = &pCollider_;
 }
 
 GoalObject::~GoalObject()
@@ -27,6 +31,11 @@ void GoalObject::Init()
 	model_.Load("data/goalObject.mv1");
 	model_.SetPosition(pos_);
 	model_.SetScale(kModelScale);
+
+	//当たり判定の初期化
+	//pCollider_.SetEnable(false);
+	//pCollider_.SetColliderType(ColliderType::Charactor);
+	//pCollider_.SetPos(pos_ + kColOffset);
 }
 
 void GoalObject::Update()

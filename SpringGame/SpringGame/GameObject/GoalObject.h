@@ -14,7 +14,7 @@ public:
 private:
 	float angle_;
 
-	SphereCollider* pCollider_;
+	//SphereCollider pCollider_;
 	Model model_;
 };
 

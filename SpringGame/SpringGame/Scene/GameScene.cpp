@@ -9,7 +9,7 @@
 #include"../Physics/Camera.h"
 #include"../System/Application.h"
 #include"../UI/OperationGuideUI.h"
-#include"../GameObject/gaolObject.h"
+#include"../GameObject/GoalObject.h"
 #include "../Manager/EffectManager.h"
 #include "../GameObject/EnemySpawner.h"
 #include"EffekseerForDXLib.h"
@@ -120,6 +120,7 @@ void GameScene::Init()
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
 
+	//ゴールオブジェクトの初期化
 	pGoalObject_->Init();
 
 	//背景の初期化
@@ -267,6 +268,9 @@ void GameScene::NormalUpdate(Input& input)
 		Input emptyInput;
 		pPlayer_->Update(emptyInput, dt_);
 	}
+
+	//ゴールオブジェクトの更新
+	pGoalObject_->Update();
 
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
@@ -456,6 +460,9 @@ void GameScene::NormalDraw()
 
 	//プレイヤーの描画
 	pPlayer_->Draw();
+
+	//ゴールオブジェクトの描画
+	pGoalObject_->Draw();
 
 	float time = (std::max)(0.0f, clearTime_);
 
