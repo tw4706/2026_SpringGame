@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="GameObject\Enemy.cpp" />
     <ClCompile Include="GameObject\Player.cpp" />
+    <ClCompile Include="GameObject\GoalObject.cpp" />
     <ClCompile Include="System\Animation.cpp" />
     <ClCompile Include="System\Application.cpp" />
     <ClCompile Include="GameObject\Bg.cpp" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="GameObject\Enemy.h" />
     <ClInclude Include="GameObject\Player.h" />
+    <ClInclude Include="GameObject\GoalObject.h" />
     <ClInclude Include="System\Animation.h" />
     <ClInclude Include="System\Application.h" />
     <ClInclude Include="GameObject\Bg.h" />

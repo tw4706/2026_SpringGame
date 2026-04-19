@@ -1,7 +1,7 @@
 #pragma once
-#include"../GameObject/Model.h"
+#include "GameObject.h"
+#include"Model.h"
 #include"../System/Animation.h"
-#include "../GameObject/GameObject.h"
 #include "../Physics/SphereCollider.h"
 
 class Player;

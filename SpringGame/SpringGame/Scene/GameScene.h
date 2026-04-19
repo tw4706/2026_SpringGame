@@ -10,6 +10,7 @@ class Player;
 class Input;
 class Camera;
 class PopUI;
+class GoalObject;
 class EnemySpawner;
 class OperationGuideUI;
 class GameScene :public Scene
@@ -80,6 +81,7 @@ private:
 	std::vector<PopUI>pPopUIs_;										//プレイヤーの頭上に表示するPopUI
 	std::shared_ptr<Player>pPlayer_;								//プレイヤー
 	std::shared_ptr<Camera>pCamera_;								//カメラ
+	std::shared_ptr<GoalObject>pGoalObject_;						//ゴール
 	std::vector<std::shared_ptr<EnemySpawner>>pEnemySpawner_;		//敵のスポナー(生成場所)
 };
 

@@ -25,8 +25,16 @@ private:
 	using DrawFunc_t = void (ClearScene::*)();
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 private:
+	enum class ResultMenu
+	{
+		Retry,
+		Title
+	};
+private:
 	int frameCount_;
 	float blinkTimer_ = 0.0f;
 	int resultScore_ = 0;
 	int displayScore_ = 0;
+
+	ResultMenu currentMenu_=ResultMenu::Retry;//現在選択されている選択肢の状態
 };

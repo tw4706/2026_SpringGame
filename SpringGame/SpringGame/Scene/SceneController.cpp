@@ -20,7 +20,7 @@ void SceneController::ResetScene(std::shared_ptr<Scene> scene)
 
 void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 {
-
+	scenes_.clear();
 	//もし、リストが空の場合、普通に代入でChangeSceneしようとすると
 	//当然、emptyの箱に対してChangeしようとするので、クラッシュします。
 	//このため、最初にemptyかどうかチェックします。

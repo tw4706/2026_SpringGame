@@ -6,7 +6,7 @@
 
 namespace
 {
-	const Vector3 kTargetToCamera = { 0.0f,280.0f,-660.0f };
+	const Vector3 kTargetToCamera = { 0.0f,500.0f,-660.0f };
 }
 
 Camera::Camera() :

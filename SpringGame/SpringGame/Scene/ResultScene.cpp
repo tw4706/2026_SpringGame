@@ -19,7 +19,7 @@ ClearScene::ClearScene(SceneController& controller) :
 	Scene(controller),
 	update_(&ClearScene::FadeInUpdate),
 	draw_(&ClearScene::FadeDraw),
-	frameCount_(0),
+	frameCount_(kFadeInterval),
 	resultScore_(0),
 	displayScore_(0)
 {
@@ -56,7 +56,7 @@ void ClearScene::NormalUpdate(Input& input)
 	frameCount_++;
 	blinkTimer_ += 0.1f;
 
-	if (frameCount_ >= 60)
+	if (frameCount_ >= kFadeInterval)
 	{
 		if (displayScore_ < resultScore_)
 		{
@@ -70,23 +70,44 @@ void ClearScene::NormalUpdate(Input& input)
 		}
 	}
 
+	//選択を選ぶ
+	if (input.IsTriggered("up") || input.IsTriggered("down"))
+	{
+		if (currentMenu_ == ResultMenu::Retry)
+		{
+			currentMenu_ = ResultMenu::Title;
+		}
+		else
+		{
+			currentMenu_ = ResultMenu::Retry;
+		}
+	}
+
 	//リトライが行われたら
 	if (input.IsTriggered("retry"))
 	{
 		//SE再生
 		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
-		
-		//ゲームシーンに戻る
-		controller_.ResetScene(std::make_shared<GameScene>(controller_));
-		return;
+
+		update_ = &ClearScene::FadeOutUpdate;
+		draw_ = &ClearScene::FadeDraw;
+
+		frameCount_ = kFadeInterval;
 	}
 }
 
 void ClearScene::FadeOutUpdate(Input& input)
 {
-	if (frameCount_++ <= 0)
+	if (frameCount_-- <= 0)
 	{
-		update_ = &ClearScene::FadeInUpdate;
+		if (currentMenu_ == ResultMenu::Retry)
+		{
+			controller_.ResetScene(std::make_shared<GameScene>(controller_));
+		}
+		else
+		{
+			controller_.ResetScene(std::make_shared<TitleScene>(controller_));
+		}
 	}
 }
 
@@ -95,7 +116,18 @@ void ClearScene::FadeDraw()
 	//通常の描画
 	NormalDraw();
 
-	float rate = (float)frameCount_ / kFadeInterval;
+	float rate;
+
+	if (update_ == &ClearScene::FadeInUpdate)
+	{
+		// フェードイン
+		rate = (float)frameCount_ / kFadeInterval;
+	}
+	else
+	{
+		//フェードアウト
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	//真っ黒画面から透明
@@ -110,16 +142,36 @@ void ClearScene::NormalDraw()
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	//リトライ表示
-	const char* retryText = "Aボタンでリスタート";
-	int retryW = GetDrawStringWidthToHandle(retryText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
-	int retryX = (Game::kScreenWidth - retryW) / 2;
+	const char* retryText = "リトライ";
+	const char* titleText = "タイトルへもどる";
 
-	//透明度
-	float alphaRate = (sinf(blinkTimer_) + 1.0f) * 0.5f;
-	int alpha = (int)(255 * alphaRate);
+	int centerX = Game::kScreenWidth / 2;
+	int baseY = Game::kScreenHeight / 2 + 50;
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawStringToHandle(retryX, Game::kScreenHeight / 2 + 150, retryText, GetColor(255, 255, 255), Game::kFontUIHandle);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//拡縮
+	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 5.0f) : 1.0f;
+	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 5.0f) : 1.0f;
+
+	//文字幅取得
+	int retryW = GetDrawStringWidthToHandle(retryText, strlen(retryText), Game::kFontUIHandle);
+	int titleW = GetDrawStringWidthToHandle(titleText, strlen(titleText), Game::kFontUIHandle);
+
+	//描画
+	DrawExtendStringToHandle(
+		centerX - retryW / 2,
+		baseY,
+		retryScale,
+		retryScale,
+		retryText,
+		GetColor(255, 255, 255),
+		Game::kFontUIHandle);
+
+	DrawExtendStringToHandle(
+		centerX - titleW / 2,
+		baseY + 50,
+		titleScale,
+		titleScale,
+		titleText,
+		GetColor(255, 255, 255),
+		Game::kFontUIHandle);
 }

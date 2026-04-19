@@ -1,14 +1,15 @@
 #include "GameScene.h"
-#include"../System/Input.h"
-#include"../UI/PopUI.h"
 #include "../Game.h"
 #include "ResultScene.h"
+#include"../UI/PopUI.h"
+#include"../System/Input.h"
+#include"SceneController.h"
 #include"../GameObject/Player.h"
 #include"../GameObject/Enemy.h"
 #include"../Physics/Camera.h"
-#include"SceneController.h"
 #include"../System/Application.h"
 #include"../UI/OperationGuideUI.h"
+#include"../GameObject/gaolObject.h"
 #include "../Manager/EffectManager.h"
 #include "../GameObject/EnemySpawner.h"
 #include"EffekseerForDXLib.h"
@@ -61,6 +62,7 @@ GameScene::GameScene(SceneController& contorller) :
 	pOperationGuideUI_ = std::make_shared<OperationGuideUI>();
 	pPlayer_ = std::make_shared<Player>();
 	pCamera_ = std::make_shared<Camera>();
+	pGoalObject_ = std::make_shared<GoalObject>();
 }
 
 GameScene::~GameScene()
@@ -117,6 +119,8 @@ void GameScene::Init()
 	//ÉJÉÅÉâÇÃèâä˙âª
 	pCamera_->SetPlayer(pPlayer_);
 	pCamera_->Init();
+
+	pGoalObject_->Init();
 
 	//îwåiÇÃèâä˙âª
 	bg_.Init();

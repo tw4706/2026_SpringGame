@@ -37,6 +37,9 @@ void TitleScene::Init()
 {
 	bg_.Init();
 
+	//カメラ設定
+	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500),VGet(0, 0, 0));
+
 	titleHandle_ = LoadGraph("data/titleLogo.png");
 
 	//BGM再生
@@ -50,6 +53,7 @@ void TitleScene::Update(Input& input)
 
 void TitleScene::Draw()
 {
+	ClearDrawScreen();
 	(this->*draw_)();
 }
 
@@ -74,14 +78,14 @@ void TitleScene::NormalUpdate(Input& input)
 		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
 		update_ = &TitleScene::FadeOutUpdate;
 		draw_ = &TitleScene::FadeDraw;
-		frameCount_ = 0;
+		frameCount_ = kFadeInterval;
 	}
 }
 
 void TitleScene::FadeOutUpdate(Input& input)
 {
 	bgAngle_ += 0.003f;
-	if (frameCount_++ >= kFadeInterval)
+	if (frameCount_-- <= 0)
 	{
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_));
 	}
@@ -91,7 +95,18 @@ void TitleScene::FadeDraw()
 {
 	NormalDraw();
 
-	float rate = frameCount_ / 60.0f;
+	float rate;
+
+	if (update_ == &TitleScene::FadeInUpdate)
+	{
+		// フェードイン
+		rate = (float)frameCount_ / kFadeInterval;
+	}
+	else
+	{
+		//フェードアウト
+		rate = 1.0f - (float)frameCount_ / kFadeInterval;
+	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
@@ -109,7 +124,7 @@ void TitleScene::NormalDraw()
 	cameraPos.y_ = 0.0f;
 	cameraPos.z_ = sinf(bgAngle_) * 500.0f;
 
-	// カメラを中心へ向ける
+	//カメラを画面中央へ向ける
 	SetCameraPositionAndTarget_UpVecY(
 		cameraPos.ToDxlibVector(),
 		center.ToDxlibVector());
@@ -118,22 +133,12 @@ void TitleScene::NormalDraw()
 	bg_.Draw(center);
 
 	//タイトル名
-	//const char* text = "らびっとスマッシュ";
 	const char* pressStartText = "ボタンをおしてスタート";
 
 	////文字の横幅を取得
-	//int titleWidth = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kTitleFontHandle);
-
 	int pressStartWidth = GetDrawStringWidthToHandle(pressStartText, static_cast<int>(strlen(pressStartText)), Game::kTitleFontHandle);
 
-	////画面サイズの半分(真ん中)
-	//int x = (Game::kScreenWidth - titleWidth) / 2;
-	//int y = Game::kScreenHeight / 2 - 200;
-
-	////描画　
-	//DrawStringToHandle(x + 4, y + 4, text, 0x000000, Game::kTitleFontHandle);
-	//DrawStringToHandle(x, y, text, 0xffff00, Game::kTitleFontHandle);
-
+	//描画
 	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0.1f, 0.0f, titleHandle_, true);
 	;
 	int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
