@@ -24,6 +24,9 @@ namespace
 	//敵を生成するスポナーの設置数
 	constexpr int kEnemySpawnerNum = 6;
 
+	//ウェーブの最大数
+	constexpr int kMaxWave = 5;
+
 	//最大体力
 	constexpr int kMaxHP = 3;
 
@@ -82,10 +85,7 @@ void GameScene::Init()
 	//シャドウマップの生成
 	shadowMapHandle_ = MakeShadowMap(4096, 4096);
 	SetShadowMapLightDirection(shadowMapHandle_, VGet(-0.5f, -1.0f, 0.5f));
-	SetShadowMapDrawArea(
-		shadowMapHandle_,
-		VGet(-1500, -100, -1500),
-		VGet(1500, 800, 1500));
+	SetShadowMapDrawArea(shadowMapHandle_,VGet(-1500, -100, -1500),VGet(4500, 800, 4500));
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/Effect/hit.efk");
@@ -104,13 +104,20 @@ void GameScene::Init()
 	{
 		auto spawner = std::make_shared<EnemySpawner>();
 
-		float z = 700.0f + i * 1500.0f;
+		float z = 1000.0f + i * 1500.0f;
 
 		spawner->Init({ 0.0f, 0.0f, z }, 600.0f);
 		spawner->SetPlayer(pPlayer_.get());
 		spawner->SetCamera(pCamera_.get());
 
 		pEnemySpawner_.push_back(spawner);
+	}
+
+	prevLocked_.resize(pEnemySpawner_.size());
+
+	for (int i = 0; i < pEnemySpawner_.size(); i++)
+	{
+		prevLocked_[i] = false;
 	}
 
 	//プレイヤーの初期化
@@ -231,6 +238,18 @@ void GameScene::NormalUpdate(Input& input)
 			lockedSpawner = spawner.get();
 			break;
 		}
+	}
+
+	for (int i = 0; i < pEnemySpawner_.size(); i++)
+	{
+		bool nowLocked = pEnemySpawner_[i]->IsLocked();
+
+		if (prevLocked_[i] && !nowLocked)
+		{
+			currentWave_++;
+		}
+
+		prevLocked_[i] = nowLocked;
 	}
 
 	if (lockedSpawner)
@@ -406,6 +425,13 @@ void GameScene::FadeOutUpdate(Input& input)
 		controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
 		return;
 	}
+
+	//ゴールオブジェクトに触れたら
+	if (pGoalObject_->IsHit())
+	{
+		controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
+		return;
+	}
 }
 
 void GameScene::FadeDraw()
@@ -480,7 +506,7 @@ void GameScene::NormalDraw()
 
 	//UIマネージャーの描画
 	gameSceneUI_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_, time, isGameStarted_,
-		gameStartTimer_, timeScale_, timeBonusDisplay_, timeBonusTimer_);
+		gameStartTimer_, timeScale_, timeBonusDisplay_, timeBonusTimer_,currentWave_);
 
 	//操作説明の描画
 	pOperationGuideUI_->Draw();

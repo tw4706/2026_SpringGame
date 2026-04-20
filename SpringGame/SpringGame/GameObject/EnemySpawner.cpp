@@ -79,8 +79,8 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 		{
 			auto enemy = std::make_shared<Enemy>();
 
-			float offsetX = static_cast<float>(GetRand(1200) - 600);
-			float offsetZ = static_cast<float>(GetRand(1200) - 600);
+			float offsetX = static_cast<float>(GetRand(800) - 400);
+			float offsetZ = static_cast<float>(GetRand(800) - 400);
 
 			Vector3 spawnPos = pos_ + Vector3(offsetX, 0.0f, offsetZ);
 

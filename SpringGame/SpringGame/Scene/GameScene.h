@@ -73,11 +73,13 @@ private:
 	bool fadeFinished_ = false;										//フェードが終了したかどうか
 	bool isGameStarted_ = false;									//ゲーム開始したかどうか
 	bool isTimeUp_ = false;											//タイムアップになったかどうか
+	int currentWave_ = 0;											//現在のウェーブ数
 
 	Bg bg_;															//背景
 	GameSceneUI	gameSceneUI_;										//ゲームシーン用UI
 	std::shared_ptr<OperationGuideUI>pOperationGuideUI_;			//操作説明
 	CollisionManager collisionManager_;								//当たり判定マネージャー
+	std::vector<bool> prevLocked_;									//スポナーを壊したかどうか
 	std::vector<PopUI>pPopUIs_;										//プレイヤーの頭上に表示するPopUI
 	std::shared_ptr<Player>pPlayer_;								//プレイヤー
 	std::shared_ptr<Camera>pCamera_;								//カメラ

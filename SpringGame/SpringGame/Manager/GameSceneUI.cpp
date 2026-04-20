@@ -42,12 +42,13 @@ void GameSceneUI::Init()
 
 void GameSceneUI::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFrame,
 	float time, bool isGameStarted,
-	float gameStartTimer, float timeScale, float bonus, float bonusTimer)
+	float gameStartTimer, float timeScale, float bonus, float bonusTimer, int currentWave)
 {
 	DrawTime(time);
 	DrawHPUI(hp, isHpAnimating, damageIndex, hpAnimFrame);
 	DrawGameStart(isGameStarted, gameStartTimer);
 	DrawDodgeScreenColor(timeScale);
+	DrawWave(currentWave);
 }
 
 void GameSceneUI::DrawHPUI(int hp, bool isAnimating, int damageIndex, int animFrame)
@@ -110,6 +111,24 @@ void GameSceneUI::DrawDodgeScreenColor(float timeScale)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 	DrawBox(0, 0, 1280, 720, GetColor(180, 100, 255), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void GameSceneUI::DrawWave(int currentWave)
+{
+	const int maxWave = 6;
+
+	char buf[64];
+	sprintf_s(buf, "WAVE %d / %d", currentWave, maxWave);
+
+	int y = 150;
+
+	//’†‰›•\Ž¦
+	int width = GetDrawStringWidthToHandle(buf, strlen(buf), Game::kFontUIHandle);
+	int x = 50;
+
+	//‰e•t‚«‚Å•`‰æ
+	DrawStringToHandle(x + 4, y + 4, buf, GetColor(0, 0, 0), Game::kFontUIHandle);
+	DrawStringToHandle(x, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
 }
 
 void GameSceneUI::DrawCenterText(const char* text, int y, int color)

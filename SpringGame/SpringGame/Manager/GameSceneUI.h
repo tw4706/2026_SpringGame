@@ -9,7 +9,7 @@ public:
 
 	void Init();
 
-	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float time,bool isGameStarted, float gameStartTimer,float timeScale,float bonus,float bonusTimer);
+	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float time,bool isGameStarted, float gameStartTimer,float timeScale,float bonus,float bonusTimer, int currentWave);
 
 private:
 
@@ -36,6 +36,11 @@ private:
 	/// </summary>
 	/// <param name="timeScale">スローの倍率</param>
 	void DrawDodgeScreenColor(float timeScale);
+
+	/// <summary>
+	/// 何ウェーブかの描画
+	/// </summary>
+	void DrawWave(int currentWave);
 
 	/// <summary>
 	/// 文字列を画面中央に描画する関数
