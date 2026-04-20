@@ -1,10 +1,13 @@
 #include "GoalObject.h"
+#include"../Scene/ResultScene.h"
+#include"../Scene/SceneController.h"
+#include<memory>
 
 namespace
 {
 	const Vector3 kFirstPos = { 0.0f,0.0f,10000.0f };
 
-	const Vector3 kPosOffset = { 0.0f,200.0f,0.0f };
+	const Vector3 kPosOffset = { 0.0f,150.0f,0.0f };
 
 	const Vector3 kModelScale = { 2.0f,1.0f,2.0f };
 
@@ -68,8 +71,22 @@ void GoalObject::Draw()
 
 	//“G‚Ì“–‚½‚è”»’è•`‰æ
 	DrawSphere3D(
-		pCollider_.GetPos().ToDxlibVector(), // ’†S
-		pCollider_.GetRadian(),				// ”¼Œa
+		pCollider_.GetPos().ToDxlibVector(),	//’†S
+		pCollider_.GetRadian(),					//”¼Œa
 		16, color, color, FALSE);
 #endif
+}
+
+void GoalObject::OnCollision(GameObject*other)
+{
+	if (other->GetCollider()->GetColliderType() == ColliderType::Charactor)
+	{
+		isHit_ = true;
+		printf("“–‚½‚Á‚Ä‚é!");
+	}
+}
+
+bool GoalObject::IsHit() const
+{
+	return isHit_;
 }

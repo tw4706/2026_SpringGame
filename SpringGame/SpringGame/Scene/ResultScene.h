@@ -3,11 +3,11 @@
 
 class SceneController;
 class Input;
-class ClearScene :public Scene
+class ResultScene :public Scene
 {
 public:
-	ClearScene(SceneController& controller,float clearTime);
-	~ClearScene();
+	ResultScene(SceneController& controller,float clearTime);
+	~ResultScene();
 
 	void Init()override {};
 	void Update(Input& input);
@@ -17,12 +17,12 @@ private:
 	void FadeInUpdate(Input& input);
 	void NormalUpdate(Input& input);
 	void FadeOutUpdate(Input& input);
-	using UpdateFunc_t = void (ClearScene::*)(Input&);
+	using UpdateFunc_t = void (ResultScene::*)(Input&);
 	UpdateFunc_t update_;//update系を受け取るメンバ関数ポインタ
 
 	void FadeDraw();
 	void NormalDraw();
-	using DrawFunc_t = void (ClearScene::*)();
+	using DrawFunc_t = void (ResultScene::*)();
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
 private:
 	enum class ResultMenu

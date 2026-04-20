@@ -37,10 +37,21 @@ void TitleScene::Init()
 {
 	bg_.Init();
 
+	SetCameraNearFar(1.0f, 10000.0f);
+
 	//ƒJƒƒ‰Ý’è
 	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500),VGet(0, 0, 0));
 
 	titleHandle_ = LoadGraph("data/titleLogo.png");
+
+	update_ = &TitleScene::FadeInUpdate;
+	draw_ = &TitleScene::FadeDraw;
+
+	frameCount_ = kFadeInterval;
+
+	bgAngle_ = 0.0f;
+	blinkTimer_ = 0.0f;
+
 
 	//BGMÄ¶
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Title);
@@ -53,7 +64,6 @@ void TitleScene::Update(Input& input)
 
 void TitleScene::Draw()
 {
-	ClearDrawScreen();
 	(this->*draw_)();
 }
 
@@ -110,8 +120,7 @@ void TitleScene::FadeDraw()
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight,
-		GetColor(0, 0, 0), TRUE);
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight,GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -151,5 +160,3 @@ void TitleScene::NormalDraw()
 	DrawStringToHandle(pressStartx, pressStarty, pressStartText, 0xffffff, Game::kTitleFontHandle);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
-
-

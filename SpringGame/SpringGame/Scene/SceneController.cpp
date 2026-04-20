@@ -1,6 +1,11 @@
 #include "SceneController.h"
 #include "Scene.h"
 #include"../Manager/EffectManager.h"
+SceneController& SceneController::GetInstance()
+{
+	static SceneController instance;
+	return instance;
+}
 
 SceneController::SceneController()
 {
@@ -20,7 +25,6 @@ void SceneController::ResetScene(std::shared_ptr<Scene> scene)
 
 void SceneController::ChangeScene(std::shared_ptr<Scene> scene)
 {
-	scenes_.clear();
 	//もし、リストが空の場合、普通に代入でChangeSceneしようとすると
 	//当然、emptyの箱に対してChangeしようとするので、クラッシュします。
 	//このため、最初にemptyかどうかチェックします。
@@ -49,7 +53,10 @@ void SceneController::PushScene(std::shared_ptr<Scene> scene)
 
 void SceneController::PopScene()
 {
-	scenes_.pop_back();
+	if (!scenes_.empty())
+	{
+		scenes_.pop_back();
+	}
 }
 
 void SceneController::Update(Input& input)

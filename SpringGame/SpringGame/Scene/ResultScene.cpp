@@ -18,11 +18,11 @@ namespace
 	constexpr float kGamePlayTime = 60.0f;
 }
 
-ClearScene::ClearScene(SceneController& controller, float clearTime) :
+ResultScene::ResultScene(SceneController& controller, float clearTime) :
 	Scene(controller),
 	clearTime_(clearTime),
-	update_(&ClearScene::FadeInUpdate),
-	draw_(&ClearScene::FadeDraw),
+	update_(&ResultScene::FadeInUpdate),
+	draw_(&ResultScene::FadeDraw),
 	frameCount_(kFadeInterval),
 	resultScore_(0),
 	displayScore_(0)
@@ -33,29 +33,29 @@ ClearScene::ClearScene(SceneController& controller, float clearTime) :
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
 
-ClearScene::~ClearScene()
+ResultScene::~ResultScene()
 {
 }
 
-void ClearScene::Update(Input& input)
+void ResultScene::Update(Input& input)
 {
 	(this->*update_)(input);
 }
-void ClearScene::Draw()
+void ResultScene::Draw()
 {
 	(this->*draw_)();
 }
 
-void ClearScene::FadeInUpdate(Input& input)
+void ResultScene::FadeInUpdate(Input& input)
 {
 	if (frameCount_-- <= 0)
 	{
-		update_ = &ClearScene::NormalUpdate;
-		draw_ = &ClearScene::NormalDraw;
+		update_ = &ResultScene::NormalUpdate;
+		draw_ = &ResultScene::NormalDraw;
 	}
 }
 
-void ClearScene::NormalUpdate(Input& input)
+void ResultScene::NormalUpdate(Input& input)
 {
 	frameCount_++;
 	blinkTimer_ += 0.1f;
@@ -93,38 +93,40 @@ void ClearScene::NormalUpdate(Input& input)
 		//SE再生
 		Application::GetInstance().GetSoundManager().PlaySe(SE::Decide);
 
-		update_ = &ClearScene::FadeOutUpdate;
-		draw_ = &ClearScene::FadeDraw;
+		update_ = &ResultScene::FadeOutUpdate;
+		draw_ = &ResultScene::FadeDraw;
 
 		frameCount_ = kFadeInterval;
 	}
 }
 
-void ClearScene::FadeOutUpdate(Input& input)
+void ResultScene::FadeOutUpdate(Input& input)
 {
 	if (frameCount_-- <= 0)
 	{
 		if (currentMenu_ == ResultMenu::Retry)
 		{
-			controller_.ResetScene(std::make_shared<GameScene>(controller_));
+			controller_.ChangeScene(std::make_shared<GameScene>(controller_));
+			return;
 		}
 		else
 		{
-			controller_.ResetScene(std::make_shared<TitleScene>(controller_));
+			controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
+			return;
 		}
 	}
 }
 
-void ClearScene::FadeDraw()
+void ResultScene::FadeDraw()
 {
 	//通常の描画
 	NormalDraw();
 
 	float rate;
 
-	if (update_ == &ClearScene::FadeInUpdate)
+	if (update_ == &ResultScene::FadeInUpdate)
 	{
-		// フェードイン
+		//フェードイン
 		rate = (float)frameCount_ / kFadeInterval;
 	}
 	else
@@ -134,13 +136,13 @@ void ClearScene::FadeDraw()
 	}
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
-	//真っ黒画面から透明
+	//黒画面から透明
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * rate));
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void ClearScene::NormalDraw()
+void ResultScene::NormalDraw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
@@ -153,15 +155,15 @@ void ClearScene::NormalDraw()
 	char buf[64];
 	sprintf_s(buf, "TIME : %d.%d", timeInt, timeDec);
 
-	// 文字幅取得
+	//文字幅取得
 	int width = GetDrawStringWidthToHandle(buf, strlen(buf), Game::kFontUIHandle);
 
 	//表示する座標
-	int x = Game::kScreenWidth / 2;
-	int y = 100;
+	int x = Game::kScreenWidth / 2 - width / 2;
+	int y = Game::kScreenHeight / 2 - 100;
 
 	//描画
-	DrawStringToHandle(x,y,buf,GetColor(255, 255, 255),Game::kFontUIHandle);
+	DrawStringToHandle(x, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
 
 	//選択肢
 	const char* retryText = "リトライ";

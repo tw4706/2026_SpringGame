@@ -273,6 +273,14 @@ void GameScene::NormalUpdate(Input& input)
 	//ƒS[ƒ‹ƒIƒuƒWƒFƒNƒg‚ÌXV
 	pGoalObject_->Update();
 
+	//ƒS[ƒ‹‚ÉG‚ê‚½‚ç
+	if (pGoalObject_->IsHit())
+	{
+		update_ = &GameScene::FadeOutUpdate;
+		draw_ = &GameScene::FadeDraw;
+		frameCount_ = 0;
+	}
+
 	pCamera_->Update();
 	Effekseer_Sync3DSetting();
 
@@ -350,6 +358,8 @@ void GameScene::NormalUpdate(Input& input)
 		//“–‚½‚è”»’è‚Ì“o˜^
 		collisionManager_.AddCollider(pPlayer_->GetCollider());
 		collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
+		collisionManager_.AddCollider(pGoalObject_->GetCollider());
+
 		for (auto& spawner : pEnemySpawner_)
 		{
 			for (auto& enemy : spawner->GetEnemy())
@@ -377,7 +387,8 @@ void GameScene::NormalUpdate(Input& input)
 			{
 				spawner->StopEffect();
 			}
-			controller_.PushScene(std::make_shared<ClearScene>(controller_, clearTime_));
+
+			controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
 			return;
 		}
 	}
@@ -392,7 +403,7 @@ void GameScene::FadeOutUpdate(Input& input)
 	{
 		frameCount_ = 0;
 		draw_ = &GameScene::NormalDraw;
-		controller_.PushScene(std::make_shared<ClearScene>(controller_, clearTime_));
+		controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
 		return;
 	}
 }

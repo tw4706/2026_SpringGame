@@ -7,8 +7,18 @@ class Scene;
 class SceneController
 {
 public: 
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns></returns>
+	static SceneController& GetInstance();
+
 	SceneController();
 	~SceneController();
+
+	//コピー禁止
+	SceneController(const SceneController&) = delete;
+	SceneController& operator=(const SceneController&) = delete;
 
 	/// <summary>
 	/// シーンの切り替え(ただし、引数で渡されたシーンのみになる)
