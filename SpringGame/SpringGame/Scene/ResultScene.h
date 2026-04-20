@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include"../GameObject/Bg.h"
 
 class SceneController;
 class Input;
@@ -9,7 +10,7 @@ public:
 	ResultScene(SceneController& controller,float clearTime);
 	~ResultScene();
 
-	void Init()override {};
+	void Init()override;
 	void Update(Input& input);
 	void Draw();
 
@@ -36,6 +37,8 @@ private:
 	int resultScore_ = 0;
 	int displayScore_ = 0;
 	float clearTime_;	//クリア時間
+	float bgAngle_;
 
+	Bg bg_;
 	ResultMenu currentMenu_=ResultMenu::Retry;//現在選択されている選択肢の状態
 };

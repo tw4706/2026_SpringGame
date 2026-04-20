@@ -29,12 +29,25 @@ ResultScene::ResultScene(SceneController& controller, float clearTime) :
 {
 	frameCount_ = kFadeInterval;
 
+	//”wŒi‚Ì‰Šú‰»
+	bg_.Init();
+
 	//BGMÄ¶
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
 
 ResultScene::~ResultScene()
 {
+}
+
+void ResultScene::Init()
+{
+	bg_.Init();
+
+	SetCameraNearFar(1.0f, 10000.0f);
+
+	//ƒJƒƒ‰İ’è
+	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500), VGet(0, 0, 0));
 }
 
 void ResultScene::Update(Input& input)
@@ -144,9 +157,18 @@ void ResultScene::FadeDraw()
 
 void ResultScene::NormalDraw()
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	Vector3 center(0.0f, 0.0f, 0.0f);
+
+	Vector3 cameraPos;
+	cameraPos.x_ = cosf(bgAngle_) * 500.0f;
+	cameraPos.y_ = 0.0f;
+	cameraPos.z_ = sinf(bgAngle_) * 500.0f;
+
+	//ƒJƒƒ‰‚ğ‰æ–Ê’†‰›‚ÖŒü‚¯‚é
+	SetCameraPositionAndTarget_UpVecY(cameraPos.ToDxlibVector(),center.ToDxlibVector());
+
+	//”wŒi‚Ì•`‰æ
+	bg_.Draw(center);
 
 	//•\¦—p
 	int timeInt = (int)clearTime_;
