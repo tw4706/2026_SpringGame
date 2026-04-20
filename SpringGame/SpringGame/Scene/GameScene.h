@@ -49,6 +49,12 @@ private:
 	void NormalDraw();
 	using DrawFunc_t = void (GameScene::*)();
 	DrawFunc_t draw_;//Draw系を受け取るメンバ関数ポインタ
+	
+	/// <summary>
+	/// ヒットストップの開始
+	/// </summary>
+	/// <param name="duration">ヒットストップ時間</param>
+	void StartHitStop(float duration);
 
 private:
 	int frameCount_ = 0;											//フレームカウント
@@ -64,16 +70,16 @@ private:
 	float dt_ = 0.0f;												//経過時間
 	float timeScale_ = 0.0f;										//時間のスケール(スロー演出などで使用)
 	float slowTimer_ = 0.0f;										//スロー時間のタイマー
-	float timeBonusDisplay_ = 0.0f;									//時間ボーナスの表示用タイマー
-	float timeBonusTimer_ = 0.0f;									//時間ボーナスのタイマー
 	float hpAnimTimer_ = 0.0f;										//HPUIアニメーションのタイマー
 	float gameStartTimer_ = 0.0f;									//ゲーム開始合図のタイマー
 	bool isHpAnimating_ = false;									//HPUIがアニメーション中かどうか
 	bool isClearing_ = false;										//クリア中かどうか
 	bool fadeFinished_ = false;										//フェードが終了したかどうか
 	bool isGameStarted_ = false;									//ゲーム開始したかどうか
-	bool isTimeUp_ = false;											//タイムアップになったかどうか
 	int currentWave_ = 0;											//現在のウェーブ数
+	float hitStopTimer_ = 0.0f;
+	float hitStopDuration_ = 0.0f;
+	bool isHitStop_ = false;
 
 	Bg bg_;															//背景
 	GameSceneUI	gameSceneUI_;										//ゲームシーン用UI

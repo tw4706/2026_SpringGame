@@ -42,7 +42,7 @@ void GameSceneUI::Init()
 
 void GameSceneUI::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFrame,
 	float time, bool isGameStarted,
-	float gameStartTimer, float timeScale, float bonus, float bonusTimer, int currentWave)
+	float gameStartTimer, float timeScale, int currentWave)
 {
 	DrawTime(time);
 	DrawHPUI(hp, isHpAnimating, damageIndex, hpAnimFrame);
@@ -93,13 +93,35 @@ void GameSceneUI::DrawGameStart(bool isGameStarted, float gameStartTimer)
 		//スタートタイマーが60フレームより小さい場合はReadyそれ以降はGo!
 		if (gameStartTimer <= kReadyFrame)
 		{
-			DrawCenterText("READY", Game::kScreenHeight / 2, GetColor(255, 255, 0));
 			Application::GetInstance().GetSoundManager().PlaySe(SE::CountDown);
+
+			float scale;
+
+			if (gameStartTimer < 20.0f)
+			{
+				// 登場：大→小（1.8 → 1.0）
+				float t = gameStartTimer / 20.0f;
+				scale = 1.8f - 0.8f * t;
+			}
+			else
+			{
+				// ループ：ふわふわ
+				float t = (sinf((gameStartTimer - 20.0f) * 0.1f) + 1.0f) * 0.5f;
+				scale = 1.0f + 0.1f * t;
+			}
+
+			DrawCenterText("READY", Game::kScreenHeight / 2, GetColor(255, 255, 0), scale);
 		}
 		else
 		{
-			DrawCenterText("Go!", Game::kScreenHeight / 2, GetColor(0, 255, 255));
 			Application::GetInstance().GetSoundManager().PlaySe(SE::Start);
+
+			float t = (gameStartTimer - kReadyFrame) / kStartFrame;
+
+			// 最初だけドン！って出す
+			float scale = 2.0f - t; // 2.0 → 1.0 に縮む
+
+			DrawCenterText("Go!", Game::kScreenHeight / 2, GetColor(0, 255, 255), scale);
 		}
 	}
 }
@@ -131,12 +153,19 @@ void GameSceneUI::DrawWave(int currentWave)
 	DrawStringToHandle(x, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
 }
 
-void GameSceneUI::DrawCenterText(const char* text, int y, int color)
+void GameSceneUI::DrawCenterText(const char* text, int y, int color, float scale)
 {
 	int width = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kFontUIHandle);
-	int x = (Game::kScreenWidth - width) / 2;
+	int x = (Game::kScreenWidth - static_cast<int>(width * scale)) / 2;
 
-	DrawStringToHandle(x, y, text, color, Game::kFontUIHandle);
+	DrawExtendStringToHandle(
+		x,
+		y,
+		scale,
+		scale,
+		text,
+		color,
+		Game::kFontUIHandle);
 }
 
 void GameSceneUI::DrawTime(float time)

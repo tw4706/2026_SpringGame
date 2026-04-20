@@ -157,7 +157,23 @@ void GameScene::Init()
 
 void GameScene::Update(Input& input)
 {
-	dt_ = (1.0f / 60.0f) * timeScale_;
+	//ヒットストップ中なら時間を止める
+	if (isHitStop_)
+	{
+		dt_ = 0.0f;
+
+		hitStopTimer_ -= (1.0f / 60.0f);
+
+		if (hitStopTimer_ <= 0.0f)
+		{
+			isHitStop_ = false;
+		}
+	}
+	else
+	{
+		dt_ = (1.0f / 60.0f) * timeScale_;
+	}
+
 	EffectManager::GetInstance().Update();
 	(this->*update_)(input);
 }
@@ -278,9 +294,17 @@ void GameScene::NormalUpdate(Input& input)
 	}
 
 	//プレイヤーとカメラの更新
-	if (isGameStarted_ && !isTimeUp_)
+	if (isGameStarted_)
 	{
-		pPlayer_->Update(input, dt_);
+		if (isHitStop_ && pPlayer_->IsDead())
+		{
+			//死亡中だけは更新する
+			pPlayer_->Update(input, (1.0f / 60.0f));
+		}
+		else
+		{
+			pPlayer_->Update(input, dt_);
+		}
 	}
 	else
 	{
@@ -348,9 +372,6 @@ void GameScene::NormalUpdate(Input& input)
 		timeScale_ = 0.4f;						//スローの倍率
 		slowTimer_ = 0.2f;						//スロー時間
 		pCamera_->StartZoom(DX_PI_F / 6.0f);	//カメラのズーム開始
-
-		timeBonusDisplay_ = 2.0f;
-		timeBonusTimer_ = 1.0f;
 	}
 
 	//スロー時間の更新
@@ -364,11 +385,6 @@ void GameScene::NormalUpdate(Input& input)
 			//スロー終了
 			timeScale_ = 1.0f;
 		}
-	}
-	//時間ボーナスの更新
-	if (timeBonusTimer_ > 0.0f)
-	{
-		timeBonusTimer_ -= dt_;
 	}
 
 	if (isGameStarted_)
@@ -398,6 +414,11 @@ void GameScene::NormalUpdate(Input& input)
 	//プレイヤーが死亡したらクリアシーンに遷移
 	if (pPlayer_->IsDead() && !isClearing_)
 	{
+		if (!isHitStop_)
+		{
+			StartHitStop(0.5f);
+		}
+
 		if (pPlayer_->IsDeathAnimEnd())
 		{
 			isClearing_ = true;
@@ -407,7 +428,7 @@ void GameScene::NormalUpdate(Input& input)
 				spawner->StopEffect();
 			}
 
-			controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
+			controller_.PushScene(std::make_shared<ResultScene>(controller_, clearTime_));
 			return;
 		}
 	}
@@ -417,19 +438,10 @@ void GameScene::FadeOutUpdate(Input& input)
 {
 	frameCount_++;
 
-	//フェード完了後に1フレーム待つ
-	if (frameCount_ >= kFadeInterval && isTimeUp_)
-	{
-		frameCount_ = 0;
-		draw_ = &GameScene::NormalDraw;
-		controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
-		return;
-	}
-
 	//ゴールオブジェクトに触れたら
 	if (pGoalObject_->IsHit())
 	{
-		controller_.ChangeScene(std::make_shared<ResultScene>(controller_, clearTime_));
+		controller_.PushScene(std::make_shared<ResultScene>(controller_, clearTime_));
 		return;
 	}
 }
@@ -506,7 +518,7 @@ void GameScene::NormalDraw()
 
 	//UIマネージャーの描画
 	gameSceneUI_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_, time, isGameStarted_,
-		gameStartTimer_, timeScale_, timeBonusDisplay_, timeBonusTimer_,currentWave_);
+		gameStartTimer_, timeScale_,currentWave_);
 
 	//操作説明の描画
 	pOperationGuideUI_->Draw();
@@ -528,4 +540,11 @@ void GameScene::NormalDraw()
 	DrawFormatString(20, 200, GetColor(255, 255, 255),
 		"Total Enemy : %d", totalEnemyCount);
 #endif
+}
+
+void GameScene::StartHitStop(float duration)
+{
+	hitStopDuration_ = duration;
+	hitStopTimer_ = duration;
+	isHitStop_ = true;
 }

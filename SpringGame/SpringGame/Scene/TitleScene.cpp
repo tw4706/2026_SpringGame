@@ -13,8 +13,8 @@ namespace
 {
 	constexpr int kFadeInterval = 60;
 
-	constexpr int kBlinkBaseAlpha = 128;
-	constexpr int kBlinkAlphaRange = 127;
+	constexpr int kBlinkBaseAlpha = 150;
+	constexpr int kBlinkAlphaRange = 120;
 	constexpr float kBlinkSpeed = 0.05f;
 }
 
@@ -138,8 +138,10 @@ void TitleScene::NormalDraw()
 		cameraPos.ToDxlibVector(),
 		center.ToDxlibVector());
 
-	//背景の描画
-	bg_.Draw(center);
+	SetUseBackCulling(FALSE);
+	//描画
+	bg_.Draw(cameraPos);
+	SetUseBackCulling(TRUE);
 
 	//タイトル名
 	const char* pressStartText = "ボタンをおしてスタート";

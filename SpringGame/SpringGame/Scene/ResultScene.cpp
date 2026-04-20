@@ -25,15 +25,9 @@ ResultScene::ResultScene(SceneController& controller, float clearTime) :
 	draw_(&ResultScene::FadeDraw),
 	frameCount_(kFadeInterval),
 	resultScore_(0),
-	displayScore_(0)
+	displayScore_(0),
+	bgAngle_(0.0f)
 {
-	frameCount_ = kFadeInterval;
-
-	//îwåiÇÃèâä˙âª
-	bg_.Init();
-
-	//BGMçƒê∂
-	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
 
 ResultScene::~ResultScene()
@@ -42,12 +36,12 @@ ResultScene::~ResultScene()
 
 void ResultScene::Init()
 {
-	bg_.Init();
+	update_ = &ResultScene::FadeInUpdate;
+	draw_ = &ResultScene::FadeDraw;
 
-	SetCameraNearFar(1.0f, 10000.0f);
-
-	//ÉJÉÅÉâê›íË
-	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500), VGet(0, 0, 0));
+	frameCount_ = kFadeInterval;
+	//BGMçƒê∂
+	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
 
 void ResultScene::Update(Input& input)
@@ -71,7 +65,10 @@ void ResultScene::FadeInUpdate(Input& input)
 void ResultScene::NormalUpdate(Input& input)
 {
 	frameCount_++;
-	blinkTimer_ += 0.1f;
+	blinkTimer_ += 0.01f;
+
+	//îwåiÇâÒì]Ç≥ÇπÇÈ
+	bgAngle_ += 0.01f;
 
 	if (frameCount_ >= kFadeInterval)
 	{
@@ -119,12 +116,12 @@ void ResultScene::FadeOutUpdate(Input& input)
 	{
 		if (currentMenu_ == ResultMenu::Retry)
 		{
-			controller_.ChangeScene(std::make_shared<GameScene>(controller_));
+			controller_.ResetScene(std::make_shared<GameScene>(controller_));
 			return;
 		}
 		else
 		{
-			controller_.ChangeScene(std::make_shared<TitleScene>(controller_));
+			controller_.ResetScene(std::make_shared<TitleScene>(controller_));
 			return;
 		}
 	}
@@ -157,18 +154,9 @@ void ResultScene::FadeDraw()
 
 void ResultScene::NormalDraw()
 {
-	Vector3 center(0.0f, 0.0f, 0.0f);
-
-	Vector3 cameraPos;
-	cameraPos.x_ = cosf(bgAngle_) * 500.0f;
-	cameraPos.y_ = 0.0f;
-	cameraPos.z_ = sinf(bgAngle_) * 500.0f;
-
-	//ÉJÉÅÉâÇâÊñ íÜâõÇ÷å¸ÇØÇÈ
-	SetCameraPositionAndTarget_UpVecY(cameraPos.ToDxlibVector(),center.ToDxlibVector());
-
-	//îwåiÇÃï`âÊ
-	bg_.Draw(center);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA,180);
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	//ï\é¶óp
 	int timeInt = (int)clearTime_;
@@ -195,13 +183,24 @@ void ResultScene::NormalDraw()
 	int baseY = Game::kScreenHeight / 2 + 50;
 
 	//ägèk
-	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 0.5f) : 1.0f;
-	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 0.5f) : 1.0f;
+	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 1.0f) : 1.0f;
+	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 1.0f) : 1.0f;
 
 	//ï∂éöïùéÊìæ
 	int retryW = GetDrawStringWidthToHandle(retryText, strlen(retryText), Game::kFontUIHandle);
 	int titleW = GetDrawStringWidthToHandle(titleText, strlen(titleText), Game::kFontUIHandle);
 
+	int resultColor = GetColor(255, 255, 255);
+	int titleColor = GetColor(255, 255, 255);
+
+	if (currentMenu_ == ResultMenu::Retry)
+	{
+		resultColor = GetColor(255, 0, 0);
+	}
+	else
+	{
+		titleColor= GetColor(255, 0, 0);
+	}
 	//ï`âÊ
 	DrawExtendStringToHandle(
 		centerX - (int)(retryW * retryScale / 2),
@@ -209,7 +208,7 @@ void ResultScene::NormalDraw()
 		retryScale,
 		retryScale,
 		retryText,
-		GetColor(255, 255, 255),
+		resultColor,
 		Game::kFontUIHandle);
 
 	DrawExtendStringToHandle(
@@ -218,6 +217,6 @@ void ResultScene::NormalDraw()
 		titleScale,
 		titleScale,
 		titleText,
-		GetColor(255, 255, 255),
+		titleColor,
 		Game::kFontUIHandle);
 }

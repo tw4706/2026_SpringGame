@@ -9,7 +9,7 @@ public:
 
 	void Init();
 
-	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float time,bool isGameStarted, float gameStartTimer,float timeScale,float bonus,float bonusTimer, int currentWave);
+	void Draw(int hp,bool isHpAnimating,int damageIndex,int hpAnimFrame,float time,bool isGameStarted, float gameStartTimer,float timeScale, int currentWave);
 
 private:
 
@@ -48,7 +48,7 @@ private:
 	/// <param name="text">•`‰æ‚·‚é•¶š—ñ</param>
 	/// <param name="y">yÀ•W</param>
 	/// <param name="color">ƒJƒ‰[</param>
-	void DrawCenterText(const char* text, int y, int color);
+	void DrawCenterText(const char* text, int y, int color, float scale);
 private:
 	int handle_;
 };

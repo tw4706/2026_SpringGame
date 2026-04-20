@@ -49,6 +49,7 @@ void SceneController::PushScene(std::shared_ptr<Scene> scene)
 	EffectManager::GetInstance().StopAll();
 
 	scenes_.push_back(scene);
+	scene->Init();
 }
 
 void SceneController::PopScene()
