@@ -183,8 +183,8 @@ void ResultScene::NormalDraw()
 	int baseY = Game::kScreenHeight / 2 + 50;
 
 	//Šgk
-	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 1.0f) : 1.0f;
-	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 1.0f) : 1.0f;
+	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 10.0f) : 1.0f;
+	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 10.0f) : 1.0f;
 
 	//•¶š•æ“¾
 	int retryW = GetDrawStringWidthToHandle(retryText, strlen(retryText), Game::kFontUIHandle);

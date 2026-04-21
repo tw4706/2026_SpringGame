@@ -130,6 +130,7 @@ void GameSceneUI::DrawDodgeScreenColor(float timeScale)
 {
 	if (timeScale >= 1.0f) return;
 
+	//ジャスト回避の時に画面の色を変更
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 	DrawBox(0, 0, 1280, 720, GetColor(180, 100, 255), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -137,15 +138,20 @@ void GameSceneUI::DrawDodgeScreenColor(float timeScale)
 
 void GameSceneUI::DrawWave(int currentWave)
 {
+	//最大ウェーブ数
 	const int maxWave = 6;
 
+	//テキストの表示
 	char buf[64];
 	sprintf_s(buf, "WAVE %d / %d", currentWave, maxWave);
 
+	//Y座標
 	int y = 150;
 
 	//中央表示
 	int width = GetDrawStringWidthToHandle(buf, strlen(buf), Game::kFontUIHandle);
+
+	//X座標
 	int x = 50;
 
 	//影付きで描画
@@ -155,21 +161,18 @@ void GameSceneUI::DrawWave(int currentWave)
 
 void GameSceneUI::DrawCenterText(const char* text, int y, int color, float scale)
 {
+	//画面中央に表示すために文字列の横幅を取得
 	int width = GetDrawStringWidthToHandle(text, static_cast<int>(strlen(text)), Game::kFontUIHandle);
 	int x = (Game::kScreenWidth - static_cast<int>(width * scale)) / 2;
 
-	DrawExtendStringToHandle(
-		x,
-		y,
-		scale,
-		scale,
-		text,
-		color,
-		Game::kFontUIHandle);
+	//描画
+	DrawExtendStringToHandle(x, y, scale, scale,
+		text, color, Game::kFontUIHandle);
 }
 
 void GameSceneUI::DrawTime(float time)
 {
+	//タイムのテキスト
 	char buf[64];
 	const char* timeText = "TIME :";
 	sprintf_s(buf, "%.2f", time);

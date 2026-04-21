@@ -9,7 +9,7 @@ namespace
 
 	const Vector3 kPosOffset = { 0.0f,150.0f,0.0f };
 
-	const Vector3 kModelScale = { 2.0f,1.0f,2.0f };
+	const Vector3 kModelScale = { 2.0f,1.5f,2.0f };
 
 	//“–‚½‚è”»’è‚ÌƒTƒCƒY
 	constexpr float kColSize = 200.0f;
