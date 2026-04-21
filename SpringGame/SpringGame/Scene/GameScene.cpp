@@ -85,7 +85,8 @@ void GameScene::Init()
 	//シャドウマップの生成
 	shadowMapHandle_ = MakeShadowMap(4096, 4096);
 	SetShadowMapLightDirection(shadowMapHandle_, VGet(-0.5f, -1.0f, 0.5f));
-	SetShadowMapDrawArea(shadowMapHandle_,VGet(-1500, -100, -1500),VGet(4500, 800, 4500));
+	SetShadowMapDrawArea(shadowMapHandle_,
+		VGet(-1500, -100, -3000), VGet(4500, 800, 10000));
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/Effect/hit.efk");
@@ -157,22 +158,7 @@ void GameScene::Init()
 
 void GameScene::Update(Input& input)
 {
-	//ヒットストップ中なら時間を止める
-	if (isHitStop_)
-	{
-		dt_ = 0.0f;
-
-		hitStopTimer_ -= (1.0f / 60.0f);
-
-		if (hitStopTimer_ <= 0.0f)
-		{
-			isHitStop_ = false;
-		}
-	}
-	else
-	{
-		dt_ = (1.0f / 60.0f) * timeScale_;
-	}
+	dt_ = (1.0f / 60.0f) * timeScale_;
 
 	EffectManager::GetInstance().Update();
 	(this->*update_)(input);
@@ -293,18 +279,16 @@ void GameScene::NormalUpdate(Input& input)
 		}
 	}
 
+	if (pPlayer_->IsDead())
+	{
+		timeScale_ = 0.4f;
+		slowTimer_ = 1.5f;
+	}
+
 	//プレイヤーとカメラの更新
 	if (isGameStarted_)
 	{
-		if (isHitStop_ && pPlayer_->IsDead())
-		{
-			//死亡中だけは更新する
-			pPlayer_->Update(input, (1.0f / 60.0f));
-		}
-		else
-		{
-			pPlayer_->Update(input, dt_);
-		}
+		pPlayer_->Update(input, dt_);
 	}
 	else
 	{
@@ -414,11 +398,6 @@ void GameScene::NormalUpdate(Input& input)
 	//プレイヤーが死亡したらクリアシーンに遷移
 	if (pPlayer_->IsDead() && !isClearing_)
 	{
-		if (!isHitStop_)
-		{
-			StartHitStop(0.5f);
-		}
-
 		if (pPlayer_->IsDeathAnimEnd())
 		{
 			isClearing_ = true;
@@ -518,7 +497,7 @@ void GameScene::NormalDraw()
 
 	//UIマネージャーの描画
 	gameSceneUI_.Draw(pPlayer_->GetHP(), isHpAnimating_, damageIndex_, hpAnimFrame_, time, isGameStarted_,
-		gameStartTimer_, timeScale_,currentWave_);
+		gameStartTimer_, timeScale_, currentWave_);
 
 	//操作説明の描画
 	pOperationGuideUI_->Draw();
@@ -540,11 +519,4 @@ void GameScene::NormalDraw()
 	DrawFormatString(20, 200, GetColor(255, 255, 255),
 		"Total Enemy : %d", totalEnemyCount);
 #endif
-}
-
-void GameScene::StartHitStop(float duration)
-{
-	hitStopDuration_ = duration;
-	hitStopTimer_ = duration;
-	isHitStop_ = true;
 }
