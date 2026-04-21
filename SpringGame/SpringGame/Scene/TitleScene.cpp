@@ -5,6 +5,7 @@
 #include"../System/Input.h"
 #include"../Game.h"
 #include"../System/Application.h"
+#include"../GameObject/TitlePlayer.h"
 #include<Dxlib.h>
 #include<memory>
 #include<algorithm>
@@ -27,6 +28,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	blinkTimer_(0.0f),
 	titleHandle_(-1)
 {
+	pTitlePlayer_ = std::make_shared<TitlePlayer>();
 }
 
 TitleScene::~TitleScene()
@@ -40,9 +42,12 @@ void TitleScene::Init()
 	SetCameraNearFar(1.0f, 10000.0f);
 
 	//カメラ設定
-	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500),VGet(0, 0, 0));
+	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500), VGet(0, 0, 0));
 
 	titleHandle_ = LoadGraph("data/titleLogo.png");
+
+	//タイトル用プレイヤーの初期化
+	pTitlePlayer_->Init();
 
 	update_ = &TitleScene::FadeInUpdate;
 	draw_ = &TitleScene::FadeDraw;
@@ -78,9 +83,12 @@ void TitleScene::FadeInUpdate(Input& input)
 
 void TitleScene::NormalUpdate(Input& input)
 {
-	bgAngle_ += 0.003f;
+	//bgAngle_ += 0.003f;
 
 	blinkTimer_++;
+
+	//タイトル用プレイヤーの更新
+	pTitlePlayer_->Update();
 
 	if (input.IsTriggered("retry"))
 	{
@@ -120,7 +128,7 @@ void TitleScene::FadeDraw()
 	rate = std::clamp(rate, 0.0f, 1.0f);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(255 * rate));
-	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight,GetColor(0, 0, 0), TRUE);
+	DrawBoxAA(0, 0, Game::kScreenWidth, Game::kScreenHeight, GetColor(0, 0, 0), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -141,6 +149,10 @@ void TitleScene::NormalDraw()
 	SetUseBackCulling(FALSE);
 	//描画
 	bg_.Draw(cameraPos);
+
+	//タイトル用プレイヤーの描画
+	//pTitlePlayer_->Draw();
+
 	SetUseBackCulling(TRUE);
 
 	//タイトル名

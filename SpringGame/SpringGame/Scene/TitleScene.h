@@ -2,7 +2,9 @@
 #include "Scene.h"
 #include"../GameObject/Bg.h"
 #include"../GameObject/Player.h"
+#include<memory>
 
+class TitlePlayer;
 class TitleScene :public Scene
 {
 public:
@@ -30,6 +32,7 @@ private:
 	float blinkTimer_;
 	int titleHandle_;
 
-	Bg bg_;				//背景
+	Bg bg_;										//背景
+	std::shared_ptr<TitlePlayer>pTitlePlayer_;	//タイトル用プレイヤー
 };
 
