@@ -20,6 +20,7 @@ namespace
 	const char* kEnemyDeath = "MonsterArmature|Death";
 
 	constexpr float kAnimationSpeed = 30.0f;
+	constexpr float kAttackAnimation = 50.0f;
 }
 
 Animation::Animation() :
@@ -271,6 +272,7 @@ void Animation::ChangeState(AnimationState state)
 	if (animIndex != -1)
 	{
 		bool loop = true;
+		float speed = kAnimationSpeed;
 
 		if (state_ == AnimationState::Attack ||
 			state_ == AnimationState::Death||
@@ -279,6 +281,11 @@ void Animation::ChangeState(AnimationState state)
 			loop = false;
 		}
 
-		Play(animIndex, kAnimationSpeed, loop);
+		if (state_ == AnimationState::Attack)
+		{
+			speed = kAttackAnimation;
+		}
+
+		Play(animIndex, speed, loop);
 	}
 }

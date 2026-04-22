@@ -45,10 +45,10 @@ namespace
 	constexpr int kJustDodgeFrame = 4;
 
 	//攻撃時間
-	constexpr float kAttackTime = 0.3f;
+	constexpr float kAttackTime = 1.2f;
 
 	//攻撃の当たり判定が出ている時間
-	constexpr float kAttackColEnabletime = 0.25f;
+	constexpr float kAttackColEnabletime = 0.35f;
 
 	//被ダメージ時間
 	constexpr float kHitTime = 0.3f;
