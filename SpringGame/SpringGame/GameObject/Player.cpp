@@ -33,7 +33,7 @@ namespace
 	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };
 
 	//モデルのサイズ
-	constexpr float kModelScale = 0.5f;
+	constexpr float kModelScale = 1.5f;
 
 	//回避時間
 	constexpr float kDodgeTime = 0.25f;
@@ -163,7 +163,7 @@ Player::~Player()
 void Player::Init()
 {
 	//モデルのロード
-	model_.Load("data/Player.mv1");
+	model_.Load("data/Player_Idle.mv1");
 	ghostModel_.Load("data/PlayerAfterImage.mv1");
 
 	//アニメーションの初期化

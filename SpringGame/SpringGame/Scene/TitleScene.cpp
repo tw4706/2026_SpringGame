@@ -83,7 +83,7 @@ void TitleScene::FadeInUpdate(Input& input)
 
 void TitleScene::NormalUpdate(Input& input)
 {
-	//bgAngle_ += 0.003f;
+	bgAngle_ += 0.003f;
 
 	blinkTimer_++;
 
