@@ -22,7 +22,7 @@ namespace
 	constexpr int kEnemyMax = 3;
 
 	//敵を生成するスポナーの設置数
-	constexpr int kEnemySpawnerNum = 6;
+	constexpr int kEnemySpawnerNum = 3;
 
 	//ウェーブの最大数
 	constexpr int kMaxWave = 5;
@@ -105,9 +105,9 @@ void GameScene::Init()
 	{
 		auto spawner = std::make_shared<EnemySpawner>();
 
-		float z = 1000.0f + i * 1500.0f;
+		float z = 1500.0f + i * 3000.0f;
 
-		spawner->Init({ 0.0f, 0.0f, z }, 600.0f);
+		spawner->Init({ 0.0f, 0.0f, z }, 1000.0f);
 		spawner->SetPlayer(pPlayer_.get());
 		spawner->SetCamera(pCamera_.get());
 
@@ -279,12 +279,6 @@ void GameScene::NormalUpdate(Input& input)
 		}
 	}
 
-	if (pPlayer_->IsDead())
-	{
-		timeScale_ = 0.4f;
-		slowTimer_ = 1.5f;
-	}
-
 	//プレイヤーとカメラの更新
 	if (isGameStarted_)
 	{
@@ -372,8 +366,10 @@ void GameScene::NormalUpdate(Input& input)
 	}
 
 	if (isGameStarted_)
-	{//当たり判定の処理
+	{
+		//当たり判定の初期化
 		collisionManager_.Clear();
+
 		//当たり判定の登録
 		collisionManager_.AddCollider(pPlayer_->GetCollider());
 		collisionManager_.AddCollider(pPlayer_->GetAttackCollider());
@@ -387,7 +383,7 @@ void GameScene::NormalUpdate(Input& input)
 			}
 		}
 
-		//判定
+		//すべてのコライダーの判定
 		collisionManager_.CheckAllCollision();
 	}
 

@@ -4,7 +4,6 @@
 #include"../GameObject/Player.h"
 #include<memory>
 
-class TitlePlayer;
 class TitleScene :public Scene
 {
 public:
@@ -33,6 +32,5 @@ private:
 	int titleHandle_;
 
 	Bg bg_;										//背景
-	std::shared_ptr<TitlePlayer>pTitlePlayer_;	//タイトル用プレイヤー
 };
 

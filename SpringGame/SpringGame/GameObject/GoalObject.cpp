@@ -12,7 +12,7 @@ namespace
 	const Vector3 kModelScale = { 2.0f,1.5f,2.0f };
 
 	//当たり判定のサイズ
-	constexpr float kColSize = 200.0f;
+	constexpr float kColSize = 160.0f;
 
 	//当たり判定の位置調整
 	const Vector3 kColOffset = { 0.0f,80.0f,0.0f };

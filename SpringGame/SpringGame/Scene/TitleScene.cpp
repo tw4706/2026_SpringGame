@@ -28,7 +28,6 @@ TitleScene::TitleScene(SceneController& controller) :
 	blinkTimer_(0.0f),
 	titleHandle_(-1)
 {
-	pTitlePlayer_ = std::make_shared<TitlePlayer>();
 }
 
 TitleScene::~TitleScene()
@@ -45,9 +44,6 @@ void TitleScene::Init()
 	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500), VGet(0, 0, 0));
 
 	titleHandle_ = LoadGraph("data/titleLogo.png");
-
-	//タイトル用プレイヤーの初期化
-	pTitlePlayer_->Init();
 
 	update_ = &TitleScene::FadeInUpdate;
 	draw_ = &TitleScene::FadeDraw;
@@ -87,9 +83,6 @@ void TitleScene::NormalUpdate(Input& input)
 
 	blinkTimer_++;
 
-	//タイトル用プレイヤーの更新
-	pTitlePlayer_->Update();
-
 	if (input.IsTriggered("retry"))
 	{
 		//SE再生
@@ -102,7 +95,7 @@ void TitleScene::NormalUpdate(Input& input)
 
 void TitleScene::FadeOutUpdate(Input& input)
 {
-	bgAngle_ += 0.003f;
+	bgAngle_ += 0.001f;
 	if (frameCount_-- <= 0)
 	{
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_));
@@ -156,7 +149,7 @@ void TitleScene::NormalDraw()
 	SetUseBackCulling(TRUE);
 
 	//タイトル名
-	const char* pressStartText = "ボタンをおしてスタート";
+	const char* pressStartText = "ボタンを押してスタート";
 
 	////文字の横幅を取得
 	int pressStartWidth = GetDrawStringWidthToHandle(pressStartText, static_cast<int>(strlen(pressStartText)), Game::kTitleFontHandle);

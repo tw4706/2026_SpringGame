@@ -352,6 +352,12 @@ void Enemy::OnCollision(GameObject* other)
 {
 	if (isDead_ || isSpawning_) return;
 
+	//“G“¯m‚ÌUŒ‚”»’è‚Í–³Œø
+	if (dynamic_cast<Enemy*>(other))
+	{
+		return;
+	}
+
 	isHit_ = true;
 
 	if (other->GetCollider()->GetColliderType() == ColliderType::Charactor)

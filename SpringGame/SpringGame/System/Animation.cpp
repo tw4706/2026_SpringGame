@@ -9,7 +9,7 @@ namespace
 	const char* kPlayerRun = "Player|Run";
 	const char* kPlayerAttack = "Player|Attack";
 	const char* kPlayerHit = "Player|Hit";
-	const char* kPlayerDeath = "Player|Dead";
+	const char* kPlayerDeath = "Player|Death";
 
 	//敵
 	const char* kEnemySpawn = "MonsterArmature|Jump";
@@ -20,7 +20,7 @@ namespace
 	const char* kEnemyDeath = "MonsterArmature|Death";
 
 	constexpr float kAnimationSpeed = 30.0f;
-	constexpr float kAttackAnimation = 50.0f;
+	constexpr float kAttackAnimationSpeed = 60.0f;
 }
 
 Animation::Animation() :
@@ -200,14 +200,16 @@ void Animation::Play(int animIndex, float speed, bool isLoop)
 	blendTime_ = 0.0f;
 	isBlending_ = true;
 
-	//ウェイト初期化
+	//ブレンドの比率の初期化
 	MV1SetAttachAnimBlendRate(modelHandle_, currentAttach_, 0.0f);
 
 	if (prevAttach_ != -1)
 	{
+		//ブレンドを最初はしないまま表示
 		MV1SetAttachAnimBlendRate(modelHandle_, prevAttach_, 1.0f);
 	}
 
+	//アニメーションの動きに応じてブレンド率を適用
 	MV1SetAttachAnimTime(modelHandle_, currentAttach_, currentTime_);
 }
 
@@ -272,6 +274,7 @@ void Animation::ChangeState(AnimationState state)
 	if (animIndex != -1)
 	{
 		bool loop = true;
+
 		float speed = kAnimationSpeed;
 
 		if (state_ == AnimationState::Attack ||
@@ -283,7 +286,7 @@ void Animation::ChangeState(AnimationState state)
 
 		if (state_ == AnimationState::Attack)
 		{
-			speed = kAttackAnimation;
+			speed = kAttackAnimationSpeed;
 		}
 
 		Play(animIndex, speed, loop);

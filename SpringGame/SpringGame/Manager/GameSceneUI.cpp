@@ -41,8 +41,7 @@ void GameSceneUI::Init()
 }
 
 void GameSceneUI::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFrame,
-	float time, bool isGameStarted,
-	float gameStartTimer, float timeScale, int currentWave)
+	float time, bool isGameStarted,float gameStartTimer, float timeScale, int currentWave)
 {
 	DrawTime(time);
 	DrawHPUI(hp, isHpAnimating, damageIndex, hpAnimFrame);
@@ -62,7 +61,6 @@ void GameSceneUI::DrawHPUI(int hp, bool isAnimating, int damageIndex, int animFr
 	int drawH = static_cast<int>(kFrameH * kHpScale);
 
 	//最大3このハートを描画する
-
 	for (int i = 0; i < kMaxHP; i++)
 	{
 		int drawX = x + i * (drawW + 10);
@@ -99,13 +97,11 @@ void GameSceneUI::DrawGameStart(bool isGameStarted, float gameStartTimer)
 
 			if (gameStartTimer < 20.0f)
 			{
-				// 登場：大→小（1.8 → 1.0）
 				float t = gameStartTimer / 20.0f;
 				scale = 1.8f - 0.8f * t;
 			}
 			else
 			{
-				// ループ：ふわふわ
 				float t = (sinf((gameStartTimer - 20.0f) * 0.1f) + 1.0f) * 0.5f;
 				scale = 1.0f + 0.1f * t;
 			}
@@ -118,8 +114,8 @@ void GameSceneUI::DrawGameStart(bool isGameStarted, float gameStartTimer)
 
 			float t = (gameStartTimer - kReadyFrame) / kStartFrame;
 
-			// 最初だけドン！って出す
-			float scale = 2.0f - t; // 2.0 → 1.0 に縮む
+			//最初だけ拡大して出す
+			float scale = 2.0f - t;
 
 			DrawCenterText("Go!", Game::kScreenHeight / 2, GetColor(0, 255, 255), scale);
 		}
@@ -139,7 +135,7 @@ void GameSceneUI::DrawDodgeScreenColor(float timeScale)
 void GameSceneUI::DrawWave(int currentWave)
 {
 	//最大ウェーブ数
-	const int maxWave = 6;
+	const int maxWave = 3;
 
 	//テキストの表示
 	char buf[64];

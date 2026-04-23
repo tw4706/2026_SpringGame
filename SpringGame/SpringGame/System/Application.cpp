@@ -74,9 +74,9 @@ bool Application::Init()
 		// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
 		SetWriteZBuffer3D(TRUE);
 	}
-	AddFontResourceEx("data/TanueiKakuPop.otf", FR_PRIVATE, NULL);
-	Game::kFontUIHandle = CreateFontToHandle("TanueiKakuPop", 40, -1);
-	Game::kTitleFontHandle = CreateFontToHandle("TanueiKakuPop", 64, -1);
+	AddFontResourceEx("data/TsukuhouMincho-Regular.ttf", FR_PRIVATE, NULL);
+	Game::kFontUIHandle = CreateFontToHandle("築豊明朝", 40, -1);
+	Game::kTitleFontHandle = CreateFontToHandle("築豊明朝", 64, -1);
 
 	return true;
 }

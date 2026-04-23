@@ -6,7 +6,7 @@
 
 namespace
 {
-	constexpr int kEnemyMax = 3;
+	constexpr int kEnemyMax = 5;
 }
 
 EnemySpawner::EnemySpawner() :

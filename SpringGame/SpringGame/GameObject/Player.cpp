@@ -45,7 +45,7 @@ namespace
 	constexpr int kJustDodgeFrame = 4;
 
 	//UŒ‚ŠÔ
-	constexpr float kAttackTime = 1.2f;
+	constexpr float kAttackTime = 0.8f;
 
 	//UŒ‚‚Ì“–‚½‚è”»’è‚ªo‚Ä‚¢‚éŠÔ
 	constexpr float kAttackColEnabletime = 0.35f;
@@ -90,7 +90,7 @@ namespace
 	constexpr float kRotateLerpAnalogStick = 0.3f;
 
 	//ˆÚ“®§ŒÀ‚·‚é‚½‚ß‚Ì’è”
-	const float kWalkXLimit = 450.0f;
+	const float kWalkXLimit = 1500.0f;
 	const float kWalkZLimit = 10000.0f;
 
 	//•Ç§ŒÀ‚Ì‚µ‚«‚¢’l(Œë·)

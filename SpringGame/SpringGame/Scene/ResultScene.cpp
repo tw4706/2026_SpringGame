@@ -10,12 +10,11 @@
 
 namespace
 {
+	//フェードの感覚
 	constexpr int kFadeInterval = 60;
 
+	//スコアテキストのオフセットY座標
 	constexpr int kscoreTextOffsetY = 100;
-
-	//ゲームの時間
-	constexpr float kGamePlayTime = 60.0f;
 }
 
 ResultScene::ResultScene(SceneController& controller, float clearTime) :
@@ -40,6 +39,7 @@ void ResultScene::Init()
 	draw_ = &ResultScene::FadeDraw;
 
 	frameCount_ = kFadeInterval;
+
 	//BGM再生
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Result);
 }
@@ -177,12 +177,13 @@ void ResultScene::NormalDraw()
 
 	//選択肢
 	const char* retryText = "リトライ";
-	const char* titleText = "タイトルへもどる";
+	const char* titleText = "タイトルへ戻る";
 
+	//表示座標
 	int centerX = Game::kScreenWidth / 2;
 	int baseY = Game::kScreenHeight / 2 + 50;
 
-	//拡縮
+	//拡大縮小
 	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 10.0f) : 1.0f;
 	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 10.0f) : 1.0f;
 
@@ -190,9 +191,11 @@ void ResultScene::NormalDraw()
 	int retryW = GetDrawStringWidthToHandle(retryText, strlen(retryText), Game::kFontUIHandle);
 	int titleW = GetDrawStringWidthToHandle(titleText, strlen(titleText), Game::kFontUIHandle);
 
+	//テキストの色
 	int resultColor = GetColor(255, 255, 255);
 	int titleColor = GetColor(255, 255, 255);
 
+	//選ばれている場合は色を変更
 	if (currentMenu_ == ResultMenu::Retry)
 	{
 		resultColor = GetColor(255, 0, 0);
@@ -201,6 +204,7 @@ void ResultScene::NormalDraw()
 	{
 		titleColor= GetColor(255, 0, 0);
 	}
+
 	//描画
 	DrawExtendStringToHandle(
 		centerX - (int)(retryW * retryScale / 2),
