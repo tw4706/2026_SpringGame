@@ -145,3 +145,21 @@
 641:	ウインドウスタイルをウインドウモード用に変更します... 完了
 786:	VMD Load Error : 対応していない VMD バージョンです
 
+2311039:	ウインドウを閉じようとしています
+2311040:	ウインドウが破棄されようとしています
+2311040:	ソフトを終了する準備が整いました
+2311047:	フォントの初期化を行います
+2311047:	フォントの初期化は正常に終了しました
+2311120:	d3d11.dll の解放 1
+2311206:	完了
+2311211:	ＣＯＭを終了... 完了
+2311211:	
+2311211:	Alloc memory dump
+2311212:		size:       288(     0.281kb)  user size:        12(     0.012kb)  time:60281  file:DxInputString.cpp           line:4441    ID:695    addr:000002602be06740  data:[30 00 2e 00 30 00 30 00 30 00 00 00]
+2311212:		size:       304(     0.297kb)  user size:        12(     0.012kb)  time:60281  file:DxInputString.cpp           line:4441    ID:696    addr:000002602be0d8e0  data:[30 00 2e 00 39 00 37 00 36 00 00 00]
+2311212:		size:       240(     0.234kb)  user size:        12(     0.012kb)  time:60281  file:DxInputString.cpp           line:4441    ID:693    addr:000002602be0f7b0  data:[30 00 2e 00 30 00 30 00 30 00 00 00]
+2311212:		size:       256(     0.250kb)  user size:        12(     0.012kb)  time:60281  file:DxInputString.cpp           line:4441    ID:694    addr:000002602be14220  data:[30 00 2e 00 39 00 37 00 36 00 00 00]
+2311212:		size:       176(     0.172kb)  user size:        12(     0.012kb)  time:60281  file:DxInputString.cpp           line:4441    ID:697    addr:000002602be18550  data:[30 00 2e 00 39 00 37 00 36 00 00 00]
+2311212:		size:       176(     0.172kb)  user size:        12(     0.012kb)  time:60281  file:DxInputString.cpp           line:4441    ID:699    addr:000002602be18600  data:[30 00 2e 00 39 00 37 00 36 00 00 00]
+2311212:		Total size:72(0.070kb)  Alloc num:6
+2311212:	

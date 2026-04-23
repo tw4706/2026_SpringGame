@@ -53,7 +53,6 @@ void TitleScene::Init()
 	bgAngle_ = 0.0f;
 	blinkTimer_ = 0.0f;
 
-
 	//BGMçƒê∂
 	Application::GetInstance().GetSoundManager().PlayBgm(BGM::Title);
 }
@@ -155,7 +154,7 @@ void TitleScene::NormalDraw()
 	int pressStartWidth = GetDrawStringWidthToHandle(pressStartText, static_cast<int>(strlen(pressStartText)), Game::kTitleFontHandle);
 
 	//ï`âÊ
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0.1f, 0.0f, titleHandle_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, titleHandle_, true);
 	;
 	int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
 

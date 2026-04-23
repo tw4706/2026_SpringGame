@@ -27,7 +27,7 @@ bool Application::Init()
 	// ウィンドウモード設定
 	ChangeWindowMode(true);
 	// ウィンドウのタイトル変更
-	SetMainWindowText("ラビットスマッシュ");
+	SetMainWindowText("DASHofNINJA");
 	// 画面のサイズ変更
 	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kColorBitNum);
 
