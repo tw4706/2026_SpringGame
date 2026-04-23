@@ -74,7 +74,7 @@ void Camera::UpdateCamera()
 	cameraPos.y_ = (std::max)(cameraPos.y_, 50.0f);
 
 	//カメラの補間
-	pos_ = Vector3::Lerp(pos_, cameraPos, 0.1f);
+	pos_ = Vector3::Lerp(pos_, cameraPos, 0.5f);
 
 	//カメラのシェイク適用
 	pos_ += UpdateShake();

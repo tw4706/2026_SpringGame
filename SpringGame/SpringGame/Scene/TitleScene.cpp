@@ -157,7 +157,7 @@ void TitleScene::NormalDraw()
 	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, titleHandle_, true);
 	;
 	int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
-
+ 
 	int pressStartx = (Game::kScreenWidth - pressStartWidth) / 2;
 	int pressStarty = Game::kScreenHeight / 2 + 100;
 

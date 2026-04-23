@@ -74,9 +74,9 @@ bool Application::Init()
 		// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
 		SetWriteZBuffer3D(TRUE);
 	}
-	AddFontResourceEx("data/TsukuhouMincho-Regular.ttf", FR_PRIVATE, NULL);
-	Game::kFontUIHandle = CreateFontToHandle("築豊明朝", 40, -1);
-	Game::kTitleFontHandle = CreateFontToHandle("築豊明朝", 64, -1);
+	AddFontResourceEx("data/Senobi-Gothic-Bold.ttf", FR_PRIVATE, NULL);
+	Game::kFontUIHandle = CreateFontToHandle("せのびゴシック Bold", 40, -1);
+	Game::kTitleFontHandle = CreateFontToHandle("せのびゴシック Bold", 64, -1);
 
 	return true;
 }
