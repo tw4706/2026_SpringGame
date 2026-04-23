@@ -3,8 +3,8 @@
 
 namespace
 {
-	constexpr int kBaseBgmVolume = 160;
-	constexpr int kBaseSeVolume = 220;
+	constexpr int kBaseBgmVolume = 0;
+	constexpr int kBaseSeVolume = 0;
 
 	//各BGM・SEのパス
 	const char* kTitleBgm = "data/BGM・SE/Title.mp3";

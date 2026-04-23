@@ -147,22 +147,54 @@ void TitleScene::NormalDraw()
 
 	SetUseBackCulling(TRUE);
 
-	//タイトル名
-	const char* pressStartText = "ボタンを押してスタート";
-
-	////文字の横幅を取得
-	int pressStartWidth = GetDrawStringWidthToHandle(pressStartText, static_cast<int>(strlen(pressStartText)), Game::kTitleFontHandle);
-
 	//描画
 	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, titleHandle_, true);
-	;
-	int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
- 
-	int pressStartx = (Game::kScreenWidth - pressStartWidth) / 2;
-	int pressStarty = Game::kScreenHeight / 2 + 100;
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawStringToHandle(pressStartx + 4, pressStarty + 4, pressStartText, 0x000000, Game::kTitleFontHandle);
-	DrawStringToHandle(pressStartx, pressStarty, pressStartText, 0xffffff, Game::kTitleFontHandle);
+	//タイトル名
+	const char* text = "ボタンを押してスタート";
+	int textLength = (int)strlen(text);
+
+	int totalWidth = GetDrawStringWidthToHandle(text, textLength, Game::kTitleFontHandle);
+	int currentX = (Game::kScreenWidth - totalWidth) / 2;
+	int baseY = Game::kScreenHeight / 2 + 100;
+
+	int charOrder = 0;
+
+	for (int i = 0; i < textLength; )
+	{
+		// --- 1文字のバイト数を判定する ---
+		int byteCount = 1;
+
+		//全角文字の対応
+		// Shift-JISの場合なら,1バイト目が 0x81-0x9F か 0xE0-0xFC なら全角(2バイト)らしい
+		unsigned char c = (unsigned char)text[i];
+		if ((c >= 0x81 && c <= 0x9F) || (c >= 0xE0 && c <= 0xFC)) {
+			byteCount = 2;
+		}
+
+		//1文字分だけを取り出す
+		char oneChar[3] = { 0 };
+		for (int b = 0; b < byteCount; b++) {
+			oneChar[b] = text[i + b];
+		}
+
+		//文字の揺れの計算
+		float waveY = sinf(blinkTimer_ * 0.1f + charOrder * 0.5f) * 10.0f;
+		int drawY = static_cast<int>(baseY + waveY);
+
+		//文字の点滅
+		int alpha = static_cast<int>(kBlinkBaseAlpha + kBlinkAlphaRange * sinf(blinkTimer_ * kBlinkSpeed));
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+		//描画
+		DrawStringToHandle(currentX+4, drawY+4, oneChar, GetColor(0, 0, 0), Game::kTitleFontHandle);
+		DrawStringToHandle(currentX, drawY, oneChar, GetColor(255, 255, 255), Game::kTitleFontHandle);
+
+		//次の文字へ進む
+		currentX += GetDrawStringWidthToHandle(oneChar, byteCount, Game::kTitleFontHandle);
+		i += byteCount;
+		charOrder++;
+	}
+
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

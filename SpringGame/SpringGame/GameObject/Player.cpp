@@ -48,7 +48,7 @@ namespace
 	constexpr float kAttackTime = 0.8f;
 
 	//攻撃の当たり判定が出ている時間
-	constexpr float kAttackColEnabletime = 0.35f;
+	constexpr float kAttackColEnabletime = 0.15f;
 
 	//被ダメージ時間
 	constexpr float kHitTime = 0.3f;
