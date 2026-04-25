@@ -28,6 +28,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	blinkTimer_(0.0f),
 	titleHandle_(-1)
 {
+	pTitlePlayer_ = std::make_shared<TitlePlayer>();
 }
 
 TitleScene::~TitleScene()
@@ -37,6 +38,8 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	bg_.Init();
+
+	pTitlePlayer_->Init();
 
 	SetCameraNearFar(1.0f, 10000.0f);
 
@@ -78,7 +81,9 @@ void TitleScene::FadeInUpdate(Input& input)
 
 void TitleScene::NormalUpdate(Input& input)
 {
-	bgAngle_ += 0.003f;
+	pTitlePlayer_->Update();
+
+	//bgAngle_ += 0.003f;
 
 	blinkTimer_++;
 
@@ -94,7 +99,6 @@ void TitleScene::NormalUpdate(Input& input)
 
 void TitleScene::FadeOutUpdate(Input& input)
 {
-	bgAngle_ += 0.001f;
 	if (frameCount_-- <= 0)
 	{
 		controller_.ChangeScene(std::make_shared<GameScene>(controller_));
@@ -135,15 +139,15 @@ void TitleScene::NormalDraw()
 
 	//カメラを画面中央へ向ける
 	SetCameraPositionAndTarget_UpVecY(
-		cameraPos.ToDxlibVector(),
-		center.ToDxlibVector());
+		VGet(0, 50, -500),
+		VGet(0, 0, 0));
 
 	SetUseBackCulling(FALSE);
 	//描画
 	bg_.Draw(cameraPos);
 
 	//タイトル用プレイヤーの描画
-	//pTitlePlayer_->Draw();
+	pTitlePlayer_->Draw();
 
 	SetUseBackCulling(TRUE);
 
@@ -187,7 +191,7 @@ void TitleScene::NormalDraw()
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
 		//描画
-		DrawStringToHandle(currentX+4, drawY+4, oneChar, GetColor(0, 0, 0), Game::kTitleFontHandle);
+		DrawStringToHandle(currentX + 4, drawY + 4, oneChar, GetColor(0, 0, 0), Game::kTitleFontHandle);
 		DrawStringToHandle(currentX, drawY, oneChar, GetColor(255, 255, 255), Game::kTitleFontHandle);
 
 		//次の文字へ進む

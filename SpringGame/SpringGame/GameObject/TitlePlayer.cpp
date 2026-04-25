@@ -24,11 +24,15 @@ TitlePlayer::~TitlePlayer()
 
 void TitlePlayer::Init()
 {
-	model_.Load("data/Player.mv1");
+	model_.Load("data/Player_Idle.mv1");
 
 	//アニメーションの設定
 	animation_.Init(model_.GetHandle(), AnimType::Player);
 	animation_.ChangeState(AnimationState::Run);
+
+	pos_ = { -200.0f, -50.0f, 0.0f };
+
+	angle_ = DX_PI_F * 0.75f;//135度
 
 	time_ = 0.0f;
 	speed_ = 300.0f;
@@ -45,7 +49,7 @@ void TitlePlayer::Update()
 void TitlePlayer::Draw()
 {
 	Matrix4x4 mat =
-		Matrix4x4::Scale(0.3f, 0.3f, 0.3f) *
+		Matrix4x4::Scale(1.0f, 1.0f, 1.0f) *
 		Matrix4x4::RotateY(angle_) *
 		Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
 

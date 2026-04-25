@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include"../GameObject/Bg.h"
-#include"../GameObject/Player.h"
+#include"../GameObject/TitlePlayer.h"
 #include<memory>
 
 class TitleScene :public Scene
@@ -31,6 +31,7 @@ private:
 	float blinkTimer_;
 	int titleHandle_;
 
-	Bg bg_;										//背景
+	Bg bg_;											//背景
+	std::shared_ptr<TitlePlayer>pTitlePlayer_;		//タイトル演出用プレイヤー
 };
 
