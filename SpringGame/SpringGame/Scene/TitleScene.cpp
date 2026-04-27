@@ -12,10 +12,16 @@
 
 namespace
 {
+	//フェードの間隔
 	constexpr int kFadeInterval = 60;
 
+	//点滅表示のデフォルトの透明度
 	constexpr int kBlinkBaseAlpha = 150;
+
+	//点滅の透明度の範囲
 	constexpr int kBlinkAlphaRange = 120;
+
+	//点滅のスピード
 	constexpr float kBlinkSpeed = 0.05f;
 }
 
@@ -29,6 +35,7 @@ TitleScene::TitleScene(SceneController& controller) :
 	titleHandle_(-1)
 {
 	pTitlePlayer_ = std::make_shared<TitlePlayer>();
+	pTitleEnemy_ = std::make_shared<TitleEnemy>();
 }
 
 TitleScene::~TitleScene()
@@ -40,6 +47,7 @@ void TitleScene::Init()
 	bg_.Init();
 
 	pTitlePlayer_->Init();
+	pTitleEnemy_->Init();
 
 	SetCameraNearFar(1.0f, 10000.0f);
 
@@ -82,6 +90,7 @@ void TitleScene::FadeInUpdate(Input& input)
 void TitleScene::NormalUpdate(Input& input)
 {
 	pTitlePlayer_->Update();
+	pTitleEnemy_->Update();
 
 	//bgAngle_ += 0.003f;
 
@@ -148,6 +157,8 @@ void TitleScene::NormalDraw()
 
 	//タイトル用プレイヤーの描画
 	pTitlePlayer_->Draw();
+	//タイトル用エネミーの描画
+	pTitleEnemy_->Draw();
 
 	SetUseBackCulling(TRUE);
 

@@ -15,7 +15,6 @@ public:
 
 private:
     float time_;
-    float speed_;
     float angle_;
 
     Model model_;

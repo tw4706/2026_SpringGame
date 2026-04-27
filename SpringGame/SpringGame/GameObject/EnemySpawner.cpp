@@ -6,6 +6,7 @@
 
 namespace
 {
+	//スポナー1個につき最大で生成される敵の数
 	constexpr int kEnemyMax = 5;
 }
 

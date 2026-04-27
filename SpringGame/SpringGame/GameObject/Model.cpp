@@ -24,21 +24,25 @@ void Model::Load(const std::string& path)
 
 void Model::Draw()
 {
+    //モデルの描画
     MV1DrawModel(handle_);
 }
 
 void Model::SetPosition(const Vector3& pos)
 {
+    //モデルの位置
     MV1SetPosition(handle_, pos.ToDxlibVector());
 }
 
 void Model::SetScale(const Vector3& scale)
 {
+    //モデルの拡縮
     MV1SetScale(handle_, scale.ToDxlibVector());
 }
 
 void Model::SetRotationY(float angle)
 {
+    //モデルの回転
     MV1SetRotationXYZ(handle_, VGet(0.0f, angle, 0.0f));
 }
 

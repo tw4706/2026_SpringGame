@@ -6,7 +6,8 @@
 
 namespace
 {
-	const Vector3 kTargetToCamera = { 0.0f,500.0f,-660.0f };
+	//ターゲットからカメラの注視点
+	const Vector3 kTargetToCamera = { 0.0f,400.0f,-600.0f };
 }
 
 Camera::Camera() :

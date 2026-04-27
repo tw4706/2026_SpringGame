@@ -50,6 +50,7 @@ namespace
 	//プレイヤーの向きのベクトルの正規化用
 	constexpr float kDirectionEpsilon = 0.001f;
 
+	//フレームレート
 	constexpr float kFrameRate = 60.0f;
 
 	//攻撃を開始する距離

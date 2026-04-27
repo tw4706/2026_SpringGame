@@ -5,10 +5,13 @@
 
 namespace
 {
+	//モデルの初期位置
 	const Vector3 kFirstPos = { 0.0f,0.0f,10000.0f };
 
+	//モデルの座標オフセット
 	const Vector3 kPosOffset = { 0.0f,150.0f,0.0f };
 
+	//モデルの拡大率
 	const Vector3 kModelScale = { 2.0f,1.5f,2.0f };
 
 	//当たり判定のサイズ

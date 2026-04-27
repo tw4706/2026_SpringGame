@@ -4,22 +4,35 @@
 
 namespace
 {
-	//プレイヤー
+	//プレイヤーアニメーション
+	//Idle
 	const char* kPlayerIdle = "Player|Idle";
+	//Run
 	const char* kPlayerRun = "Player|Run";
+	//Attack
 	const char* kPlayerAttack = "Player|Attack";
+	//Hit
 	const char* kPlayerHit = "Player|Hit";
+	//Death
 	const char* kPlayerDeath = "Player|Death";
 
-	//敵
+	//敵アニメーション
+	//Spawn
 	const char* kEnemySpawn = "MonsterArmature|Jump";
+	//Idle
 	const char* kEnemyIdle = "MonsterArmature|Idle";
+	//Run
 	const char* kEnemyRun = "MonsterArmature|Dance";
+	//Attack
 	const char* kEnemyAttack = "MonsterArmature|Bite_Front";
+	//PrevAttack
 	const char* kEnemyPrevAttack = "MonsterArmature|No";
+	//Death
 	const char* kEnemyDeath = "MonsterArmature|Death";
 
+	//アニメーションの進むスピード
 	constexpr float kAnimationSpeed = 30.0f;
+	//攻撃アニメーションの進むスピード
 	constexpr float kAttackAnimationSpeed = 60.0f;
 }
 
@@ -37,7 +50,8 @@ Animation::Animation() :
 	isAnimEnd_(false),
 	totalTime_(0.0f),
 	state_(AnimationState::Idle),
-	prevState_(AnimationState::Idle)
+	prevState_(AnimationState::Idle),
+	type_(AnimType::Player)
 {
 
 }

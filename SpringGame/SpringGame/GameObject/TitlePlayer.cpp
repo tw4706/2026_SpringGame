@@ -11,7 +11,6 @@ namespace
 TitlePlayer::TitlePlayer() :
 	GameObject(pos_, vel_),
 	time_(0.0f),
-	speed_(0.0f),
 	angle_(0.0f)
 {
 }
@@ -32,10 +31,9 @@ void TitlePlayer::Init()
 
 	pos_ = { -200.0f, -50.0f, 0.0f };
 
-	angle_ = DX_PI_F * 0.75f;//135“x
+	angle_ = DX_PI_F * 0.5f;
 
 	time_ = 0.0f;
-	speed_ = 300.0f;
 }
 
 void TitlePlayer::Update()

@@ -147,6 +147,7 @@
     <ClCompile Include="Manager\EffectManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject\TitlePlayer.cpp" />
+    <ClCompile Include="GameObject\TitleEnemy.cpp" />
     <ClCompile Include="UI\OperationGuideUI.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="GameObject\Model.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="GameObject\EnemySpawner.h" />
     <ClInclude Include="Manager\EffectManager.h" />
     <ClInclude Include="GameObject\TitlePlayer.h" />
+    <ClInclude Include="GameObject\TitleEnemy.h" />
     <ClInclude Include="UI\OperationGuideUI.h" />
     <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="GameObject\Model.h" />

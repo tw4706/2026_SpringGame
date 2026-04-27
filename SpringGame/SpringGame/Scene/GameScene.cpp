@@ -45,7 +45,7 @@ namespace
 	constexpr int kReadyFrame = 60;
 	constexpr int kStartFrame = 30;
 
-	//“G‚Ì¶¬”ÍˆÍ
+	//“G‚Ì¶¬”ÍˆÍ(XÀ•WEZÀ•W)
 	constexpr float kWalkXLimit = 130.0f;
 	constexpr float kWalkZLimit = 10000.0f;
 }
