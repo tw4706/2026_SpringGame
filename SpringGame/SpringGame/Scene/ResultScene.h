@@ -2,12 +2,18 @@
 #include "Scene.h"
 #include"../GameObject/Bg.h"
 
+enum class ResultTextType
+{
+	Clear,
+	GameOver
+};
+
 class SceneController;
 class Input;
 class ResultScene :public Scene
 {
 public:
-	ResultScene(SceneController& controller,float clearTime);
+	ResultScene(SceneController& controller,float clearTime,ResultTextType resultType);
 	~ResultScene();
 
 	void Init()override;
@@ -40,5 +46,6 @@ private:
 	float bgAngle_;
 
 	Bg bg_;
-	ResultMenu currentMenu_=ResultMenu::Retry;//現在選択されている選択肢の状態
+	ResultMenu currentMenu_=ResultMenu::Retry;	//現在選択されている選択肢の状態
+	ResultTextType resultType_;					//リザルトで表示するテキストのタイプ
 };

@@ -403,7 +403,7 @@ void GameScene::NormalUpdate(Input& input)
 				spawner->StopEffect();
 			}
 
-			controller_.PushScene(std::make_shared<ResultScene>(controller_, clearTime_));
+			controller_.PushScene(std::make_shared<ResultScene>(controller_, clearTime_, ResultTextType::GameOver));
 			return;
 		}
 	}
@@ -416,7 +416,7 @@ void GameScene::FadeOutUpdate(Input& input)
 	//ゴールオブジェクトに触れたら
 	if (pGoalObject_->IsHit())
 	{
-		controller_.PushScene(std::make_shared<ResultScene>(controller_, clearTime_));
+		controller_.PushScene(std::make_shared<ResultScene>(controller_, clearTime_,ResultTextType::Clear));
 		return;
 	}
 }

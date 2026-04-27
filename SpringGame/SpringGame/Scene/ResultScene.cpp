@@ -17,7 +17,7 @@ namespace
 	constexpr int kscoreTextOffsetY = 100;
 }
 
-ResultScene::ResultScene(SceneController& controller, float clearTime) :
+ResultScene::ResultScene(SceneController& controller, float clearTime, ResultTextType resultType) :
 	Scene(controller),
 	clearTime_(clearTime),
 	update_(&ResultScene::FadeInUpdate),
@@ -25,7 +25,8 @@ ResultScene::ResultScene(SceneController& controller, float clearTime) :
 	frameCount_(kFadeInterval),
 	resultScore_(0),
 	displayScore_(0),
-	bgAngle_(0.0f)
+	bgAngle_(0.0f),
+	resultType_(resultType)
 {
 }
 
@@ -223,4 +224,29 @@ void ResultScene::NormalDraw()
 		titleText,
 		titleColor,
 		Game::kFontUIHandle);
+
+	//ゲームオーバーまたはゲームクリアの表示
+	const char* resultText = "";
+	int resultTextColor = GetColor(255, 255, 255);
+
+	if (resultType_ == ResultTextType::Clear)
+	{
+		resultText = "GAME CLEAR！";
+		resultTextColor = GetColor(255, 255, 255);
+	}
+	else
+	{
+		resultText = "GAME OVER...";
+		resultTextColor = GetColor(255, 255, 255);
+	}
+
+	//文字の幅を取得して中央に配置
+	int resWidth = GetDrawStringWidthToHandle(resultText, (int)strlen(resultText), Game::kFontUIHandle);
+	int resultX = Game::kScreenWidth / 2 - resWidth / 2;
+	int resultY = Game::kScreenHeight / 2 - 200;
+
+	//描画
+	DrawExtendStringToHandle(resultX+4, resultY+4, 1.2f, 1.2f, resultText, GetColor(0,0,0), Game::kFontUIHandle);
+	DrawExtendStringToHandle(resultX, resultY, 1.2f, 1.2f, resultText, resultTextColor, Game::kFontUIHandle);
+
 }
