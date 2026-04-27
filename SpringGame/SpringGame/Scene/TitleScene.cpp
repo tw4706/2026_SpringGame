@@ -63,6 +63,13 @@ void TitleScene::Init()
 
 	titleHandle_ = LoadGraph("data/titleLogo.png");
 
+	//床のモデル読み込み
+	floorModel_.Load("data/floor.mv1");
+	floorModel_.SetPosition({ 0.0f, -200.0f, 10.0f });
+	floorModel_.SetRotationY(DX_PI_F * 0.5f);
+	floorModel_.SetScale({ 1.0f,1.0f,1.0f });
+
+
 	update_ = &TitleScene::FadeInUpdate;
 	draw_ = &TitleScene::FadeDraw;
 
@@ -195,6 +202,9 @@ void TitleScene::NormalDraw()
 	pTitlePlayer_->Draw();
 	//タイトル用エネミーの描画
 	pTitleEnemy_->Draw();
+
+	//床のモデル描画
+	floorModel_.Draw();
 
 	SetUseBackCulling(TRUE);
 
