@@ -4,8 +4,14 @@
 
 namespace
 {
-	constexpr float kHalfW = 500.0f;
-	constexpr float kHalfH = 500.0f;
+	//初期位置
+	const Vector3 kFirstPos = { -200.0f, -120.0f, 0.0f };
+
+	//プレイヤーが向いている角度
+	constexpr float kPlayerAngle = DX_PI_F * 0.5f;
+
+	//経過時間
+	constexpr float kDeltaTime = 1.0f / 60.0f;
 }
 
 TitlePlayer::TitlePlayer() :
@@ -30,16 +36,16 @@ void TitlePlayer::Init()
 	animation_.Init(model_.GetHandle(), AnimType::Player);
 	animation_.ChangeState(AnimationState::Run);
 
-	pos_ = { -200.0f, -120.0f, 0.0f };
+	pos_ = kFirstPos;
 
-	angle_ = DX_PI_F * 0.5f;
+	angle_ = kPlayerAngle;
 
 	time_ = 0.0f;
 }
 
 void TitlePlayer::Update()
 {
-	float dt = 1.0f / 60.0f;
+	float dt = kDeltaTime;
 
 	//アニメーションの更新
 	animation_.Update(dt);

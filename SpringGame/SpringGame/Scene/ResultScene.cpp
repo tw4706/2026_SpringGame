@@ -15,6 +15,24 @@ namespace
 
 	//スコアテキストのオフセットY座標
 	constexpr int kscoreTextOffsetY = 100;
+
+	//点滅の時間
+	constexpr float kBlinkTime = 0.01f;
+
+	//背景の回転速度
+	constexpr float kBgAngleSpeed = 0.01f;
+
+	//TIME表示のY座標オフセット
+	constexpr int kTimeTextOffsetY = 100;
+
+	//選択肢のY座標オフセット
+	constexpr int kMenuOffsetY = 50;
+
+	//resultの結果の文字表示のY座標オフセット
+	constexpr int kResultTextOffsetY = 200;
+
+	//Resultの結果文字のサイズ
+	constexpr float kResultTextScale = 1.2f;
 }
 
 ResultScene::ResultScene(SceneController& controller, float clearTime, ResultTextType resultType) :
@@ -66,10 +84,10 @@ void ResultScene::FadeInUpdate(Input& input)
 void ResultScene::NormalUpdate(Input& input)
 {
 	frameCount_++;
-	blinkTimer_ += 0.01f;
+	blinkTimer_ += kBlinkTime;
 
 	//背景を回転させる
-	bgAngle_ += 0.01f;
+	bgAngle_ += kBgAngleSpeed;
 
 	if (frameCount_ >= kFadeInterval)
 	{
@@ -171,7 +189,7 @@ void ResultScene::NormalDraw()
 
 	//表示する座標
 	int x = Game::kScreenWidth / 2 - width / 2;
-	int y = Game::kScreenHeight / 2 - 100;
+	int y = Game::kScreenHeight / 2 - kTimeTextOffsetY;
 
 	//描画
 	DrawStringToHandle(x, y, buf, GetColor(255, 255, 255), Game::kFontUIHandle);
@@ -182,7 +200,7 @@ void ResultScene::NormalDraw()
 
 	//表示座標
 	int centerX = Game::kScreenWidth / 2;
-	int baseY = Game::kScreenHeight / 2 + 50;
+	int baseY = Game::kScreenHeight / 2 + kMenuOffsetY;
 
 	//拡大縮小
 	float retryScale = (currentMenu_ == ResultMenu::Retry) ? 1.0f + 0.1f * sinf(blinkTimer_ * 10.0f) : 1.0f;
@@ -218,7 +236,7 @@ void ResultScene::NormalDraw()
 
 	DrawExtendStringToHandle(
 		centerX - (int)(titleW * titleScale / 2),
-		baseY + 50,
+		baseY + kMenuOffsetY,
 		titleScale,
 		titleScale,
 		titleText,
@@ -243,9 +261,9 @@ void ResultScene::NormalDraw()
 	//文字の幅を取得して中央に配置
 	int resWidth = GetDrawStringWidthToHandle(resultText, (int)strlen(resultText), Game::kFontUIHandle);
 	int resultX = Game::kScreenWidth / 2 - resWidth / 2;
-	int resultY = Game::kScreenHeight / 2 - 200;
+	int resultY = Game::kScreenHeight / 2 - kResultTextOffsetY;
 
 	//描画
-	DrawExtendStringToHandle(resultX+4, resultY+4, 1.2f, 1.2f, resultText, GetColor(0,0,0), Game::kFontUIHandle);
-	DrawExtendStringToHandle(resultX, resultY, 1.2f, 1.2f, resultText, resultTextColor, Game::kFontUIHandle);
+	DrawExtendStringToHandle(resultX+4, resultY+4, kResultTextScale, kResultTextScale, resultText, GetColor(0,0,0), Game::kFontUIHandle);
+	DrawExtendStringToHandle(resultX, resultY, kResultTextScale, kResultTextScale, resultText, resultTextColor, Game::kFontUIHandle);
 }

@@ -193,9 +193,7 @@ void TitleScene::NormalDraw()
 	cameraPos.z_ = sinf(bgAngle_) * 500.0f;
 
 	//ƒJƒƒ‰‚ğ‰æ–Ê’†‰›‚ÖŒü‚¯‚é
-	SetCameraPositionAndTarget_UpVecY(
-		VGet(0, 50, -500),
-		VGet(0, 0, 0));
+	SetCameraPositionAndTarget_UpVecY(VGet(0, 50, -500),VGet(0, 0, 0));
 
 	SetUseBackCulling(FALSE);
 	//•`‰æ

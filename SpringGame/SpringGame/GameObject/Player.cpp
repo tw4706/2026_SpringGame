@@ -391,12 +391,14 @@ void Player::HandleInput(Input& input)
 	//攻撃中は新しい攻撃を受け付けない
 	if (state_ == PlayerState::Attack)return;
 
+	//回避の入力が行われているかつプレイヤーの状態が回避でない場合
 	if (input.IsTriggered("dodge") && state_ != PlayerState::Dodge)
 	{
 		StartDodge();
 		return;
 	}
 
+	//攻撃の入力が行われたら
 	if (input.IsTriggered("attack"))
 	{
 		StartAttack();
@@ -406,6 +408,7 @@ void Player::HandleInput(Input& input)
 
 void Player::UpdateAction(Input& input, float dt)
 {
+	//プレイヤーの状態に応じて処理を分岐
 	switch (state_)
 	{
 	case PlayerState::Idle:
@@ -418,6 +421,8 @@ void Player::UpdateAction(Input& input, float dt)
 		break;
 
 	case PlayerState::Attack:
+		
+		//ノックバックが行われていない場合
 		if (knockbackTimer_ <= 0.0f)
 		{
 			Move(input, dt);
@@ -437,10 +442,13 @@ void Player::UpdateAction(Input& input, float dt)
 
 void Player::UpdateState()
 {
+	//攻撃状態かつ攻撃タイマーが0以下なら状態をIdleに戻す
 	if (state_ == PlayerState::Attack && attackTimer_ <= 0.0f)state_ = PlayerState::Idle;
 
+	//回避状態かつ回避タイマーが0以下なら状態をIdleに戻す
 	if (state_ == PlayerState::Dodge && dodgeTimer_ <= 0.0f)state_ = PlayerState::Idle;
 
+	//idle状態または走り状態の場合
 	if (state_ == PlayerState::Idle || state_ == PlayerState::Run)
 	{
 		if (fabs(vel_.x_) > kRunEpsilon || fabs(vel_.z_) > kRunEpsilon)
@@ -452,45 +460,38 @@ void Player::UpdateState()
 			state_ = PlayerState::Idle;
 		}
 	}
+
 	//ダメージ処理から戻す
 	if (state_ == PlayerState::Hit && hitTimer_ <= 0.0f)
 	{
 		state_ = PlayerState::Idle;
 	}
 
-	//死亡は戻らない
+	//死亡状態は戻らない
 	if (state_ == PlayerState::Death)return;
 }
 
 void Player::UpdateAttack()
 {
-	//ジャスト回避時は攻撃判定を広げる
-	float attackRadius = kAttackColSize;
-
-	//ジャスト回避のバフを受けている場合は攻撃判定を広げる
-	if (isJustDodgeBuff_)
-	{
-		attackRadius *= 5.0f;
-	}
-
-	//攻撃判定の半径をセット
-	attackCollider_.SetRadian(attackRadius);
-
 	//プレイヤーの前方に攻撃判定を生成する
 	Vector3 forward = { -sinf(moveAngle_), 0.0f, cosf(moveAngle_) };
 	Vector3 attackPos = pos_ + forward * kAttackDistance + kColOffset;
 
 	attackCollider_.SetPos(attackPos);
 
+	//攻撃のタイマーが攻撃判定発生開始以下かつ発生終了以上まで
 	if (attackTimer_ <= kAttackColStart && attackTimer_ >= kAttackColEnd)
 	{
+		//判定ON
 		attackCollider_.SetEnable(true);
 	}
 	else
 	{
+		//判定OFF
 		attackCollider_.SetEnable(false);
 	}
 
+	//攻撃タイマーが0以下なら判定OFF
 	if (attackTimer_ <= 0.0f)
 	{
 		attackCollider_.SetEnable(false);
@@ -506,6 +507,7 @@ void Player::UpdateKnockBack(float dt)
 		//減速（自然に止まるようにする）
 		knockbackVel_ *= kKnockbackDeceration;
 
+		//タイマーを減らす
 		knockbackTimer_ -= dt;
 	}
 }

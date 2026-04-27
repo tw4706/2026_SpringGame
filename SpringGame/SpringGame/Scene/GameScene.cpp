@@ -48,6 +48,30 @@ namespace
 	//敵の生成範囲(X座標・Z座標)
 	constexpr float kWalkXLimit = 130.0f;
 	constexpr float kWalkZLimit = 10000.0f;
+
+	//敵スポナーの生成Z座標
+	constexpr float kEnemySpawnerPosZ = 1500.0f;
+
+	//スポナーの生成間隔Z座標
+	constexpr float kEnemySpawnerDistanceZ = 3000.0f;
+
+	//敵スポナーの半径
+	constexpr float kEnemySpawnerRadius = 1000.0f;
+
+	//床モデルの初期位置
+	const Vector3 kFirstFloorPos = { 0.0f,-50.0f,3000.0f };
+
+	//経過時間
+	constexpr float kDeltaTime = 1.0f / 60.0f;
+
+	//スローの倍率
+	constexpr float kTimeScale = 0.4f;
+
+	//スロー時間
+	constexpr float kSlowTime = 0.2f;
+
+	//カメラのズーム倍率
+	constexpr float kCameraZoom = DX_PI_F / 6.0f;
 }
 
 GameScene::GameScene(SceneController& contorller) :
@@ -105,9 +129,9 @@ void GameScene::Init()
 	{
 		auto spawner = std::make_shared<EnemySpawner>();
 
-		float z = 1500.0f + i * 3000.0f;
+		float z = kEnemySpawnerPosZ + i * kEnemySpawnerDistanceZ;
 
-		spawner->Init({ 0.0f, 0.0f, z }, 1000.0f);
+		spawner->Init({ 0.0f, 0.0f, z }, kEnemySpawnerRadius);
 		spawner->SetPlayer(pPlayer_.get());
 		spawner->SetCamera(pCamera_.get());
 
@@ -143,7 +167,7 @@ void GameScene::Init()
 
 	//床のモデル読み込み
 	floorHandle_ = MV1LoadModel("data/floor.mv1");
-	MV1SetPosition(floorHandle_, VGet(0.0f, -50.0f, 3000.0f));
+	MV1SetPosition(floorHandle_, kFirstFloorPos.ToDxlibVector());
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
 	//HPの設定
@@ -158,7 +182,7 @@ void GameScene::Init()
 
 void GameScene::Update(Input& input)
 {
-	dt_ = (1.0f / 60.0f) * timeScale_;
+	dt_ = kDeltaTime * timeScale_;
 
 	EffectManager::GetInstance().Update();
 	(this->*update_)(input);
@@ -347,9 +371,9 @@ void GameScene::NormalUpdate(Input& input)
 	//ジャスト回避処理
 	if (pPlayer_->IsJustDodge())
 	{
-		timeScale_ = 0.4f;						//スローの倍率
-		slowTimer_ = 0.2f;						//スロー時間
-		pCamera_->StartZoom(DX_PI_F / 6.0f);	//カメラのズーム開始
+		timeScale_ = kTimeScale;					//スローの倍率
+		slowTimer_ = kSlowTime;						//スロー時間
+		pCamera_->StartZoom(kCameraZoom);			//カメラのズーム開始
 	}
 
 	//スロー時間の更新

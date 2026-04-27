@@ -8,6 +8,18 @@ namespace
 {
 	//スポナー1個につき最大で生成される敵の数
 	constexpr int kEnemyMax = 5;
+
+	//スポナーから出る敵の生成間隔
+	constexpr float kSpawnInterval = 0.1f;
+
+	//スポナーの生成最大範囲
+	constexpr float kSpawnerMaxRange = 800;
+
+	//スポナーの生成最小範囲
+	constexpr float kSpawnerMinRange = 400;
+
+	//敵を削除する判定距離
+	constexpr float kRemoveDistane = 1500.0f;
 }
 
 EnemySpawner::EnemySpawner() :
@@ -42,7 +54,7 @@ void EnemySpawner::Init(const Vector3& pos, float radius)
 	isSpawned_ = false;
 
 	spawnTimer_ = 0.0f;
-	spawnInteval_ = 0.1f;
+	spawnInteval_ = kSpawnInterval;
 }
 
 void EnemySpawner::Update(const Vector3& playerPos, float dt)
@@ -80,8 +92,8 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 		{
 			auto enemy = std::make_shared<Enemy>();
 
-			float offsetX = static_cast<float>(GetRand(800) - 400);
-			float offsetZ = static_cast<float>(GetRand(800) - 400);
+			float offsetX = static_cast<float>(GetRand(kSpawnerMaxRange) - kSpawnerMinRange);
+			float offsetZ = static_cast<float>(GetRand(kSpawnerMaxRange) - kSpawnerMinRange);
 
 			Vector3 spawnPos = pos_ + Vector3(offsetX, 0.0f, offsetZ);
 
@@ -139,7 +151,7 @@ void EnemySpawner::Update(const Vector3& playerPos, float dt)
 			float distanceSq = dx * dx + dz * dz;
 
 			//1000以上離れた敵は削除する
-			return distanceSq >= 1500.0f * 1500.0f;
+			return distanceSq >= kRemoveDistane * kRemoveDistane;
 		}),
 		pEnemies_.end());
 }

@@ -8,6 +8,21 @@ namespace
 {
 	//ターゲットからカメラの注視点
 	const Vector3 kTargetToCamera = { 0.0f,400.0f,-600.0f };
+
+	//カメラのfov
+	constexpr float kCameraFov = DX_PI_F / 2.0f;
+
+	//カメラのfovのターゲット
+	constexpr float kCameraFovTarget = DX_PI_F / 3.0f;
+
+	//DXライブラリの光の向き
+	constexpr float kLightDirection = -1.8f;
+
+	//真上真下まで行かないよう制限
+	const float kLimitPitch = DX_PI_F / 4.0f; //60度
+
+	//経過時間
+	constexpr float kDeletaTime = 1.0f / 60.0f;
 }
 
 Camera::Camera() :
@@ -29,8 +44,8 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	fov_ = static_cast<float>(DX_PI / 2.0f);
-	fovTarget_ = static_cast<float>(DX_PI / 3.0f);
+	fov_ = kCameraFov;
+	fovTarget_ = kCameraFovTarget;
 
 	cameraTarget_ = pPlayer_->GetCameraTarget();
 
@@ -61,7 +76,7 @@ void Camera::UpdateCamera()
 	fov_ = Vector3::Lerp(fov_, fovTarget_, 0.07f);
 
 	//ズーム後少しずつ元に戻す
-	fovTarget_ = Vector3::Lerp(fovTarget_, DX_PI_F / 3.0f, 0.1f);
+	fovTarget_ = Vector3::Lerp(fovTarget_, kCameraFovTarget, 0.1f);
 	SetupCamera_Perspective(fov_);
 
 	//回転
@@ -84,7 +99,7 @@ void Camera::UpdateCamera()
 	Vector3 lightDir = (cameraTarget_ - pos_).Normalize();
 
 	//少し上から照らす
-	lightDir.y_ = -1.8f;
+	lightDir.y_ = kLightDirection;
 
 	//正規化
 	lightDir = lightDir.Normalize();
@@ -98,9 +113,7 @@ void Camera::AddRotation(float yaw, float pitch)
 	yaw_ += yaw;
 	pitch_ += pitch;
 
-	//真上真下まで行かないよう制限
-	const float limit = DX_PI_F / 4.0f; //60度
-	pitch_ = std::clamp(pitch_, -limit, limit);
+	pitch_ = std::clamp(pitch_, -kLimitPitch, kLimitPitch);
 }
 
 //シェイク
@@ -122,7 +135,7 @@ Vector3 Camera::UpdateShake()
 		return Vector3(0, 0, 0);
 	}
 
-	shakeTime_ -= 1.0f / 60.0f;
+	shakeTime_ -= kDeletaTime;
 
 	//r=(rand/RAND_MAX-0.5f)*2.0f;の計算は-1.0fから1.0fの範囲でランダムな値を生成
 	float rx = ((float)rand() / RAND_MAX - 0.5f) * 2.0f;

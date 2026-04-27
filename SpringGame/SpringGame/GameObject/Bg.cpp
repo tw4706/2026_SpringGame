@@ -1,6 +1,12 @@
 #include "Bg.h"
 #include<Dxlib.h>
 
+namespace
+{
+	//頂点のサイズ
+	constexpr float kSize = 2000.0f;
+}
+
 Bg::Bg()
 {
 }
@@ -32,8 +38,6 @@ void Bg::Draw(const Vector3& cameraPos)
 	SetUseZBuffer3D(TRUE);
 	SetWriteZBuffer3D(FALSE);
 	SetUseLighting(FALSE);
-
-	const float size = 2000.0f;
 
 	VECTOR c = cameraPos.ToDxlibVector();
 
@@ -69,61 +73,62 @@ void Bg::Draw(const Vector3& cameraPos)
 	// 前面
 	// =========================
 	drawFace(
-		VGet(c.x - size, c.y - size, c.z + size),
-		VGet(c.x + size, c.y - size, c.z + size),
-		VGet(c.x - size, c.y + size, c.z + size),
-		VGet(c.x + size, c.y + size, c.z + size),
+		VGet(c.x - kSize, c.y - kSize, c.z + kSize),
+		VGet(c.x + kSize, c.y - kSize, c.z + kSize),
+		VGet(c.x - kSize, c.y + kSize, c.z + kSize),
+		VGet(c.x + kSize, c.y + kSize, c.z + kSize),
 		skyTex_[4]);
 
 	// =========================
 	// 背面
 	// =========================
 	drawFace(
-		VGet(c.x + size, c.y - size, c.z - size),
-		VGet(c.x - size, c.y - size, c.z - size),
-		VGet(c.x + size, c.y + size, c.z - size),
-		VGet(c.x - size, c.y + size, c.z - size),
+		VGet(c.x + kSize, c.y - kSize, c.z - kSize),
+		VGet(c.x - kSize, c.y - kSize, c.z - kSize),
+		VGet(c.x + kSize, c.y + kSize, c.z - kSize),
+		VGet(c.x - kSize, c.y + kSize, c.z - kSize),
 		skyTex_[5]);
 
 	// =========================
 	// 左面
 	// =========================
 	drawFace(
-		VGet(c.x - size, c.y - size, c.z - size),
-		VGet(c.x - size, c.y - size, c.z + size),
-		VGet(c.x - size, c.y + size, c.z - size),
-		VGet(c.x - size, c.y + size, c.z + size),
+		VGet(c.x - kSize, c.y - kSize, c.z - kSize),
+		VGet(c.x - kSize, c.y - kSize, c.z + kSize),
+		VGet(c.x - kSize, c.y + kSize, c.z - kSize),
+		VGet(c.x - kSize, c.y + kSize, c.z + kSize),
 		skyTex_[0]);
 
 	// =========================
 	// 右面
 	// =========================
 	drawFace(
-		VGet(c.x + size, c.y - size, c.z + size),
-		VGet(c.x + size, c.y - size, c.z - size),
-		VGet(c.x + size, c.y + size, c.z + size),
-		VGet(c.x + size, c.y + size, c.z - size),
+		VGet(c.x + kSize, c.y - kSize, c.z + kSize),
+		VGet(c.x + kSize, c.y - kSize, c.z - kSize),
+		VGet(c.x + kSize, c.y + kSize, c.z + kSize),
+		VGet(c.x + kSize, c.y + kSize, c.z - kSize),
 		skyTex_[1]);
 
 	// =========================
 	// 上面
 	// =========================
 	drawFace(
-		VGet(c.x - size, c.y + size, c.z - size),
-		VGet(c.x - size, c.y + size, c.z + size),
-		VGet(c.x + size, c.y + size, c.z - size),
-		VGet(c.x + size, c.y + size, c.z + size),
+		VGet(c.x - kSize, c.y + kSize, c.z - kSize),
+		VGet(c.x - kSize, c.y + kSize, c.z + kSize),
+		VGet(c.x + kSize, c.y + kSize, c.z - kSize),
+		VGet(c.x + kSize, c.y + kSize, c.z + kSize),
 		skyTex_[2]);
 
 	// =========================
 	// 下
 	// =========================
 	drawFace(
-		VGet(c.x - size, c.y - size, c.z - size),
-		VGet(c.x + size, c.y - size, c.z - size),
-		VGet(c.x - size, c.y - size, c.z + size),
-		VGet(c.x + size, c.y - size, c.z + size),
+		VGet(c.x - kSize, c.y - kSize, c.z - kSize),
+		VGet(c.x + kSize, c.y - kSize, c.z - kSize),
+		VGet(c.x - kSize, c.y - kSize, c.z + kSize),
+		VGet(c.x + kSize, c.y - kSize, c.z + kSize),
 		skyTex_[3]);
+
 	SetUseZBuffer3D(TRUE);
 	SetUseLighting(TRUE);
 }

@@ -4,7 +4,26 @@
 
 namespace
 {
+	//初期位置
+	const Vector3 kFirstPos = { 200.0f,-120.0f,50.0f };
+
+	//敵の生成位置
+	const Vector3 kReSpawnPos = { 200.0f,-120.0f,0.0f };
+
+	//移動速度
 	constexpr float kEnemySpeed = 4.0f;
+
+	//敵の向いている方向
+	constexpr float kEnemyAngle = DX_PI_F * 1.5f;
+
+	//経過時間
+	constexpr float kDeltaTime = 1.0f / 60.0f;
+
+	//敵のモデルのパス
+	const char* kEnemyPath = "data/Enemy.mv1";
+
+	//モデルのサイズ
+	constexpr float kModelScale = 0.5f;
 }
 
 TitleEnemy::TitleEnemy():
@@ -23,14 +42,14 @@ TitleEnemy::~TitleEnemy()
 void TitleEnemy::Init()
 {
 	//モデルのロード
-	model_.Load("data/Enemy.mv1");
+	model_.Load(kEnemyPath);
 
 	//アニメーション設定
 	animation_.Init(model_.GetHandle(), AnimType::Enemy);
 	animation_.ChangeState(AnimationState::Attack);
 
-	pos_ = { 200.0f,-120.0f,50.0f };
-	angle_ = DX_PI_F * 1.5f;
+	pos_ = kFirstPos;
+	angle_ = kEnemyAngle;
 
 	time_ = 0.0f;
 	speed_ = 0.0f;
@@ -38,7 +57,7 @@ void TitleEnemy::Init()
 
 void TitleEnemy::Update()
 {
-	float dt = 1.0f / 60.0f;
+	float dt = kDeltaTime;
 
 	speed_ += kEnemySpeed;
 
@@ -51,7 +70,7 @@ void TitleEnemy::Update()
 void TitleEnemy::Draw()
 {
 	Matrix4x4 mat =
-		Matrix4x4::Scale(0.5f, 0.5f, 0.5f) *
+		Matrix4x4::Scale(kModelScale, kModelScale, kModelScale) *
 		Matrix4x4::RotateY(angle_) *
 		Matrix4x4::Translate(pos_.x_, pos_.y_, pos_.z_);
 
@@ -61,6 +80,6 @@ void TitleEnemy::Draw()
 
 void TitleEnemy::ReSpawn()
 {
-	pos_ = { 600.0f,-120.0f,0.0f };
+	pos_ = kReSpawnPos;
 	speed_ = 0.0f;
 }

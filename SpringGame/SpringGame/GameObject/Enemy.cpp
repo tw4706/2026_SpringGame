@@ -44,9 +44,6 @@ namespace
 	//エフェクトの位置調整
 	const Vector3 kEffectOffset = { 0.0f,80.0f,0.0f };
 
-	//ポップするスコアの位置調整用
-	const Vector3 kScorePopOffset = { 0.0f,200.0f,0.0f };
-
 	//プレイヤーの向きのベクトルの正規化用
 	constexpr float kDirectionEpsilon = 0.001f;
 
@@ -268,8 +265,6 @@ void Enemy::Update(float dt)
 		//攻撃判定あり
 		attackCollider_.SetEnable(true);
 
-		//攻撃判定を敵の前に前配置する
-		//Vector3 attackPos = pos_ + dir * 80.0f + kColOffset;
 		Vector3 attackPos = pos_;
 		attackCollider_.SetPos(attackPos);
 

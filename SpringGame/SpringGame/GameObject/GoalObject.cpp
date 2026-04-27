@@ -85,7 +85,6 @@ void GoalObject::OnCollision(GameObject*other)
 	if (other->GetCollider()->GetColliderType() == ColliderType::Charactor)
 	{
 		isHit_ = true;
-		printf("“–‚½‚Á‚Ä‚é!");
 	}
 }
 
