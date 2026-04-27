@@ -166,7 +166,7 @@
     <ClCompile Include="UI\PopUI.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Manager\SoundManager.cpp" />
-    <ClCompile Include="Manager\GameSceneUI.cpp" />
+    <ClCompile Include="UI\GameSceneUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject\Enemy.h" />
@@ -198,7 +198,7 @@
     <ClInclude Include="UI\PopUI.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Manager\SoundManager.h" />
-    <ClInclude Include="Manager\GameSceneUI.h" />
+    <ClInclude Include="UI\GameSceneUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Enemy.mv1" />

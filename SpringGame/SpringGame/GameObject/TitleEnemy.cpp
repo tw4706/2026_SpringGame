@@ -27,7 +27,7 @@ void TitleEnemy::Init()
 
 	//アニメーション設定
 	animation_.Init(model_.GetHandle(), AnimType::Enemy);
-	animation_.ChangeState(AnimationState::Idle);
+	animation_.ChangeState(AnimationState::Attack);
 
 	pos_ = { 200.0f,-120.0f,50.0f };
 	angle_ = DX_PI_F * 1.5f;

@@ -130,6 +130,9 @@ void TitleScene::NormalUpdate(Input& input)
 		//エフェクトの再生
 		EffectManager::GetInstance().Play("hit", hitPos+ kHitEffectOffset);
 
+		//SE再生
+		Application::GetInstance().GetSoundManager().PlaySe(SE::Hit);
+
 		pTitleEnemy_->ReSpawn();
 	}
 

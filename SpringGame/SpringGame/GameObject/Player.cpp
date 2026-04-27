@@ -48,7 +48,8 @@ namespace
 	constexpr float kAttackTime = 0.8f;
 
 	//攻撃の当たり判定が出ている時間
-	constexpr float kAttackColEnabletime = 0.15f;
+	constexpr float kAttackColStart = 0.7f;
+	constexpr float kAttackColEnd = 0.4f;
 
 	//被ダメージ時間
 	constexpr float kHitTime = 0.3f;
@@ -481,7 +482,7 @@ void Player::UpdateAttack()
 
 	attackCollider_.SetPos(attackPos);
 
-	if (attackTimer_ > kAttackColEnabletime)
+	if (attackTimer_ <= kAttackColStart && attackTimer_ >= kAttackColEnd)
 	{
 		attackCollider_.SetEnable(true);
 	}
@@ -560,10 +561,10 @@ void Player::UpdateAnimation(float dt)
 
 void Player::UpdateCollision()
 {
-	if (state_ != PlayerState::Attack)
-	{
-		attackCollider_.SetEnable(false);
-	}
+	//if (state_ != PlayerState::Attack)
+	//{
+	//	attackCollider_.SetEnable(false);
+	//}
 
 	collider_.SetPos(pos_ + kColOffset);
 }
