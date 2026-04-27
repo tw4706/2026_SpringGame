@@ -11,7 +11,8 @@ namespace
 TitlePlayer::TitlePlayer() :
 	GameObject(pos_, vel_),
 	time_(0.0f),
-	angle_(0.0f)
+	angle_(0.0f),
+	isAttacking_(false)
 {
 }
 
@@ -29,7 +30,7 @@ void TitlePlayer::Init()
 	animation_.Init(model_.GetHandle(), AnimType::Player);
 	animation_.ChangeState(AnimationState::Run);
 
-	pos_ = { -200.0f, -50.0f, 0.0f };
+	pos_ = { -200.0f, -120.0f, 0.0f };
 
 	angle_ = DX_PI_F * 0.5f;
 
@@ -42,6 +43,16 @@ void TitlePlayer::Update()
 
 	//アニメーションの更新
 	animation_.Update(dt);
+
+	//アニメーションが終わったら
+	if (animation_.IsEnd())
+	{
+		//攻撃のフラグを戻す
+		isAttacking_ = false;
+
+		//走りアニメーションに戻す
+		animation_.ChangeState(AnimationState::Run);
+	}
 }
 
 void TitlePlayer::Draw()
@@ -53,4 +64,12 @@ void TitlePlayer::Draw()
 
 	MV1SetMatrix(model_.GetHandle(), mat.ToDxLibMatrix());
 	MV1DrawModel(model_.GetHandle());
+}
+
+void TitlePlayer::Attack()
+{
+	if (isAttacking_) return;
+
+	isAttacking_ = true;
+	animation_.ChangeState(AnimationState::Attack);
 }

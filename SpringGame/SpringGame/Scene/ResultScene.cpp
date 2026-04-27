@@ -248,5 +248,4 @@ void ResultScene::NormalDraw()
 	//•`‰æ
 	DrawExtendStringToHandle(resultX+4, resultY+4, 1.2f, 1.2f, resultText, GetColor(0,0,0), Game::kFontUIHandle);
 	DrawExtendStringToHandle(resultX, resultY, 1.2f, 1.2f, resultText, resultTextColor, Game::kFontUIHandle);
-
 }

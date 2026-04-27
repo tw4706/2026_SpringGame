@@ -12,6 +12,17 @@ public:
 	void Init()override;
 	void Update()override;
 	void Draw()override;
+
+	/// <summary>
+	/// “G‚ÌÄ¶¬
+	/// </summary>
+	void ReSpawn();
+
+	/// <summary>
+	/// “G‚Ì€–S
+	/// </summary>
+	void Death();
+
 private:
 	float time_;
 	float speed_;

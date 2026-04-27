@@ -9,6 +9,7 @@ SceneController& SceneController::GetInstance()
 
 SceneController::SceneController()
 {
+
 }
 
 SceneController::~SceneController()

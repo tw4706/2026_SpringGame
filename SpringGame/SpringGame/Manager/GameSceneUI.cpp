@@ -98,7 +98,7 @@ void GameSceneUI::DrawGameStart(bool isGameStarted, float gameStartTimer)
 			if (gameStartTimer < 20.0f)
 			{
 				float t = gameStartTimer / 20.0f;
-				scale = 1.8f - 0.8f * t;
+				scale = 2.0f * t;
 			}
 			else
 			{

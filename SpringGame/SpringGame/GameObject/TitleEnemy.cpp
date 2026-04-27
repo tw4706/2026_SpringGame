@@ -29,7 +29,7 @@ void TitleEnemy::Init()
 	animation_.Init(model_.GetHandle(), AnimType::Enemy);
 	animation_.ChangeState(AnimationState::Idle);
 
-	pos_ = { 200.0f,-50.0f,50.0f };
+	pos_ = { 200.0f,-120.0f,50.0f };
 	angle_ = DX_PI_F * 1.5f;
 
 	time_ = 0.0f;
@@ -57,4 +57,10 @@ void TitleEnemy::Draw()
 
 	MV1SetMatrix(model_.GetHandle(), mat.ToDxLibMatrix());
 	MV1DrawModel(model_.GetHandle());
+}
+
+void TitleEnemy::ReSpawn()
+{
+	pos_ = { 600.0f,-120.0f,0.0f };
+	speed_ = 0.0f;
 }

@@ -90,7 +90,7 @@ namespace
 	constexpr float kRotateLerpAnalogStick = 0.3f;
 
 	//ˆÚ“®§ŒÀ‚·‚é‚½‚ß‚Ì’è”
-	const float kWalkXLimit = 1500.0f;
+	const float kWalkXLimit = 950.0f;
 	const float kWalkZLimit = 10000.0f;
 
 	//•Ç§ŒÀ‚Ì‚µ‚«‚¢’l(Œë·)

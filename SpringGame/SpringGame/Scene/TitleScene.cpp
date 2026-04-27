@@ -6,6 +6,8 @@
 #include"../Game.h"
 #include"../System/Application.h"
 #include"../GameObject/TitlePlayer.h"
+#include"../Manager/EffectManager.h"
+#include"EffekseerForDXLib.h"
 #include<Dxlib.h>
 #include<memory>
 #include<algorithm>
@@ -23,6 +25,8 @@ namespace
 
 	//点滅のスピード
 	constexpr float kBlinkSpeed = 0.05f;
+
+	const Vector3 kHitEffectOffset = { 150.0f,50.0f,0.0f };
 }
 
 TitleScene::TitleScene(SceneController& controller) :
@@ -53,6 +57,9 @@ void TitleScene::Init()
 
 	//カメラ設定
 	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500), VGet(0, 0, 0));
+
+	//エフェクトのロード
+	EffectManager::GetInstance().Load("hit", "data/Effect/hit.efk");
 
 	titleHandle_ = LoadGraph("data/titleLogo.png");
 
@@ -89,12 +96,41 @@ void TitleScene::FadeInUpdate(Input& input)
 
 void TitleScene::NormalUpdate(Input& input)
 {
+	blinkTimer_++;
+
 	pTitlePlayer_->Update();
 	pTitleEnemy_->Update();
 
-	//bgAngle_ += 0.003f;
+	EffectManager::GetInstance().Update();
+	Effekseer_Sync3DSetting();
+	bgAngle_ += 0.003f;
 
-	blinkTimer_++;
+	//距離の計算
+	float dx = pTitleEnemy_->GetPos().x_ - pTitlePlayer_->GetPos().x_;
+
+	//一定距離近づいたらプレイヤーが攻撃
+	if (dx < 200.0f && dx>0.0f)
+	{
+		pTitlePlayer_->Attack();
+	}
+
+	//攻撃判定
+	if (dx < 120.0f)
+	{
+		//ヒット時の座標保存用
+		Vector3 hitPos = pTitlePlayer_->GetPos();
+
+		//エフェクトの再生
+		EffectManager::GetInstance().Play("hit", hitPos+ kHitEffectOffset);
+
+		pTitleEnemy_->ReSpawn();
+	}
+
+	//画面端まで行くとリセット
+	if (pTitleEnemy_->GetPos().x_ < -500.0f)
+	{
+		pTitleEnemy_->ReSpawn();
+	}
 
 	if (input.IsTriggered("retry"))
 	{
@@ -163,7 +199,7 @@ void TitleScene::NormalDraw()
 	SetUseBackCulling(TRUE);
 
 	//描画
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, titleHandle_, true);
+	DrawRotaGraph(Game::kScreenWidth / 2, 200, 0.6f, 0.0f, titleHandle_, true);
 
 	//タイトル名
 	const char* text = "ボタンを押してスタート";
@@ -171,7 +207,7 @@ void TitleScene::NormalDraw()
 
 	int totalWidth = GetDrawStringWidthToHandle(text, textLength, Game::kTitleFontHandle);
 	int currentX = (Game::kScreenWidth - totalWidth) / 2;
-	int baseY = Game::kScreenHeight / 2 + 100;
+	int baseY = Game::kScreenHeight / 2 + 200;
 
 	int charOrder = 0;
 
