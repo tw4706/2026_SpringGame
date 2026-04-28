@@ -37,7 +37,7 @@ GameSceneUI::~GameSceneUI()
 
 void GameSceneUI::Init()
 {
-	handle_ = LoadGraph("data/HP.png");
+	handle_ = LoadGraph("data/UI/HP.png");
 }
 
 void GameSceneUI::Draw(int hp, bool isHpAnimating, int damageIndex, int hpAnimFrame,
@@ -145,7 +145,7 @@ void GameSceneUI::DrawWave(int currentWave)
 	int y = 150;
 
 	//íÜâõï\é¶
-	int width = GetDrawStringWidthToHandle(buf, strlen(buf), Game::kFontUIHandle);
+	int width = GetDrawStringWidthToHandle(buf, static_cast<int>(strlen(buf)), Game::kFontUIHandle);
 
 	//Xç¿ïW
 	int x = 50;

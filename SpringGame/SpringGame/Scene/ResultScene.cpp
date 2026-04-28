@@ -28,7 +28,7 @@ namespace
 	//選択肢のY座標オフセット
 	constexpr int kMenuOffsetY = 50;
 
-	//resultの結果の文字表示のY座標オフセット
+	//Resultの結果の文字表示のY座標オフセット
 	constexpr int kResultTextOffsetY = 200;
 
 	//Resultの結果文字のサイズ
@@ -185,7 +185,7 @@ void ResultScene::NormalDraw()
 	sprintf_s(buf, "TIME : %d.%d", timeInt, timeDec);
 
 	//文字幅取得
-	int width = GetDrawStringWidthToHandle(buf, strlen(buf), Game::kFontUIHandle);
+	int width = GetDrawStringWidthToHandle(buf, static_cast<int>(strlen(buf)), Game::kFontUIHandle);
 
 	//表示する座標
 	int x = Game::kScreenWidth / 2 - width / 2;
@@ -207,8 +207,8 @@ void ResultScene::NormalDraw()
 	float titleScale = (currentMenu_ == ResultMenu::Title) ? 1.0f + 0.1f * sinf(blinkTimer_ * 10.0f) : 1.0f;
 
 	//文字幅取得
-	int retryW = GetDrawStringWidthToHandle(retryText, strlen(retryText), Game::kFontUIHandle);
-	int titleW = GetDrawStringWidthToHandle(titleText, strlen(titleText), Game::kFontUIHandle);
+	int retryW = GetDrawStringWidthToHandle(retryText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
+	int titleW = GetDrawStringWidthToHandle(titleText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
 
 	//テキストの色
 	int resultColor = GetColor(255, 255, 255);

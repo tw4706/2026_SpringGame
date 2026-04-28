@@ -42,7 +42,7 @@ GoalObject::~GoalObject()
 
 void GoalObject::Init()
 {
-	model_.Load("data/goalObject.mv1");
+	model_.Load("data/Model/goalObject.mv1");
 	model_.SetPosition(pos_ + kPosOffset);
 	model_.SetScale(kModelScale);
 

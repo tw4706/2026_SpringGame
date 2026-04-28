@@ -30,7 +30,7 @@ TitlePlayer::~TitlePlayer()
 
 void TitlePlayer::Init()
 {
-	model_.Load("data/Player_Idle.mv1");
+	model_.Load("data/Model/Player_Idle.mv1");
 
 	//アニメーションの設定
 	animation_.Init(model_.GetHandle(), AnimType::Player);

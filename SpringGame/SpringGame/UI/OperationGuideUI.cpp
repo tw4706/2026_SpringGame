@@ -19,8 +19,8 @@ OperationGuideUI::~OperationGuideUI()
 void OperationGuideUI::Init()
 {
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
-	aButtonHandle_ = LoadGraph("data/AButton.png");
-	bButtonHandle_ = LoadGraph("data/BButton.png");
+	aButtonHandle_ = LoadGraph("data/UI/AButton.png");
+	bButtonHandle_ = LoadGraph("data/UI/BButton.png");
 }
 
 

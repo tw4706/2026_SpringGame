@@ -164,8 +164,8 @@ Player::~Player()
 void Player::Init()
 {
 	//モデルのロード
-	model_.Load("data/Player_Idle.mv1");
-	ghostModel_.Load("data/PlayerAfterImage.mv1");
+	model_.Load("data/Model/Player_Idle.mv1");
+	ghostModel_.Load("data/Model/PlayerAfterImage.mv1");
 
 	//アニメーションの初期化
 	animation_.Init(model_.GetHandle(), AnimType::Player);

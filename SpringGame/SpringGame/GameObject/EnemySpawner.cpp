@@ -13,10 +13,10 @@ namespace
 	constexpr float kSpawnInterval = 0.1f;
 
 	//スポナーの生成最大範囲
-	constexpr float kSpawnerMaxRange = 800;
+	constexpr int kSpawnerMaxRange = 800;
 
 	//スポナーの生成最小範囲
-	constexpr float kSpawnerMinRange = 400;
+	constexpr int kSpawnerMinRange = 400;
 
 	//敵を削除する判定距離
 	constexpr float kRemoveDistane = 1500.0f;

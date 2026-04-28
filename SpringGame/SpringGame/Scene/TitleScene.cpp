@@ -26,7 +26,32 @@ namespace
 	//点滅のスピード
 	constexpr float kBlinkSpeed = 0.05f;
 
+	//ヒットエフェクトの表示座標
 	const Vector3 kHitEffectOffset = { 150.0f,50.0f,0.0f };
+
+	//カメラの座標
+	const Vector3 kCameraPos = { 0.0f,0.0f,-500.0f };
+
+	//カメラのターゲット
+	const Vector3 kCameraTarget = { 0.0f,0.0f,0.0f };
+
+	//床モデルの初期位置
+	const Vector3 kFirstFloorModelPos = { 0.0f,-200.0f,10.0f };
+
+	//床モデルの角度
+	constexpr float kRotateFloorModel = DX_PI_F * 0.5f;
+
+	//床モデルのサイズ
+	const float kFloorModelSize = 1.0f;
+
+	//プレイヤーが攻撃を開始する位置
+	constexpr float kPlayerAttackStart = 200.0f;
+
+	//プレイヤーが攻撃判定を行う位置
+	constexpr float kPlayerAttackHit = 120.0f;
+
+	//敵を再生成させる位置
+	constexpr float kEnemyResetPos = -500.0f;
 }
 
 TitleScene::TitleScene(SceneController& controller) :
@@ -56,18 +81,18 @@ void TitleScene::Init()
 	SetCameraNearFar(1.0f, 10000.0f);
 
 	//カメラ設定
-	SetCameraPositionAndTarget_UpVecY(VGet(0, 0, -500), VGet(0, 0, 0));
+	SetCameraPositionAndTarget_UpVecY(kCameraPos.ToDxlibVector(), kCameraTarget.ToDxlibVector());
 
 	//エフェクトのロード
 	EffectManager::GetInstance().Load("hit", "data/Effect/hit.efk");
 
-	titleHandle_ = LoadGraph("data/titleLogo.png");
+	titleHandle_ = LoadGraph("data/UI/titleLogo.png");
 
 	//床のモデル読み込み
 	floorModel_.Load("data/floor.mv1");
-	floorModel_.SetPosition({ 0.0f, -200.0f, 10.0f });
-	floorModel_.SetRotationY(DX_PI_F * 0.5f);
-	floorModel_.SetScale({ 1.0f,1.0f,1.0f });
+	floorModel_.SetPosition(kFirstFloorModelPos);
+	floorModel_.SetRotationY(kRotateFloorModel);
+	floorModel_.SetScale({ kFloorModelSize,kFloorModelSize,kFloorModelSize });
 
 
 	update_ = &TitleScene::FadeInUpdate;
@@ -116,19 +141,19 @@ void TitleScene::NormalUpdate(Input& input)
 	float dx = pTitleEnemy_->GetPos().x_ - pTitlePlayer_->GetPos().x_;
 
 	//一定距離近づいたらプレイヤーが攻撃
-	if (dx < 200.0f && dx>0.0f)
+	if (dx < kPlayerAttackStart && dx>0.0f)
 	{
 		pTitlePlayer_->Attack();
 	}
 
 	//攻撃判定
-	if (dx < 120.0f)
+	if (dx < kPlayerAttackHit)
 	{
 		//ヒット時の座標保存用
 		Vector3 hitPos = pTitlePlayer_->GetPos();
 
 		//エフェクトの再生
-		EffectManager::GetInstance().Play("hit", hitPos+ kHitEffectOffset);
+		EffectManager::GetInstance().Play("hit", hitPos + kHitEffectOffset);
 
 		//SE再生
 		Application::GetInstance().GetSoundManager().PlaySe(SE::Hit);
@@ -137,7 +162,7 @@ void TitleScene::NormalUpdate(Input& input)
 	}
 
 	//画面端まで行くとリセット
-	if (pTitleEnemy_->GetPos().x_ < -500.0f)
+	if (pTitleEnemy_->GetPos().x_ < kEnemyResetPos)
 	{
 		pTitleEnemy_->ReSpawn();
 	}
@@ -193,7 +218,7 @@ void TitleScene::NormalDraw()
 	cameraPos.z_ = sinf(bgAngle_) * 500.0f;
 
 	//カメラを画面中央へ向ける
-	SetCameraPositionAndTarget_UpVecY(VGet(0, 50, -500),VGet(0, 0, 0));
+	SetCameraPositionAndTarget_UpVecY(VGet(0, 50, -500), VGet(0, 0, 0));
 
 	SetUseBackCulling(FALSE);
 	//描画

@@ -5,10 +5,10 @@
 namespace
 {
 	//初期位置
-	const Vector3 kFirstPos = { 200.0f,-120.0f,50.0f };
+	const Vector3 kFirstPos = { 400.0f,-120.0f,50.0f };
 
 	//敵の生成位置
-	const Vector3 kReSpawnPos = { 200.0f,-120.0f,0.0f };
+	const Vector3 kReSpawnPos = { 400.0f,-120.0f,0.0f };
 
 	//移動速度
 	constexpr float kEnemySpeed = 4.0f;
@@ -20,7 +20,7 @@ namespace
 	constexpr float kDeltaTime = 1.0f / 60.0f;
 
 	//敵のモデルのパス
-	const char* kEnemyPath = "data/Enemy.mv1";
+	const char* kEnemyPath = "data/Model/Enemy.mv1";
 
 	//モデルのサイズ
 	constexpr float kModelScale = 0.5f;

@@ -25,12 +25,12 @@ Bg::~Bg()
 void Bg::Init()
 {
 	//スカイボックス用のテクスチャのロード
-	skyTex_[0] = LoadGraph("data/backGround_rt.png");
-	skyTex_[1] = LoadGraph("data/backGround_lf.png");
-	skyTex_[2] = LoadGraph("data/backGround_up.png");
-	skyTex_[3] = LoadGraph("data/backGround_dn.png");
-	skyTex_[4] = LoadGraph("data/backGround_ft.png");
-	skyTex_[5] = LoadGraph("data/backGround_bk.png");
+	skyTex_[0] = LoadGraph("data/Bg/backGround_rt.png");
+	skyTex_[1] = LoadGraph("data/Bg/backGround_lf.png");
+	skyTex_[2] = LoadGraph("data/Bg/backGround_up.png");
+	skyTex_[3] = LoadGraph("data/Bg/backGround_dn.png");
+	skyTex_[4] = LoadGraph("data/Bg/backGround_ft.png");
+	skyTex_[5] = LoadGraph("data/Bg/backGround_bk.png");
 }
 
 void Bg::Draw(const Vector3& cameraPos)
