@@ -101,7 +101,7 @@ Enemy::~Enemy()
 
 void Enemy::Init()
 {
-	model_ .Load("data/Enemy.mv1");
+	model_ .Load("data/Model/Enemy.mv1");
 	//モデルのポジションとサイズの設定
 	model_.SetPosition(pos_);
 	model_.SetScale(kModelScale);

@@ -208,7 +208,7 @@ void ResultScene::NormalDraw()
 
 	//文字幅取得
 	int retryW = GetDrawStringWidthToHandle(retryText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
-	int titleW = GetDrawStringWidthToHandle(titleText, static_cast<int>(strlen(retryText)), Game::kFontUIHandle);
+	int titleW = GetDrawStringWidthToHandle(titleText, static_cast<int>(strlen(titleText)), Game::kFontUIHandle);
 
 	//テキストの色
 	int resultColor = GetColor(255, 255, 255);

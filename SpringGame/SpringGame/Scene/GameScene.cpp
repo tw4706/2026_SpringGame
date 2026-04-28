@@ -59,7 +59,7 @@ namespace
 	constexpr float kEnemySpawnerRadius = 1000.0f;
 
 	//床モデルの初期位置
-	const Vector3 kFirstFloorPos = { 0.0f,-50.0f,3000.0f };
+	const Vector3 kFirstFloorModelPos = { 0.0f,-50.0f,3000.0f };
 
 	//経過時間
 	constexpr float kDeltaTime = 1.0f / 60.0f;
@@ -167,7 +167,7 @@ void GameScene::Init()
 
 	//床のモデル読み込み
 	floorHandle_ = MV1LoadModel("data/floor.mv1");
-	MV1SetPosition(floorHandle_, kFirstFloorPos.ToDxlibVector());
+	MV1SetPosition(floorHandle_, kFirstFloorModelPos.ToDxlibVector());
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
 	//HPの設定
