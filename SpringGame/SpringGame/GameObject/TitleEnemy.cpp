@@ -8,7 +8,7 @@ namespace
 	const Vector3 kFirstPos = { 400.0f,-120.0f,50.0f };
 
 	//“G‚Ì¶¬ˆÊ’u
-	const Vector3 kReSpawnPos = { 400.0f,-120.0f,0.0f };
+	const Vector3 kReSpawnPos = { 600.0f,-120.0f,0.0f };
 
 	//ˆÚ“®‘¬“x
 	constexpr float kEnemySpeed = 4.0f;

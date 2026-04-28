@@ -89,7 +89,7 @@ void TitleScene::Init()
 	titleHandle_ = LoadGraph("data/UI/titleLogo.png");
 
 	//è∞ÇÃÉÇÉfÉãì«Ç›çûÇ›
-	floorModel_.Load("data/floor.mv1");
+	floorModel_.Load("data/Model/floor.mv1");
 	floorModel_.SetPosition(kFirstFloorModelPos);
 	floorModel_.SetRotationY(kRotateFloorModel);
 	floorModel_.SetScale({ kFloorModelSize,kFloorModelSize,kFloorModelSize });

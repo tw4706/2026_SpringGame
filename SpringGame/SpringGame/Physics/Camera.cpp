@@ -144,5 +144,8 @@ Vector3 Camera::UpdateShake()
 
 	Vector3 shake = { rx * shakePower_,ry * shakePower_,rz * shakePower_ };
 
+	//ê≥ãKâª
+	shake.Normalize();
+
 	return shake;
 }

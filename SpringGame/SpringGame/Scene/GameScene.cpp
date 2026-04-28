@@ -56,10 +56,10 @@ namespace
 	constexpr float kEnemySpawnerDistanceZ = 3000.0f;
 
 	//敵スポナーの半径
-	constexpr float kEnemySpawnerRadius = 1000.0f;
+	constexpr float kEnemySpawnerRadius = 900.0f;
 
 	//床モデルの初期位置
-	const Vector3 kFirstFloorModelPos = { 0.0f,-50.0f,3000.0f };
+	const Vector3 kFirstFloorModelPos = { -250.0f,-50.0f,10000.0f };
 
 	//経過時間
 	constexpr float kDeltaTime = 1.0f / 60.0f;
@@ -166,7 +166,7 @@ void GameScene::Init()
 	pOperationGuideUI_->Init();
 
 	//床のモデル読み込み
-	floorHandle_ = MV1LoadModel("data/floor.mv1");
+	floorHandle_ = MV1LoadModel("data/Model/floor.mv1");
 	MV1SetPosition(floorHandle_, kFirstFloorModelPos.ToDxlibVector());
 	MV1SetScale(floorHandle_, VGet(1.0f, 1.0f, 1.0f));
 
