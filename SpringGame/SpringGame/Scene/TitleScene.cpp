@@ -36,7 +36,7 @@ namespace
 	const Vector3 kCameraTarget = { 0.0f,0.0f,0.0f };
 
 	//床モデルの初期位置
-	const Vector3 kFirstFloorModelPos = { 0.0f,-200.0f,10.0f };
+	const Vector3 kFirstFloorModelPos = { -1500.0f,-250.0f,-3000.0f };
 
 	//床モデルの角度
 	constexpr float kRotateFloorModel = DX_PI_F * 0.5f;

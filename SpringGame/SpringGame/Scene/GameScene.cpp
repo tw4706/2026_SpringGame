@@ -59,7 +59,7 @@ namespace
 	constexpr float kEnemySpawnerRadius = 900.0f;
 
 	//°ƒ‚ƒfƒ‹‚Ì‰ŠúˆÊ’u
-	const Vector3 kFirstFloorModelPos = { -250.0f,-50.0f,10000.0f };
+	const Vector3 kFirstFloorModelPos = { 3250.0f,-100.0f,-100.0f };
 
 	//Œo‰ßŠÔ
 	constexpr float kDeltaTime = 1.0f / 60.0f;
